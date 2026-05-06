@@ -38,21 +38,22 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm leading-relaxed text-slate-400 mb-6">
-              Sirius Academy vous accompagne dans votre montée en compétences digitales grâce à des
-              formations de haute qualité, animées par des experts actifs dans leur domaine.
+              Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à
+              construire des compétences concrètes, visibles et utiles grâce à un accompagnement
+              personnalisé en petits groupes.
             </p>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-brand-green shrink-0" />
-                <span>contact@sirius-academy.fr</span>
+                <span>contact@sirius-academy.sn</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-brand-green shrink-0" />
-                <span>+33 1 23 45 67 89</span>
+                <span>+221 77 000 00 00</span>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-brand-green shrink-0" />
-                <span>Paris, France (et 100% en ligne)</span>
+                <span>Dakar, Sénégal (et 100% en ligne)</span>
               </div>
             </div>
             <div className="flex items-center gap-3 mt-6">

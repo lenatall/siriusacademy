@@ -185,7 +185,7 @@ export default function BlogPostPage({ params }: Props) {
                   Formez-vous avec nos experts
                 </h3>
                 <p className="text-slate-300 text-sm mb-5 leading-relaxed">
-                  Des formations complètes et certifiantes pour maîtriser les métiers du digital.
+                  Des formations pratiques en petits groupes pour acquérir des compétences concrètes et constituer un portfolio.
                 </p>
                 <Link
                   href="/formations"

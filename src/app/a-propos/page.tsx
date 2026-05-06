@@ -11,40 +11,28 @@ export const metadata: Metadata = {
 
 const team = [
   {
-    name: 'Marie Dupont',
-    role: 'Co-fondatrice & Formatrice Dev Web',
-    avatar: 'https://ui-avatars.com/api/?name=Marie+Dupont&background=10B981&color=fff&size=200',
-    bio: 'Développeuse Full-Stack avec 10 ans d\'expérience. Passionnée par la transmission du savoir et l\'égalité des chances dans le numérique.',
+    name: 'Léna Badiane',
+    role: 'Fondatrice & Formatrice Marketing Digital',
+    avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=10B981&color=fff&size=200',
+    bio: 'Référente Digitale certifiée avec plus de 5 ans d\'expérience en marketing digital, création de contenu, gestion de réseaux sociaux et accompagnement d\'entreprises. Fondatrice de Sirius Academy.',
   },
   {
-    name: 'Thomas Renard',
-    role: 'Co-fondateur & Formateur Marketing',
-    avatar: 'https://ui-avatars.com/api/?name=Thomas+Renard&background=F59E0B&color=0B1F3A&size=200',
-    bio: 'Consultant marketing digital depuis 8 ans. Certifié Google et Meta Ads. A accompagné plus de 150 entreprises dans leur transformation digitale.',
+    name: 'Cheikh Sarr',
+    role: 'Formateur Développement Web',
+    avatar: 'https://ui-avatars.com/api/?name=Cheikh+Sarr&background=F59E0B&color=0B1F3A&size=200',
+    bio: 'Développeur Full-Stack freelance depuis 8 ans. Il a livré des projets web pour des startups et PME et partage sa pratique concrète avec les apprenants.',
   },
   {
-    name: 'Camille Martin',
+    name: 'Ndeye Fall',
     role: 'Formatrice Design UX/UI',
-    avatar: 'https://ui-avatars.com/api/?name=Camille+Martin&background=4c6ef5&color=fff&size=200',
-    bio: 'Lead Designer ex-Leboncoin et Doctolib. Championne du design centré sur l\'humain, elle croit que la beauté et l\'utilité ne font qu\'un.',
+    avatar: 'https://ui-avatars.com/api/?name=Ndeye+Fall&background=4c6ef5&color=fff&size=200',
+    bio: 'Designer produit freelance spécialisée dans les interfaces web et mobiles. Elle transmet sa passion du design centré utilisateur avec clarté et méthode.',
   },
   {
-    name: 'Dr. Julien Leroy',
+    name: 'Moussa Diène',
     role: 'Formateur Data Science & IA',
-    avatar: 'https://ui-avatars.com/api/?name=Julien+Leroy&background=364fc7&color=fff&size=200',
-    bio: 'Docteur en Intelligence Artificielle, ex-chercheur INRIA. Il rend les concepts les plus complexes accessibles à tous avec une pédagogie remarquable.',
-  },
-  {
-    name: 'Sophie Bernard',
-    role: 'Responsable Pédagogique',
-    avatar: 'https://ui-avatars.com/api/?name=Sophie+Bernard&background=059669&color=fff&size=200',
-    bio: 'Ancienne apprenante reconvertie, Sophie garantit la qualité pédagogique de chaque formation et veille à la réussite de chaque apprenant.',
-  },
-  {
-    name: 'Lucas Petit',
-    role: 'Responsable Communauté',
-    avatar: 'https://ui-avatars.com/api/?name=Lucas+Petit&background=D97706&color=fff&size=200',
-    bio: 'Il anime la communauté Sirius Academy et organise les événements en ligne et en présentiel pour connecter apprenants et professionnels du secteur.',
+    avatar: 'https://ui-avatars.com/api/?name=Moussa+Diene&background=364fc7&color=fff&size=200',
+    bio: 'Data scientist avec une solide expérience sur des projets appliqués. Il rend la data science accessible à travers des exemples concrets et des projets sur données réelles.',
   },
 ]
 
@@ -88,16 +76,16 @@ export default function AProposPage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm font-medium px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
               <Star className="w-4 h-4 text-brand-yellow fill-current" />
-              <span>Notre histoire depuis 2021</span>
+              <span>Académie digitale · Sénégal</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
-              Former les talents du
-              <span className="text-brand-green"> numérique de demain</span>
+              Des compétences digitales
+              <span className="text-brand-green"> concrètes et utiles</span>
             </h1>
             <p className="text-slate-300 text-xl leading-relaxed">
-              Sirius Academy est née d&apos;un constat simple : la formation digitale en France est
-              trop souvent théorique, trop chère et déconnectée des réalités du marché. Nous avons
-              voulu créer quelque chose de différent.
+              Sirius Academy est une académie digitale basée au Sénégal, fondée par Léna Badiane.
+              Notre priorité : un accompagnement humain, des formations pratiques en petits groupes
+              et des projets concrets que vous pouvez montrer.
             </p>
           </div>
         </div>
@@ -111,27 +99,28 @@ export default function AProposPage() {
               <h2 className="text-3xl font-black text-navy-900 mb-6">Notre histoire</h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p>
-                  Sirius Academy a été fondée en 2021 par Marie Dupont et Thomas Renard, deux
-                  professionnels du digital frustrés par la qualité des formations disponibles sur
-                  le marché. Trop théoriques, trop génériques, trop déconnectées du marché réel.
+                  Sirius Academy est une jeune académie digitale basée au Sénégal, fondée par Léna
+                  Badiane, Référente Digitale certifiée, avec plus de 5 ans d&apos;expérience en
+                  marketing digital, création de contenu, gestion de réseaux sociaux et accompagnement
+                  d&apos;entreprises.
                 </p>
                 <p>
-                  Leur pari : créer des formations courtes, intensives et pratiques, animées par des
-                  professionnels qui exercent leur métier au quotidien. Des formations où l&apos;on
-                  construit de vraies choses, sur de vraies données, avec de vrais outils.
+                  Notre approche : des formations en petits groupes, animées par des praticiens qui
+                  exercent leur métier au quotidien. Des formations où l&apos;on construit de vraies
+                  choses, avec de vrais outils, pour constituer un portfolio concret et présentable.
                 </p>
                 <p>
-                  Trois ans plus tard, Sirius Academy a formé plus de 3 000 apprenants. 87% d&apos;entre
-                  eux ont trouvé un emploi ou des clients freelance dans les 6 mois suivant la fin
-                  de leur formation. Ces chiffres, c&apos;est notre fierté.
+                  À la fin de nos formations métiers, les apprenants repartent avec des projets
+                  réalisés et des éléments de portfolio. Nous proposons également un accompagnement
+                  CV et une préparation aux entretiens selon les opportunités disponibles.
                 </p>
               </div>
 
               <div className="grid grid-cols-3 gap-6 mt-10">
                 {[
-                  { value: '2021', label: 'Année de création' },
-                  { value: '3 000+', label: 'Apprenants formés' },
-                  { value: '87%', label: 'Taux d\'emploi' },
+                  { value: '5+', label: 'Ans d\'expérience' },
+                  { value: 'Petits', label: 'groupes' },
+                  { value: '100%', label: 'Projets concrets' },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-2xl font-black text-brand-green mb-1">{stat.value}</div>
@@ -149,12 +138,12 @@ export default function AProposPage() {
                   </div>
                   <h3 className="text-2xl font-black mb-3">Notre mission</h3>
                   <p className="text-slate-300 leading-relaxed text-sm">
-                    Rendre la formation digitale de haute qualité accessible à tous, partout en
-                    France, sans barrière géographique ou sociale.
+                    Rendre la formation digitale de haute qualité accessible à tous, au Sénégal et
+                    au-delà, avec un accompagnement humain et des projets concrets.
                   </p>
                   <div className="mt-8 grid grid-cols-2 gap-4">
                     {[
-                      { icon: Award, text: 'Certifiant' },
+                      { icon: Award, text: 'Attestation' },
                       { icon: Users, text: 'Communauté' },
                       { icon: Zap, text: 'Pratique' },
                       { icon: Heart, text: 'Bienveillant' },

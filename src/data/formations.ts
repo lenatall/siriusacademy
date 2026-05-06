@@ -15,9 +15,6 @@ export const formations: Formation[] = [
     duration: '4 mois',
     level: 'Débutant',
     category: 'Développement',
-    students: 847,
-    rating: 4.8,
-    reviewCount: 214,
     isFeatured: true,
     certificate: true,
     tags: ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'MongoDB'],
@@ -35,10 +32,10 @@ export const formations: Formation[] = [
       'Motivation et rigueur',
     ],
     instructor: {
-      name: 'Marie Dupont',
-      title: 'Développeuse Full-Stack Senior · 10 ans d\'expérience',
-      bio: 'Marie a travaillé chez des startups et grandes entreprises parisiennes avant de se consacrer à l\'enseignement. Elle forme des développeurs depuis 5 ans.',
-      avatar: 'https://ui-avatars.com/api/?name=Marie+Dupont&background=10B981&color=fff&size=200',
+      name: 'Cheikh Sarr',
+      title: 'Développeur Full-Stack · 8 ans d\'expérience',
+      bio: 'Cheikh est développeur full-stack freelance depuis 8 ans. Il a livré des projets web pour des startups et PME africaines et partage sa pratique concrète avec ses apprenants.',
+      avatar: 'https://ui-avatars.com/api/?name=Cheikh+Sarr&background=10B981&color=fff&size=200',
     },
     modules: [
       {
@@ -106,9 +103,6 @@ export const formations: Formation[] = [
     duration: '3 mois',
     level: 'Débutant',
     category: 'Marketing',
-    students: 1243,
-    rating: 4.9,
-    reviewCount: 389,
     isFeatured: true,
     certificate: true,
     tags: ['SEO', 'Google Ads', 'Réseaux sociaux', 'Content Marketing', 'Analytics'],
@@ -126,10 +120,10 @@ export const formations: Formation[] = [
       'Intérêt pour le marketing et la communication',
     ],
     instructor: {
-      name: 'Thomas Renard',
-      title: 'Consultant Marketing Digital · Agence & Freelance depuis 8 ans',
-      bio: 'Thomas a accompagné plus de 150 entreprises dans leur transformation digitale. Formateur certifié Google et Meta.',
-      avatar: 'https://ui-avatars.com/api/?name=Thomas+Renard&background=F59E0B&color=0B1F3A&size=200',
+      name: 'Léna Badiane',
+      title: 'Référente Digitale certifiée · 5+ ans d\'expérience',
+      bio: 'Léna est fondatrice de Sirius Academy. Spécialiste du marketing digital, de la création de contenu et de la gestion des réseaux sociaux, elle accompagne les entreprises dans leur stratégie digitale depuis plus de 5 ans.',
+      avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=F59E0B&color=0B1F3A&size=200',
     },
     modules: [
       {
@@ -190,9 +184,6 @@ export const formations: Formation[] = [
     duration: '2 mois',
     level: 'Intermédiaire',
     category: 'Design',
-    students: 562,
-    rating: 4.7,
-    reviewCount: 178,
     isFeatured: true,
     certificate: true,
     tags: ['Figma', 'UX Research', 'Prototypage', 'Design System', 'Wireframing'],
@@ -210,10 +201,10 @@ export const formations: Formation[] = [
       'Des notions en design graphique sont un plus',
     ],
     instructor: {
-      name: 'Camille Martin',
-      title: 'Lead Designer Produit · Ex-Leboncoin & Doctolib',
-      bio: 'Camille a designé des produits utilisés par des millions d\'utilisateurs. Elle partage sa passion pour le design centré sur l\'humain avec ses apprenants.',
-      avatar: 'https://ui-avatars.com/api/?name=Camille+Martin&background=4c6ef5&color=fff&size=200',
+      name: 'Ndeye Fall',
+      title: 'Designer UX/UI · Spécialiste Figma',
+      bio: 'Ndeye est designer produit freelance avec une forte expérience en design d\'interfaces pour des applications web et mobiles. Elle transmet sa passion du design centré sur l\'utilisateur avec clarté et méthode.',
+      avatar: 'https://ui-avatars.com/api/?name=Ndeye+Fall&background=4c6ef5&color=fff&size=200',
     },
     modules: [
       {
@@ -274,9 +265,6 @@ export const formations: Formation[] = [
     duration: '5 mois',
     level: 'Intermédiaire',
     category: 'Data & IA',
-    students: 423,
-    rating: 4.9,
-    reviewCount: 156,
     isFeatured: false,
     certificate: true,
     tags: ['Python', 'Machine Learning', 'Deep Learning', 'NLP', 'LLMs'],
@@ -294,10 +282,10 @@ export const formations: Formation[] = [
       'Curiosité et esprit analytique',
     ],
     instructor: {
-      name: 'Dr. Julien Leroy',
-      title: 'Data Scientist Senior · Doctorat en IA · Ex-INRIA',
-      bio: 'Julien est chercheur et praticien de l\'IA depuis 12 ans. Il a publié des articles dans des conférences internationales et consulte pour plusieurs entreprises du CAC40.',
-      avatar: 'https://ui-avatars.com/api/?name=Julien+Leroy&background=364fc7&color=fff&size=200',
+      name: 'Moussa Diène',
+      title: 'Data Scientist · Spécialiste Python & Machine Learning',
+      bio: 'Moussa est data scientist avec une solide expérience sur des projets appliqués. Il rend les concepts de data science accessibles à travers des exemples concrets et des projets sur données réelles.',
+      avatar: 'https://ui-avatars.com/api/?name=Moussa+Diene&background=364fc7&color=fff&size=200',
     },
     modules: [
       {

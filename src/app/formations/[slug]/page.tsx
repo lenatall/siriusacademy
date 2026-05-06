@@ -90,25 +90,9 @@ export default function FormationDetailPage({ params }: Props) {
 
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-5 text-sm text-slate-300 mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(formation.rating)
-                            ? 'text-brand-yellow fill-current'
-                            : 'text-slate-600'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="font-bold text-brand-yellow">{formation.rating}</span>
-                  <span className="text-slate-400">({formation.reviewCount} avis)</span>
-                </div>
                 <div className="flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-brand-green" />
-                  <span>{formation.students.toLocaleString('fr-FR')} apprenants</span>
+                  <span>Petits groupes · accompagnement personnalisé</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-brand-green" />
@@ -121,7 +105,7 @@ export default function FormationDetailPage({ params }: Props) {
                 {formation.certificate && (
                   <div className="flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-brand-yellow" />
-                    <span>Certificat inclus</span>
+                    <span>Attestation de réussite</span>
                   </div>
                 )}
               </div>
@@ -303,7 +287,7 @@ export default function FormationDetailPage({ params }: Props) {
                         { icon: BookOpen, text: `${totalLessons} leçons vidéo` },
                         { icon: Zap, text: `${formation.modules.length} modules pratiques` },
                         { icon: Users, text: 'Accès à la communauté Slack' },
-                        { icon: Award, text: 'Certificat de réussite' },
+                        { icon: Award, text: 'Attestation de réussite' },
                       ].map(({ icon: Icon, text }) => (
                         <div key={text} className="flex items-center gap-3 text-sm text-gray-600">
                           <Icon className="w-4 h-4 text-brand-green shrink-0" />
@@ -313,7 +297,7 @@ export default function FormationDetailPage({ params }: Props) {
                     </div>
 
                     <p className="text-xs text-center text-gray-400 mt-5">
-                      Paiement sécurisé · Financement CPF disponible
+                      Paiement sécurisé · Paiement en plusieurs fois possible
                     </p>
                   </div>
                 </div>

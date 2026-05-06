@@ -48,19 +48,19 @@ export default function Hero() {
             {/* Top badge */}
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm px-4 py-2 rounded-full mb-8 backdrop-blur-sm">
               <Star className="w-4 h-4 text-brand-yellow fill-current" />
-              <span className="font-medium">N°1 de la formation digitale en France</span>
+              <span className="font-medium">Académie digitale basée au Sénégal</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
-              Formez-vous aux
-              <span className="block text-gradient-green">métiers du digital</span>
-              avec les experts
+              Construisez des
+              <span className="block text-gradient-green">compétences digitales</span>
+              visibles et concrètes
             </h1>
 
             <p className="text-lg text-slate-300 leading-relaxed mb-8 max-w-lg">
-              Développement web, marketing digital, UX/UI design, data science — des formations
-              intensives, pratiques et certifiantes pour booster votre carrière.
+              Marketing digital, création de contenu, réseaux sociaux, design — des formations
+              pratiques, en petits groupes, avec des projets concrets et un accompagnement personnalisé.
             </p>
 
             {/* CTAs */}
@@ -94,19 +94,14 @@ export default function Hero() {
                   ))}
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">3 000+ apprenants</p>
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3 h-3 text-brand-yellow fill-current" />
-                    ))}
-                    <span className="text-xs text-slate-400 ml-1">4.9/5</span>
-                  </div>
+                  <p className="text-white font-bold text-sm">Petits groupes</p>
+                  <p className="text-xs text-slate-400">Accompagnement personnalisé</p>
                 </div>
               </div>
               <div className="h-8 w-px bg-white/20" />
               <div className="flex items-center gap-2">
                 <Award className="w-5 h-5 text-brand-yellow" />
-                <span className="text-sm text-slate-300">Formations certifiantes</span>
+                <span className="text-sm text-slate-300">Attestation de réussite</span>
               </div>
             </div>
           </div>
@@ -151,8 +146,8 @@ export default function Hero() {
                   <Users className="w-5 h-5 text-brand-green" />
                 </div>
                 <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">3 075</p>
-                  <p className="text-xs text-gray-400">Apprenants actifs</p>
+                  <p className="font-black text-navy-900 text-lg leading-none">Petits groupes</p>
+                  <p className="text-xs text-gray-400">Suivi individualisé</p>
                 </div>
               </div>
 

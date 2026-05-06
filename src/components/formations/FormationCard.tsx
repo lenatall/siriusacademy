@@ -57,7 +57,7 @@ export default function FormationCard({ formation, variant = 'default' }: Format
           {formation.certificate && (
             <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">
               <Award className="w-3 h-3" />
-              <span>Certificat</span>
+              <span>Attestation</span>
             </div>
           )}
         </div>
@@ -90,28 +90,12 @@ export default function FormationCard({ formation, variant = 'default' }: Format
             </div>
             <div className="flex items-center gap-1">
               <Users className="w-3.5 h-3.5 text-brand-green" />
-              <span>{formation.students.toLocaleString('fr-FR')} élèves</span>
+              <span>Petits groupes</span>
             </div>
           </div>
 
-          {/* Rating & Price */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3.5 h-3.5 ${
-                      i < Math.floor(formation.rating)
-                        ? 'text-brand-yellow fill-current'
-                        : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs font-semibold text-gray-700">{formation.rating}</span>
-              <span className="text-xs text-gray-400">({formation.reviewCount})</span>
-            </div>
+          {/* Price */}
+          <div className="flex items-center justify-end">
             <div className="text-right">
               {formation.originalPrice && (
                 <div className="text-xs text-gray-400 line-through">

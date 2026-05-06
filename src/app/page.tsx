@@ -28,8 +28,8 @@ export default function HomePage() {
                 Prêt à lancer votre transformation ?
               </h2>
               <p className="text-slate-300 text-base mb-8 max-w-xl mx-auto">
-                Rejoignez 3 000+ apprenants qui ont déjà fait confiance à Sirius Academy pour
-                booster leur carrière dans le digital.
+                Rejoignez les apprenants qui ont déjà fait le choix de construire des compétences
+                digitales concrètes et présentables avec Sirius Academy.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <Link
