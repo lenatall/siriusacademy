@@ -99,11 +99,11 @@ export default function FormationCard({ formation, variant = 'default' }: Format
             <div className="text-right">
               {formation.originalPrice && (
                 <div className="text-xs text-gray-400 line-through">
-                  {formation.originalPrice.toLocaleString('fr-FR')} €
+                  {formation.originalPrice.toLocaleString('fr-FR')} FCFA
                 </div>
               )}
               <div className="text-lg font-bold text-navy-900">
-                {formation.price.toLocaleString('fr-FR')} €
+                {formation.price.toLocaleString('fr-FR')} FCFA
               </div>
             </div>
           </div>

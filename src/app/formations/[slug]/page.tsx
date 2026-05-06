@@ -247,17 +247,17 @@ export default function FormationDetailPage({ params }: Props) {
                     <div className="mb-5">
                       <div className="flex items-baseline gap-3">
                         <span className="text-3xl font-black text-navy-900">
-                          {formation.price.toLocaleString('fr-FR')} €
+                          {formation.price.toLocaleString('fr-FR')} FCFA
                         </span>
                         {formation.originalPrice && (
                           <span className="text-gray-400 line-through text-base">
-                            {formation.originalPrice.toLocaleString('fr-FR')} €
+                            {formation.originalPrice.toLocaleString('fr-FR')} FCFA
                           </span>
                         )}
                       </div>
                       {discount && (
                         <p className="text-xs text-brand-green font-semibold mt-1">
-                          Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} €
+                          Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} FCFA
                         </p>
                       )}
                     </div>

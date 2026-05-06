@@ -10,8 +10,8 @@ export const formations: Formation[] = [
     fullDescription:
       "Devenez développeur web Full-Stack en 4 mois grâce à une formation complète et pratique. Vous apprendrez à concevoir des interfaces modernes avec React, développer des APIs robustes avec Node.js et Express, gérer des bases de données SQL et NoSQL, et déployer vos applications sur le cloud. La formation intègre des projets réels et un accompagnement personnalisé pour vous préparer à intégrer une équipe de développement ou lancer votre activité en freelance.",
     image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80',
-    price: 1200,
-    originalPrice: 1800,
+    price: 800000,
+    originalPrice: 1200000,
     duration: '4 mois',
     level: 'Débutant',
     category: 'Développement',
@@ -98,8 +98,8 @@ export const formations: Formation[] = [
     fullDescription:
       "Apprenez à construire une stratégie marketing digitale complète et mesurable. Cette formation couvre le référencement naturel (SEO) et payant (SEA), la gestion des réseaux sociaux, l'email marketing, l'analyse de données avec Google Analytics 4, et la création de contenus performants. Idéale pour les entrepreneurs, freelances ou salariés souhaitant monter en compétences digitales.",
     image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&q=80',
-    price: 890,
-    originalPrice: 1200,
+    price: 590000,
+    originalPrice: 800000,
     duration: '3 mois',
     level: 'Débutant',
     category: 'Marketing',
@@ -179,8 +179,8 @@ export const formations: Formation[] = [
     fullDescription:
       "Maîtrisez les fondamentaux et techniques avancées du design d'expérience utilisateur (UX) et d'interfaces (UI). De la recherche utilisateur aux prototypes interactifs, en passant par les systèmes de design, cette formation vous prépare à travailler comme designer produit dans des startups, agences ou en freelance.",
     image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',
-    price: 750,
-    originalPrice: 990,
+    price: 500000,
+    originalPrice: 650000,
     duration: '2 mois',
     level: 'Intermédiaire',
     category: 'Design',
@@ -260,8 +260,8 @@ export const formations: Formation[] = [
     fullDescription:
       "Plongez au cœur de la data science et de l'intelligence artificielle avec une formation intensive et pratique. Vous apprendrez Python pour la data, les algorithmes de machine learning avec scikit-learn, les réseaux de neurones avec TensorFlow et PyTorch, et l'utilisation des grands modèles de langage (GPT, Claude). Des projets appliqués sur des données réelles jalonnent l'ensemble du parcours.",
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
-    price: 1500,
-    originalPrice: 2200,
+    price: 990000,
+    originalPrice: 1450000,
     duration: '5 mois',
     level: 'Intermédiaire',
     category: 'Data & IA',

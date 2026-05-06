@@ -191,7 +191,7 @@ function InscriptionForm() {
                   <option value="">Sélectionnez une formation</option>
                   {formations.map((f) => (
                     <option key={f.slug} value={f.slug}>
-                      {f.title} — {f.price.toLocaleString('fr-FR')} €
+                      {f.title} — {f.price.toLocaleString('fr-FR')} FCFA
                     </option>
                   ))}
                 </select>
@@ -322,7 +322,7 @@ function InscriptionForm() {
             <h3 className="font-bold text-navy-900 text-sm mb-1">{selectedFormation.title}</h3>
             <p className="text-xs text-gray-500 mb-3">{selectedFormation.duration} · {selectedFormation.level}</p>
             <div className="text-2xl font-black text-navy-900">
-              {selectedFormation.price.toLocaleString('fr-FR')} €
+              {selectedFormation.price.toLocaleString('fr-FR')} FCFA
             </div>
           </div>
         )}

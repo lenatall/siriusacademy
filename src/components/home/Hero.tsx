@@ -120,8 +120,8 @@ export default function Hero() {
                     <p className="text-slate-400 text-xs">4 mois · 12 modules</p>
                   </div>
                   <div className="ml-auto text-right">
-                    <p className="text-white font-black text-lg">1 200€</p>
-                    <p className="text-slate-400 text-xs line-through">1 800€</p>
+                    <p className="text-white font-black text-lg">800 000 FCFA</p>
+                    <p className="text-slate-400 text-xs line-through">1 200 000 FCFA</p>
                   </div>
                 </div>
                 <div className="space-y-2">
