@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Trash2, Loader2, Save, ArrowLeft } from 'lucide-react'
-import type { Formation, Module } from '@/types'
+import type { Formation, Module, FormationStatus, FormationSchedule } from '@/types'
 import Link from 'next/link'
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const LEVELS = ['Débutant', 'Intermédiaire', 'Avancé', 'Tous niveaux'] as const
-const CATEGORIES = ['Développement', 'Marketing', 'Design', 'Data & IA'] as const
+const CATEGORIES = ['Marketing', 'Développement', 'Design', 'Data & IA'] as const
 
 const emptyModule = (): Module => ({
   id: String(Date.now() + Math.random()),
@@ -21,6 +21,13 @@ const emptyModule = (): Module => ({
   duration: '',
   lessons: 0,
 })
+
+const DEFAULT_INSTRUCTOR = {
+  name: 'Léna Badiane',
+  title: 'Référente Digitale certifiée · Fondatrice de Sirius Academy',
+  avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=F59E0B&color=0B1F3A&size=200',
+  bio: 'Référente Digitale certifiée avec plus de 5 ans d\'expérience en marketing digital, création de contenu, gestion des réseaux sociaux et accompagnement d\'entreprises.',
+}
 
 export default function FormationForm({ initial = {}, mode }: Props) {
   const router = useRouter()
@@ -37,19 +44,22 @@ export default function FormationForm({ initial = {}, mode }: Props) {
     originalPrice: initial.originalPrice ?? '',
     duration: initial.duration ?? '',
     level: initial.level ?? 'Débutant',
-    category: initial.category ?? 'Développement',
-    students: initial.students ?? 0,
-    rating: initial.rating ?? 4.8,
-    reviewCount: initial.reviewCount ?? 0,
+    category: initial.category ?? 'Marketing',
     isFeatured: initial.isFeatured ?? false,
     certificate: initial.certificate ?? true,
     tags: initial.tags?.join(', ') ?? '',
     objectives: initial.objectives?.join('\n') ?? '',
     prerequisites: initial.prerequisites?.join('\n') ?? '',
-    instructorName: initial.instructor?.name ?? '',
-    instructorTitle: initial.instructor?.title ?? '',
-    instructorAvatar: initial.instructor?.avatar ?? '',
-    instructorBio: initial.instructor?.bio ?? '',
+    keyPoints: initial.keyPoints?.join('\n') ?? '',
+    status: (initial.status ?? 'bientot') as FormationStatus,
+    schedule: (initial.schedule ?? 'sans-date') as FormationSchedule,
+    startDate: initial.startDate ?? '',
+    endDate: initial.endDate ?? '',
+    weekendDates: initial.weekendDates?.join('\n') ?? '',
+    instructorName: initial.instructor?.name ?? DEFAULT_INSTRUCTOR.name,
+    instructorTitle: initial.instructor?.title ?? DEFAULT_INSTRUCTOR.title,
+    instructorAvatar: initial.instructor?.avatar ?? DEFAULT_INSTRUCTOR.avatar,
+    instructorBio: initial.instructor?.bio ?? DEFAULT_INSTRUCTOR.bio,
   })
 
   const [modules, setModules] = useState<Module[]>(
@@ -72,12 +82,13 @@ export default function FormationForm({ initial = {}, mode }: Props) {
       ...form,
       price: Number(form.price),
       originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
-      students: Number(form.students),
-      rating: Number(form.rating),
-      reviewCount: Number(form.reviewCount),
       tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
       objectives: form.objectives.split('\n').map((o) => o.trim()).filter(Boolean),
       prerequisites: form.prerequisites.split('\n').map((p) => p.trim()).filter(Boolean),
+      keyPoints: form.keyPoints.split('\n').map((k) => k.trim()).filter(Boolean),
+      weekendDates: form.weekendDates.split('\n').map((d) => d.trim()).filter(Boolean),
+      startDate: form.startDate || undefined,
+      endDate: form.endDate || undefined,
       instructor: {
         name: form.instructorName,
         title: form.instructorTitle,
@@ -165,11 +176,12 @@ export default function FormationForm({ initial = {}, mode }: Props) {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Main */}
         <div className="lg:col-span-2 space-y-6">
+
           {/* Infos générales */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
             <h2 className="font-bold text-navy-900 text-base border-b border-gray-100 pb-3">Informations générales</h2>
             <Field label="Titre de la formation" required>
-              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input" placeholder="Développement Web Full-Stack" required />
+              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input" placeholder="Marketing Digital & Réseaux Sociaux" required />
             </Field>
             <Field label="Description courte" required hint="Affichée sur les cards — 1 à 2 phrases max">
               <textarea rows={2} value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} className="input resize-none" required />
@@ -180,19 +192,29 @@ export default function FormationForm({ initial = {}, mode }: Props) {
             <Field label="URL de l'image" hint="Image Unsplash ou URL externe HTTPS">
               <input type="url" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="input" placeholder="https://images.unsplash.com/..." />
             </Field>
-            <Field label="Tags" hint="Séparés par des virgules : React, Node.js, MongoDB">
-              <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} className="input" placeholder="React, Node.js, MongoDB" />
+            <Field label="Tags" hint="Séparés par des virgules">
+              <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} className="input" placeholder="SEO, Réseaux sociaux, Canva" />
             </Field>
           </div>
 
-          {/* Objectifs et prérequis */}
+          {/* Points essentiels */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
-            <h2 className="font-bold text-navy-900 text-base border-b border-gray-100 pb-3">Objectifs & Prérequis</h2>
+            <h2 className="font-bold text-navy-900 text-base border-b border-gray-100 pb-3">Points essentiels</h2>
+            <Field label="Points essentiels" required hint="Un point par ligne — affichés en évidence sur la page de la formation">
+              <textarea
+                rows={6}
+                value={form.keyPoints}
+                onChange={(e) => setForm({ ...form, keyPoints: e.target.value })}
+                className="input resize-none"
+                placeholder={"Créer et gérer vos réseaux sociaux professionnels\nProduire du contenu visuel avec Canva\nLancer des campagnes publicitaires Meta Ads\n..."}
+                required
+              />
+            </Field>
             <Field label="Objectifs pédagogiques" hint="Un objectif par ligne">
-              <textarea rows={4} value={form.objectives} onChange={(e) => setForm({ ...form, objectives: e.target.value })} className="input resize-none" placeholder={"Créer des interfaces modernes\nDévelopper des APIs REST\n..."} />
+              <textarea rows={4} value={form.objectives} onChange={(e) => setForm({ ...form, objectives: e.target.value })} className="input resize-none" placeholder={"Élaborer une stratégie de contenu\nGérer plusieurs réseaux simultanément\n..."} />
             </Field>
             <Field label="Prérequis" hint="Un prérequis par ligne">
-              <textarea rows={3} value={form.prerequisites} onChange={(e) => setForm({ ...form, prerequisites: e.target.value })} className="input resize-none" placeholder={"Aucune expérience requise\nUn ordinateur avec connexion\n..."} />
+              <textarea rows={3} value={form.prerequisites} onChange={(e) => setForm({ ...form, prerequisites: e.target.value })} className="input resize-none" placeholder={"Aucune compétence requise\nUn smartphone ou ordinateur\n..."} />
             </Field>
           </div>
 
@@ -240,7 +262,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
                       value={mod.duration}
                       onChange={(e) => updateModule(mod.id, 'duration', e.target.value)}
                       className="input text-sm"
-                      placeholder="Durée (ex: 2 semaines)"
+                      placeholder="Durée (ex: 1 week-end)"
                     />
                     <input
                       type="number"
@@ -259,16 +281,19 @@ export default function FormationForm({ initial = {}, mode }: Props) {
           {/* Formateur */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
             <h2 className="font-bold text-navy-900 text-base border-b border-gray-100 pb-3">Formateur</h2>
+            <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-xs text-emerald-700 font-medium">
+              Pré-rempli avec les informations de Léna Badiane. Modifiez si nécessaire.
+            </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Nom du formateur">
-                <input type="text" value={form.instructorName} onChange={(e) => setForm({ ...form, instructorName: e.target.value })} className="input" placeholder="Marie Dupont" />
+                <input type="text" value={form.instructorName} onChange={(e) => setForm({ ...form, instructorName: e.target.value })} className="input" />
               </Field>
               <Field label="Titre / Poste">
-                <input type="text" value={form.instructorTitle} onChange={(e) => setForm({ ...form, instructorTitle: e.target.value })} className="input" placeholder="Développeuse Senior · 10 ans" />
+                <input type="text" value={form.instructorTitle} onChange={(e) => setForm({ ...form, instructorTitle: e.target.value })} className="input" />
               </Field>
             </div>
             <Field label="URL de l'avatar">
-              <input type="url" value={form.instructorAvatar} onChange={(e) => setForm({ ...form, instructorAvatar: e.target.value })} className="input" placeholder="https://ui-avatars.com/..." />
+              <input type="url" value={form.instructorAvatar} onChange={(e) => setForm({ ...form, instructorAvatar: e.target.value })} className="input" />
             </Field>
             <Field label="Biographie">
               <textarea rows={3} value={form.instructorBio} onChange={(e) => setForm({ ...form, instructorBio: e.target.value })} className="input resize-none" />
@@ -278,16 +303,80 @@ export default function FormationForm({ initial = {}, mode }: Props) {
 
         {/* Sidebar */}
         <div className="space-y-5">
+
+          {/* Statut */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Statut de la formation</h2>
+            <div className="space-y-2">
+              {([
+                { value: 'ouvert', label: 'Ouvert', desc: 'Inscriptions accessibles', color: 'border-brand-green bg-emerald-50 text-emerald-700' },
+                { value: 'bientot', label: 'Bientôt', desc: 'Prochainement disponible', color: 'border-brand-yellow bg-amber-50 text-amber-700' },
+              ] as { value: FormationStatus; label: string; desc: string; color: string }[]).map((opt) => (
+                <label
+                  key={opt.value}
+                  className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                    form.status === opt.value ? opt.color : 'border-gray-200 bg-white'
+                  }`}
+                >
+                  <input type="radio" name="status" value={opt.value} checked={form.status === opt.value} onChange={() => setForm({ ...form, status: opt.value })} className="sr-only" />
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${form.status === opt.value ? 'border-current' : 'border-gray-300'}`}>
+                    {form.status === opt.value && <div className="w-2 h-2 rounded-full bg-current" />}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">{opt.label}</p>
+                    <p className="text-xs opacity-70">{opt.desc}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Planning */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Planning & Dates</h2>
+            <Field label="Type de planning" required>
+              <select value={form.schedule} onChange={(e) => setForm({ ...form, schedule: e.target.value as FormationSchedule })} className="input">
+                <option value="sans-date">Sans date (bientôt)</option>
+                <option value="weekend">Week-end(s)</option>
+                <option value="date-fixe">Dates fixes</option>
+              </select>
+            </Field>
+
+            {form.schedule === 'date-fixe' && (
+              <>
+                <Field label="Date de début">
+                  <input type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} className="input" />
+                </Field>
+                <Field label="Date de fin">
+                  <input type="date" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} className="input" />
+                </Field>
+              </>
+            )}
+
+            {form.schedule === 'weekend' && (
+              <Field label="Dates des week-ends" hint="Une date par ligne, ex : Sam 14 & Dim 15 juin 2025">
+                <textarea
+                  rows={5}
+                  value={form.weekendDates}
+                  onChange={(e) => setForm({ ...form, weekendDates: e.target.value })}
+                  className="input resize-none text-sm"
+                  placeholder={"Sam 14 & Dim 15 juin 2025\nSam 21 & Dim 22 juin 2025\n..."}
+                />
+              </Field>
+            )}
+          </div>
+
+          {/* Tarification */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
             <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Tarification & Détails</h2>
-            <Field label="Prix (€)" required>
+            <Field label="Prix (FCFA)" required>
               <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="input" min={0} required />
             </Field>
-            <Field label="Prix barré (€)" hint="Optionnel — prix original avant réduction">
+            <Field label="Prix barré (FCFA)" hint="Optionnel — prix original avant réduction">
               <input type="number" value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value })} className="input" min={0} />
             </Field>
             <Field label="Durée" required>
-              <input type="text" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="input" placeholder="4 mois" required />
+              <input type="text" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="input" placeholder="3 mois" required />
             </Field>
             <Field label="Niveau" required>
               <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value as typeof form.level })} className="input">
@@ -301,24 +390,12 @@ export default function FormationForm({ initial = {}, mode }: Props) {
             </Field>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Statistiques</h2>
-            <Field label="Nombre d'élèves">
-              <input type="number" value={form.students} onChange={(e) => setForm({ ...form, students: Number(e.target.value) })} className="input" min={0} />
-            </Field>
-            <Field label="Note (sur 5)">
-              <input type="number" value={form.rating} onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })} className="input" min={0} max={5} step={0.1} />
-            </Field>
-            <Field label="Nombre d'avis">
-              <input type="number" value={form.reviewCount} onChange={(e) => setForm({ ...form, reviewCount: Number(e.target.value) })} className="input" min={0} />
-            </Field>
-          </div>
-
+          {/* Options */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-3">
             <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Options</h2>
             {[
               { key: 'isFeatured', label: 'Formation vedette (page accueil)' },
-              { key: 'certificate', label: 'Certificat de réussite inclus' },
+              { key: 'certificate', label: 'Attestation de réussite incluse' },
             ].map(({ key, label }) => (
               <label key={key} className="flex items-center gap-3 cursor-pointer">
                 <div className="relative">

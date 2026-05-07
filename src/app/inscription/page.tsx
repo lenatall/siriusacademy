@@ -86,7 +86,7 @@ function InscriptionForm() {
             <ul className="space-y-2 text-sm text-emerald-700">
               <li className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Explorer nos cours gratuits pour commencer dès maintenant
+                Consulter le programme détaillé de votre formation
               </li>
               <li className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -99,8 +99,8 @@ function InscriptionForm() {
             </ul>
           </div>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/cours-gratuits" className="btn-primary">
-              Accéder aux cours gratuits
+            <Link href="/formations" className="btn-primary">
+              Voir toutes les formations
             </Link>
             <Link href="/" className="btn-outline-navy">
               Retour à l&apos;accueil

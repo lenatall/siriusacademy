@@ -5,13 +5,15 @@ import Link from 'next/link'
 import {
   Clock,
   Users,
-  Star,
   BookOpen,
   Award,
   CheckCircle,
   ArrowRight,
   ChevronRight,
   Zap,
+  CalendarDays,
+  Lock,
+  Sparkles,
 } from 'lucide-react'
 import { getFormationBySlug, formations } from '@/data/formations'
 import ModuleAccordion from '@/components/formations/ModuleAccordion'
@@ -75,7 +77,19 @@ export default function FormationDetailPage({ params }: Props) {
           <div className="grid lg:grid-cols-3 gap-8 pb-12">
             {/* Left content */}
             <div className="lg:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
+              {/* Status + badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                {formation.status === 'ouvert' ? (
+                  <span className="inline-flex items-center gap-1.5 bg-brand-green text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    Inscriptions ouvertes
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 bg-brand-yellow text-navy-900 text-xs font-bold px-3 py-1.5 rounded-lg">
+                    <Lock className="w-3 h-3" />
+                    Bientôt disponible
+                  </span>
+                )}
                 <Badge variant={levelVariant[formation.level] ?? 'navy'}>{formation.level}</Badge>
                 <Badge variant="gray">{formation.category}</Badge>
               </div>
@@ -87,6 +101,34 @@ export default function FormationDetailPage({ params }: Props) {
               <p className="text-slate-300 text-base leading-relaxed mb-6">
                 {formation.shortDescription}
               </p>
+
+              {/* Dates / planning */}
+              {formation.schedule === 'weekend' && formation.weekendDates?.length && (
+                <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 mb-5 text-sm text-slate-200">
+                  <div className="flex items-center gap-2 font-semibold text-white mb-2">
+                    <CalendarDays className="w-4 h-4 text-brand-yellow" />
+                    Prochaines sessions week-end
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formation.weekendDates.map((d) => (
+                      <span key={d} className="bg-white/10 px-2.5 py-1 rounded-lg text-xs">{d}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {formation.schedule === 'date-fixe' && formation.startDate && (
+                <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 mb-5 text-sm">
+                  <div className="flex items-center gap-2 font-semibold text-white">
+                    <CalendarDays className="w-4 h-4 text-brand-yellow" />
+                    Début : {new Date(formation.startDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {formation.endDate && (
+                      <span className="text-slate-300 font-normal">
+                        — Fin : {new Date(formation.endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-5 text-sm text-slate-300 mb-6">
@@ -139,6 +181,24 @@ export default function FormationDetailPage({ params }: Props) {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Content */}
             <div className="lg:col-span-2 space-y-10">
+              {/* Key points — points essentiels */}
+              {formation.keyPoints.length > 0 && (
+                <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-2xl p-8 shadow-sm">
+                  <div className="flex items-center gap-2 mb-5">
+                    <Sparkles className="w-5 h-5 text-brand-yellow" />
+                    <h2 className="text-xl font-bold text-white">Points essentiels</h2>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {formation.keyPoints.map((point) => (
+                      <div key={point} className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-brand-green shrink-0 mt-0.5" />
+                        <span className="text-sm text-slate-200">{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* About */}
               <div className="bg-white rounded-2xl p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-navy-900 mb-4">À propos de la formation</h2>
@@ -243,50 +303,80 @@ export default function FormationDetailPage({ params }: Props) {
                   </div>
 
                   <div className="p-6">
-                    {/* Price */}
-                    <div className="mb-5">
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-3xl font-black text-navy-900">
-                          {formation.price.toLocaleString('fr-FR')} FCFA
-                        </span>
-                        {formation.originalPrice && (
-                          <span className="text-gray-400 line-through text-base">
-                            {formation.originalPrice.toLocaleString('fr-FR')} FCFA
-                          </span>
-                        )}
-                      </div>
-                      {discount && (
-                        <p className="text-xs text-brand-green font-semibold mt-1">
-                          Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} FCFA
+                    {formation.status === 'ouvert' ? (
+                      <>
+                        {/* Price */}
+                        <div className="mb-5">
+                          <div className="flex items-baseline gap-3">
+                            <span className="text-3xl font-black text-navy-900">
+                              {formation.price.toLocaleString('fr-FR')} FCFA
+                            </span>
+                            {formation.originalPrice && (
+                              <span className="text-gray-400 line-through text-base">
+                                {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                              </span>
+                            )}
+                          </div>
+                          {discount && (
+                            <p className="text-xs text-brand-green font-semibold mt-1">
+                              Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} FCFA
+                            </p>
+                          )}
+                        </div>
+                        <Link
+                          href={`/inscription?formation=${formation.slug}`}
+                          className="w-full flex items-center justify-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-green-lg hover:-translate-y-0.5 mb-3"
+                        >
+                          S&apos;inscrire à cette formation
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                        <Link
+                          href="/contact"
+                          className="w-full flex items-center justify-center gap-2 border-2 border-gray-200 text-gray-600 hover:border-navy-800 hover:text-navy-800 font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
+                        >
+                          Demander des informations
+                        </Link>
+                        <p className="text-xs text-center text-gray-400 mt-5">
+                          Paiement sécurisé · Paiement en plusieurs fois possible
                         </p>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Bientôt */}
+                        <div className="text-center py-4 mb-5">
+                          <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <Lock className="w-8 h-8 text-brand-yellow" />
+                          </div>
+                          <h3 className="font-black text-navy-900 text-lg mb-2">
+                            Formation bientôt disponible
+                          </h3>
+                          <p className="text-sm text-gray-500 leading-relaxed">
+                            La prochaine session n&apos;est pas encore ouverte. Laissez votre contact pour être prévenu en priorité.
+                          </p>
+                        </div>
+                        <Link
+                          href={`/contact?sujet=Je suis intéressé par : ${formation.title}`}
+                          className="w-full flex items-center justify-center gap-2 bg-brand-yellow hover:bg-amber-400 text-navy-900 font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 mb-3"
+                        >
+                          Être notifié à l&apos;ouverture
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                        <p className="text-xs text-center text-gray-400">
+                          Gratuit · Aucun engagement
+                        </p>
+                      </>
+                    )}
 
-                    {/* CTA */}
-                    <Link
-                      href={`/inscription?formation=${formation.slug}`}
-                      className="w-full flex items-center justify-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-green-lg hover:-translate-y-0.5 mb-3"
-                    >
-                      S&apos;inscrire à cette formation
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link
-                      href="/contact"
-                      className="w-full flex items-center justify-center gap-2 border-2 border-gray-200 text-gray-600 hover:border-navy-800 hover:text-navy-800 font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
-                    >
-                      Demander des informations
-                    </Link>
-
-                    {/* Includes */}
-                    <div className="mt-6 space-y-3">
+                    {/* Includes — always visible */}
+                    <div className="mt-6 pt-5 border-t border-gray-100 space-y-3">
                       <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Cette formation inclut :
                       </p>
                       {[
                         { icon: Clock, text: `${formation.duration} de formation` },
-                        { icon: BookOpen, text: `${totalLessons} leçons vidéo` },
-                        { icon: Zap, text: `${formation.modules.length} modules pratiques` },
-                        { icon: Users, text: 'Accès à la communauté Slack' },
+                        { icon: BookOpen, text: `${totalLessons > 0 ? `${totalLessons} leçons` : `${formation.modules.length} modules`}` },
+                        { icon: Zap, text: 'Projets concrets & portfolio' },
+                        { icon: Users, text: 'Petits groupes · suivi personnalisé' },
                         { icon: Award, text: 'Attestation de réussite' },
                       ].map(({ icon: Icon, text }) => (
                         <div key={text} className="flex items-center gap-3 text-sm text-gray-600">
@@ -295,10 +385,6 @@ export default function FormationDetailPage({ params }: Props) {
                         </div>
                       ))}
                     </div>
-
-                    <p className="text-xs text-center text-gray-400 mt-5">
-                      Paiement sécurisé · Paiement en plusieurs fois possible
-                    </p>
                   </div>
                 </div>
               </div>
