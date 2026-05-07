@@ -17,9 +17,9 @@ const features = [
   },
   {
     icon: Award,
-    title: 'Certifications reconnues',
+    title: 'Attestation de réussite',
     description:
-      'Obtenez un certificat valorisable sur LinkedIn et par les recruteurs à la fin de votre formation.',
+      'À l\'issue de chaque formation, vous recevez une attestation de réussite valorisant vos compétences acquises.',
     color: 'bg-amber-50 text-amber-600',
   },
   {
@@ -38,9 +38,9 @@ const features = [
   },
   {
     icon: TrendingUp,
-    title: 'Accompagnement à l\'emploi',
+    title: 'Orientation professionnelle',
     description:
-      'Conseils CV, préparation aux entretiens et mise en relation avec notre réseau de recruteurs partenaires.',
+      'Conseils CV, préparation aux entretiens et orientation selon les opportunités disponibles.',
     color: 'bg-indigo-50 text-indigo-600',
   },
 ]
@@ -58,7 +58,7 @@ export default function Features() {
             <span className="text-brand-green"> unique</span>
           </h2>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            Nous avons conçu chaque formation pour maximiser votre progression et votre employabilité.
+            Nous vous aidons à construire des compétences visibles, utiles et présentables.
           </p>
         </div>
 

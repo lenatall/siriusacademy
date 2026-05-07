@@ -5,10 +5,6 @@ import { Mail, Phone, MapPin, Clock, CheckCircle, Loader2, MessageCircle } from 
 
 const faqs = [
   {
-    q: 'Puis-je financer ma formation avec le CPF ?',
-    a: 'Oui, plusieurs de nos formations sont éligibles au CPF (Compte Personnel de Formation). Contactez-nous pour vérifier l\'éligibilité de la formation qui vous intéresse.',
-  },
-  {
     q: 'Y a-t-il des prérequis pour s\'inscrire ?',
     a: 'Chaque formation a ses propres prérequis, détaillés sur la page de la formation. La plupart de nos formations sont accessibles aux débutants.',
   },
@@ -92,14 +88,14 @@ export default function ContactPage() {
                 {
                   icon: Phone,
                   title: 'Téléphone',
-                  info: '+33 1 23 45 67 89',
+                  info: '+221 77 000 00 00',
                   sub: 'Lun–Ven, 9h–18h',
                   color: 'bg-blue-50 text-blue-600',
                 },
                 {
                   icon: MapPin,
-                  title: 'Adresse',
-                  info: 'Paris, France',
+                  title: 'Localisation',
+                  info: 'Dakar, Sénégal',
                   sub: '100% en ligne également',
                   color: 'bg-amber-50 text-amber-600',
                 },
@@ -187,7 +183,7 @@ export default function ContactPage() {
                         >
                           <option value="">Choisissez un sujet</option>
                           <option>Renseignements sur une formation</option>
-                          <option>Financement CPF</option>
+                          <option>Modalités de paiement</option>
                           <option>Partenariat entreprise</option>
                           <option>Support technique</option>
                           <option>Autre</option>

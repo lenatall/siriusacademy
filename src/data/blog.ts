@@ -42,9 +42,9 @@ Prenez le temps de comparer et ne vous précipitez pas. Investir dans une format
     `,
     image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
     author: {
-      name: 'Marie Dupont',
-      avatar: 'https://ui-avatars.com/api/?name=Marie+Dupont&background=10B981&color=fff&size=200',
-      title: 'Responsable Pédagogique',
+      name: 'Léna Badiane',
+      avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=10B981&color=fff&size=200',
+      title: 'Fondatrice · Référente Digitale',
     },
     publishedAt: '2024-03-15',
     readTime: 6,
@@ -84,9 +84,9 @@ Le développeur web de 2024 doit savoir travailler avec l'IA, maîtriser les fra
     `,
     image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80',
     author: {
-      name: 'Marie Dupont',
-      avatar: 'https://ui-avatars.com/api/?name=Marie+Dupont&background=10B981&color=fff&size=200',
-      title: 'Développeuse Full-Stack Senior',
+      name: 'Cheikh Sarr',
+      avatar: 'https://ui-avatars.com/api/?name=Cheikh+Sarr&background=10B981&color=fff&size=200',
+      title: 'Développeur Full-Stack',
     },
     publishedAt: '2024-04-02',
     readTime: 8,
@@ -124,15 +124,15 @@ Ne terminez pas votre formation sans avoir des projets à montrer. Un portfolio 
 
 Intégrez-vous dans la communauté de votre futur métier dès le début. LinkedIn, communautés Discord, meetups locaux — ces contacts seront précieux pour trouver votre premier poste.
 
-## Les chiffres encourageants
+## Des perspectives concrètes
 
-Selon nos données internes, 87% de nos apprenants qui ont suivi une formation complète ont trouvé un emploi ou des clients freelance dans les 6 mois suivant la fin de leur formation.
+Les apprenants qui complètent une formation repartent avec un portfolio de projets réels et des compétences immédiatement applicables. Un accompagnement CV et une préparation aux entretiens sont proposés selon les opportunités disponibles.
     `,
     image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80',
     author: {
-      name: 'Thomas Renard',
-      avatar: 'https://ui-avatars.com/api/?name=Thomas+Renard&background=F59E0B&color=0B1F3A&size=200',
-      title: 'Consultant & Formateur',
+      name: 'Léna Badiane',
+      avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=F59E0B&color=0B1F3A&size=200',
+      title: 'Fondatrice · Référente Digitale',
     },
     publishedAt: '2024-04-18',
     readTime: 7,
@@ -156,7 +156,7 @@ Selon le Forrester Research, chaque dollar investi dans l'UX rapporte en moyenne
 
 ## Les opportunités de carrière
 
-Le marché du travail pour les designers UX/UI est exceptionnel. Les offres d'emploi ont augmenté de 87% en 5 ans, et le salaire médian dépasse 45 000€ à Paris pour un profil junior.
+Le marché digital recrute de plus en plus des profils maîtrisant le design UX/UI. C'est une compétence valorisée aussi bien dans les entreprises que pour les activités freelance, avec une demande croissante pour des interfaces bien pensées.
 
 ## UX vs UI : quelle différence ?
 
@@ -172,9 +172,9 @@ La formation Sirius Academy en Design UX/UI vous prépare en 2 mois avec des pro
     `,
     image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',
     author: {
-      name: 'Camille Martin',
-      avatar: 'https://ui-avatars.com/api/?name=Camille+Martin&background=4c6ef5&color=fff&size=200',
-      title: 'Lead Designer & Formatrice',
+      name: 'Ndeye Fall',
+      avatar: 'https://ui-avatars.com/api/?name=Ndeye+Fall&background=4c6ef5&color=fff&size=200',
+      title: 'Designer UX/UI & Formatrice',
     },
     publishedAt: '2024-05-05',
     readTime: 5,

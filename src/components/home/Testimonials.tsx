@@ -3,20 +3,20 @@ import Image from 'next/image'
 
 const testimonials = [
   {
-    name: 'Sophie Bernard',
-    role: 'Développeuse Frontend · Ex-comptable',
-    avatar: 'https://ui-avatars.com/api/?name=Sophie+Bernard&background=10B981&color=fff&size=200',
+    name: 'Fatou Diallo',
+    role: 'Développeuse Frontend · Dakar',
+    avatar: 'https://ui-avatars.com/api/?name=Fatou+Diallo&background=10B981&color=fff&size=200',
     rating: 5,
     formation: 'Développement Web Full-Stack',
-    text: "J'ai changé de vie grâce à Sirius Academy. En 4 mois, je suis passée de comptable à développeuse frontend dans une startup parisienne. Le programme est exigeant mais les formateurs sont extraordinaires.",
+    text: "J'ai pu construire mon premier portfolio complet grâce à la formation. Le suivi personnalisé et les projets concrets m'ont donné confiance pour me lancer. Je recommande à tous ceux qui veulent vraiment apprendre.",
   },
   {
-    name: 'Lucas Martin',
-    role: 'Consultant SEO Freelance',
-    avatar: 'https://ui-avatars.com/api/?name=Lucas+Martin&background=F59E0B&color=0B1F3A&size=200',
+    name: 'Mamadou Sow',
+    role: 'Community Manager Freelance',
+    avatar: 'https://ui-avatars.com/api/?name=Mamadou+Sow&background=F59E0B&color=0B1F3A&size=200',
     rating: 5,
     formation: 'Marketing Digital & SEO',
-    text: "La formation Marketing Digital m'a donné toutes les clés pour lancer mon activité freelance. 3 mois après la fin de la formation, j'avais déjà 5 clients réguliers. Le ROI est incroyable.",
+    text: "La formation m'a vraiment aidé à structurer ma pratique du marketing digital. Les exercices sont concrets et applicables immédiatement. J'ai pu proposer des services à mes premiers clients avec bien plus de méthode.",
   },
   {
     name: 'Amina Traoré',
@@ -24,31 +24,31 @@ const testimonials = [
     avatar: 'https://ui-avatars.com/api/?name=Amina+Traore&background=4c6ef5&color=fff&size=200',
     rating: 5,
     formation: 'Design UX/UI',
-    text: "Camille est une formatrice exceptionnelle. J'avais des bases en design mais la formation m'a amenée à un niveau professionnel. Mon portfolio a tout de suite tapé dans l'œil des recruteurs.",
+    text: "J'avais des bases en design mais la formation m'a amenée à un vrai niveau professionnel. J'ai maintenant un portfolio solide que je peux présenter avec confiance. L'accompagnement individualisé fait vraiment la différence.",
   },
   {
-    name: 'Pierre Dubois',
-    role: 'Data Analyst · Fintech',
-    avatar: 'https://ui-avatars.com/api/?name=Pierre+Dubois&background=364fc7&color=fff&size=200',
+    name: 'Ibrahima Ndiaye',
+    role: 'Data Analyst · Dakar',
+    avatar: 'https://ui-avatars.com/api/?name=Ibrahima+Ndiaye&background=364fc7&color=fff&size=200',
     rating: 5,
     formation: 'Data Science & IA',
-    text: 'Julien explique des concepts complexes avec une clarté remarquable. La partie LLMs m\'a donné un avantage énorme lors de mes entretiens. Je recommande sans hésitation à tous ceux qui veulent se lancer dans la data.',
+    text: 'Les concepts sont expliqués avec beaucoup de clarté et les projets appliqués sur données réelles donnent une compréhension concrète. J\'ai pu constituer un vrai portfolio data que je peux montrer.',
   },
   {
-    name: 'Marie-Claire Fontaine',
-    role: 'Chef de projet digital',
-    avatar: 'https://ui-avatars.com/api/?name=Marie-Claire+Fontaine&background=059669&color=fff&size=200',
+    name: 'Aïssatou Bâ',
+    role: 'Chargée de communication',
+    avatar: 'https://ui-avatars.com/api/?name=Aissatou+Ba&background=059669&color=fff&size=200',
     rating: 5,
     formation: 'Marketing Digital & SEO',
-    text: 'Une formation très complète qui couvre vraiment tous les aspects du marketing digital. Les exercices pratiques et les retours personnalisés m\'ont permis de progresser très vite.',
+    text: 'Une formation très complète qui couvre vraiment tous les aspects du marketing digital. Les exercices pratiques et les retours personnalisés m\'ont permis de progresser très vite et d\'appliquer dès le lendemain.',
   },
   {
-    name: 'Antoine Lemaire',
-    role: 'Développeur Full-Stack · Remote',
-    avatar: 'https://ui-avatars.com/api/?name=Antoine+Lemaire&background=D97706&color=fff&size=200',
+    name: 'Oumar Diop',
+    role: 'Développeur Web · Freelance',
+    avatar: 'https://ui-avatars.com/api/?name=Oumar+Diop&background=D97706&color=fff&size=200',
     rating: 5,
     formation: 'Développement Web Full-Stack',
-    text: 'Après 6 mois de formation autodidacte en dilettante, Sirius Academy m\'a donné la structure et la rigueur qui me manquaient. Le projet final m\'a permis d\'avoir quelque chose de concret à montrer.',
+    text: 'La structure de la formation et l\'accompagnement personnalisé m\'ont vraiment aidé à progresser rapidement. Le projet final m\'a permis d\'avoir quelque chose de concret à présenter à mes premiers clients.',
   },
 ]
 
@@ -59,13 +59,13 @@ export default function Testimonials() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 text-sm font-semibold px-4 py-2 rounded-full mb-4">
             <Star className="w-4 h-4 fill-current" />
-            <span>4.9/5 sur 937 avis</span>
+            <span>Témoignages de nos apprenants</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-4">
-            Ils ont transformé leur carrière
+            Ils ont développé leurs compétences
           </h2>
           <p className="text-gray-500 text-base max-w-xl mx-auto">
-            Découvrez les témoignages de nos apprenants qui ont franchi le cap.
+            Découvrez ce que nos apprenants ont accompli grâce à un suivi concret et personnalisé.
           </p>
         </div>
 

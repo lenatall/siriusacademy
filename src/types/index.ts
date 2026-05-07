@@ -27,9 +27,9 @@ export interface Formation {
   modules: Module[]
   instructor: Instructor
   tags: string[]
-  students: number
-  rating: number
-  reviewCount: number
+  students?: number
+  rating?: number
+  reviewCount?: number
   isFeatured: boolean
   objectives: string[]
   prerequisites: string[]

@@ -6,7 +6,7 @@ import { Filter, Search } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Formations',
   description:
-    'Découvrez toutes nos formations digitales certifiantes en développement web, marketing, design UX/UI et data science.',
+    'Découvrez toutes nos formations digitales en développement web, marketing, design UX/UI et data science — pratiques, en petits groupes, avec des projets concrets.',
 }
 
 const categories = ['Toutes', 'Développement', 'Marketing', 'Design', 'Data & IA']
@@ -19,7 +19,7 @@ export default function FormationsPage() {
       <div className="page-hero">
         <div className="container-custom text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm font-medium px-4 py-2 rounded-full mb-6 backdrop-blur-sm">
-            <span>4 formations certifiantes disponibles</span>
+            <span>4 formations digitales disponibles</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
             Nos formations <span className="text-brand-yellow">digitales</span>

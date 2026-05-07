@@ -8,9 +8,8 @@ import Link from 'next/link'
 
 const financingOptions = [
   { value: 'personnel', label: 'Financement personnel' },
-  { value: 'cpf', label: 'CPF (Compte Personnel de Formation)' },
-  { value: 'entreprise', label: 'Prise en charge par l\'entreprise / OPCO' },
-  { value: 'pole-emploi', label: 'Pôle Emploi / France Travail' },
+  { value: 'paiement-echelonne', label: 'Paiement en plusieurs fois' },
+  { value: 'entreprise', label: 'Prise en charge par l\'entreprise' },
   { value: 'autre', label: 'Autre / Je ne sais pas encore' },
 ]
 
@@ -192,7 +191,7 @@ function InscriptionForm() {
                   <option value="">Sélectionnez une formation</option>
                   {formations.map((f) => (
                     <option key={f.slug} value={f.slug}>
-                      {f.title} — {f.price.toLocaleString('fr-FR')} €
+                      {f.title} — {f.price.toLocaleString('fr-FR')} FCFA
                     </option>
                   ))}
                 </select>
@@ -323,7 +322,7 @@ function InscriptionForm() {
             <h3 className="font-bold text-navy-900 text-sm mb-1">{selectedFormation.title}</h3>
             <p className="text-xs text-gray-500 mb-3">{selectedFormation.duration} · {selectedFormation.level}</p>
             <div className="text-2xl font-black text-navy-900">
-              {selectedFormation.price.toLocaleString('fr-FR')} €
+              {selectedFormation.price.toLocaleString('fr-FR')} FCFA
             </div>
           </div>
         )}
@@ -335,10 +334,10 @@ function InscriptionForm() {
             {[
               { icon: Users, text: 'Entretien personnalisé sous 48h' },
               { icon: Star, text: 'Formateurs experts actifs' },
-              { icon: Award, text: 'Certificat de réussite' },
+              { icon: Award, text: 'Attestation de réussite' },
               { icon: CheckCircle, text: 'Accès à vie au contenu' },
               { icon: CheckCircle, text: 'Communauté et support' },
-              { icon: CheckCircle, text: 'Accompagnement à l\'emploi' },
+              { icon: CheckCircle, text: 'Orientation professionnelle' },
             ].map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-3 text-sm text-slate-300">
                 <Icon className="w-4 h-4 text-brand-green shrink-0" />
@@ -363,7 +362,7 @@ function InscriptionForm() {
         </div>
 
         <p className="text-xs text-center text-gray-400">
-          Paiement sécurisé · Financement CPF disponible · Données protégées
+          Paiement sécurisé · Paiement en plusieurs fois possible · Données protégées
         </p>
       </div>
     </div>
@@ -378,7 +377,7 @@ export default function InscriptionPage() {
         <div className="container-custom text-center">
           <div className="inline-flex items-center gap-2 bg-brand-yellow/20 border border-brand-yellow/30 text-brand-yellow text-sm font-medium px-4 py-2 rounded-full mb-6">
             <Star className="w-4 h-4 fill-current" />
-            <span>Plus de 3 000 apprenants nous ont fait confiance</span>
+            <span>Petits groupes · Accompagnement personnalisé</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
             Demande <span className="text-brand-yellow">d&apos;inscription</span>

@@ -103,14 +103,14 @@ export default function CoursGratuitsPage() {
               Vous voulez aller plus loin ?
             </h3>
             <p className="text-slate-300 mb-6 max-w-xl mx-auto text-sm">
-              Nos cours gratuits sont un avant-goût. Découvrez nos formations certifiantes complètes
-              pour acquérir toutes les compétences d&apos;un professionnel.
+              Nos cours gratuits sont un avant-goût. Découvrez nos formations complètes
+              pour acquérir des compétences concrètes et constituer un portfolio professionnel.
             </p>
             <a
               href="/formations"
               className="inline-flex items-center gap-2 bg-brand-yellow hover:bg-amber-400 text-navy-900 font-bold px-7 py-3.5 rounded-xl transition-colors text-sm"
             >
-              Voir les formations certifiantes
+              Voir les formations
             </a>
           </div>
         </div>

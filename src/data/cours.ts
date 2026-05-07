@@ -12,7 +12,7 @@ export const coursgratuits: FreeCourse[] = [
     level: 'Débutant',
     category: 'Développement',
     lessonsCount: 12,
-    instructor: 'Marie Dupont',
+    instructor: 'Cheikh Sarr',
     topics: [
       'Structure d\'une page HTML5',
       'Sélecteurs et propriétés CSS',
@@ -32,7 +32,7 @@ export const coursgratuits: FreeCourse[] = [
     level: 'Débutant',
     category: 'Marketing',
     lessonsCount: 8,
-    instructor: 'Thomas Renard',
+    instructor: 'Léna Badiane',
     topics: [
       'Comment fonctionnent les moteurs de recherche',
       'Recherche de mots-clés avec des outils gratuits',
@@ -52,7 +52,7 @@ export const coursgratuits: FreeCourse[] = [
     level: 'Débutant',
     category: 'Design',
     lessonsCount: 14,
-    instructor: 'Camille Martin',
+    instructor: 'Ndeye Fall',
     topics: [
       'Interface et navigation dans Figma',
       'Formes, textes et images',
@@ -72,7 +72,7 @@ export const coursgratuits: FreeCourse[] = [
     level: 'Débutant',
     category: 'Développement',
     lessonsCount: 10,
-    instructor: 'Dr. Julien Leroy',
+    instructor: 'Moussa Diène',
     topics: [
       'Installation et environnement de développement',
       'Variables, types de données et opérateurs',
@@ -92,7 +92,7 @@ export const coursgratuits: FreeCourse[] = [
     level: 'Débutant',
     category: 'Marketing',
     lessonsCount: 9,
-    instructor: 'Thomas Renard',
+    instructor: 'Léna Badiane',
     topics: [
       'Vue d\'ensemble du marketing digital',
       'SEO vs SEA : quelles différences ?',
