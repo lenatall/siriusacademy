@@ -13,6 +13,8 @@ import {
   Menu,
   X,
   ExternalLink,
+  Users,
+  Settings,
 } from 'lucide-react'
 
 const navItems = [
@@ -42,6 +44,11 @@ const navItems = [
       { label: '+ Nouvel article', href: '/admin/blog/nouvel-article' },
     ],
   },
+  {
+    label: 'Paramètres',
+    href: '/admin/parametres',
+    icon: Settings,
+  },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -49,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [checked, setChecked] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [openSections, setOpenSections] = useState<string[]>(['Formations', 'Cours gratuits', 'Blog'])
+  const [openSections, setOpenSections] = useState<string[]>(['Formations', 'Blog'])
 
   useEffect(() => {
     if (pathname === '/admin/login') { setChecked(true); return }
