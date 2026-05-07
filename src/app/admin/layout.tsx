@@ -7,7 +7,6 @@ import {
   Star,
   LayoutDashboard,
   GraduationCap,
-  BookOpen,
   FileText,
   LogOut,
   ChevronRight,
@@ -28,14 +27,6 @@ const navItems = [
     children: [
       { label: 'Toutes les formations', href: '/admin/formations' },
       { label: '+ Nouvelle formation', href: '/admin/formations/nouvelle' },
-    ],
-  },
-  {
-    label: 'Cours gratuits',
-    icon: BookOpen,
-    children: [
-      { label: 'Tous les cours', href: '/admin/cours' },
-      { label: '+ Nouveau cours', href: '/admin/cours/nouveau' },
     ],
   },
   {
