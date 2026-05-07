@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { formations } from '@/data/formations'
+import { store } from '@/lib/store'
 import FormationCard from '@/components/formations/FormationCard'
 import { Filter, Search } from 'lucide-react'
 
@@ -12,7 +12,11 @@ export const metadata: Metadata = {
 const categories = ['Toutes', 'Développement', 'Marketing', 'Design', 'Data & IA']
 const levels = ['Tous niveaux', 'Débutant', 'Intermédiaire', 'Avancé']
 
+export const dynamic = 'force-dynamic'
+
 export default function FormationsPage() {
+  const formations = store.formations.getAll().filter((f) => f.status !== 'brouillon')
+
   return (
     <>
       {/* Hero */}

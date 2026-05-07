@@ -13,7 +13,7 @@ export interface Instructor {
   bio: string
 }
 
-export type FormationStatus = 'ouvert' | 'bientot'
+export type FormationStatus = 'ouvert' | 'bientot' | 'brouillon'
 export type FormationSchedule = 'date-fixe' | 'weekend' | 'sans-date'
 
 export interface Formation {
@@ -25,6 +25,9 @@ export interface Formation {
   image: string
   price: number
   originalPrice?: number
+  monthlyPrice?: number
+  paymentMonths?: number
+  registrationFee?: number
   duration: string
   level: 'Débutant' | 'Intermédiaire' | 'Avancé' | 'Tous niveaux'
   modules: Module[]
@@ -34,6 +37,10 @@ export interface Formation {
   objectives: string[]
   prerequisites: string[]
   keyPoints: string[]
+  skillsTargeted?: string[]
+  targetAudience?: string
+  maxPlaces?: number
+  programPdfUrl?: string
   certificate: boolean
   category: string
   status: FormationStatus
@@ -73,6 +80,57 @@ export interface BlogPost {
   readTime: number
   tags: string[]
   category: string
+  metaTitle?: string
+  metaDescription?: string
+  isFeatured?: boolean
+  published?: boolean
+}
+
+export type ProspectSource = 'inscription' | 'pdf' | 'contact' | 'liste-attente'
+export type ProspectStatus =
+  | 'nouveau'
+  | 'contacte'
+  | 'interesse'
+  | 'attente-paiement'
+  | 'inscrit'
+  | 'relancer'
+  | 'non-interesse'
+
+export interface Prospect {
+  id: string
+  nom: string
+  prenom: string
+  email: string
+  telephone?: string
+  formationSlug?: string
+  source: ProspectSource
+  status: ProspectStatus
+  note?: string
+  message?: string
+  statut?: string
+  createdAt: string
+}
+
+export interface SiteSettings {
+  heroFormationSlug: string
+  siteName: string
+  slogan: string
+  country: string
+  currency: string
+  contactEmail: string
+  whatsappNumber: string
+  whatsappLink: string
+  heroTitle: string
+  heroSubtitle: string
+  heroCta1: string
+  heroCta2: string
+  footerText: string
+  socialFacebook?: string
+  socialInstagram?: string
+  socialLinkedin?: string
+  socialTwitter?: string
+  legalMentions?: string
+  privacyPolicy?: string
 }
 
 export interface RegistrationForm {
@@ -82,7 +140,6 @@ export interface RegistrationForm {
   phone: string
   formation: string
   message: string
-  financing: string
 }
 
 export interface ContactForm {
@@ -90,11 +147,4 @@ export interface ContactForm {
   email: string
   subject: string
   message: string
-}
-
-export interface CourseAccessForm {
-  firstName: string
-  lastName: string
-  email: string
-  courseSlug: string
 }

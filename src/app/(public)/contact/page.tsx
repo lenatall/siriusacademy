@@ -44,7 +44,19 @@ export default function ContactPage() {
     const errs = validate()
     if (Object.keys(errs).length > 0) { setErrors(errs); return }
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 1500))
+    await fetch('/api/prospects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nom: form.name,
+        prenom: '',
+        email: form.email,
+        message: `[${form.subject}] ${form.message}`,
+        source: 'contact',
+        status: 'nouveau',
+        createdAt: new Date().toISOString(),
+      }),
+    })
     setLoading(false)
     setSubmitted(true)
   }

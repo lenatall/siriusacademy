@@ -30,6 +30,11 @@ const navItems = [
     ],
   },
   {
+    label: 'Prospects & inscriptions',
+    href: '/admin/liste-attente',
+    icon: Users,
+  },
+  {
     label: 'Blog',
     icon: FileText,
     children: [

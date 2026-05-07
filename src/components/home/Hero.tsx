@@ -54,21 +54,12 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-brand-green/20 border border-brand-green/30 text-brand-green text-xs font-semibold px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
-              <Zap className="w-3.5 h-3.5" />
-              <span>Learning by Doing · 100% pratique · Sénégal</span>
-            </div>
-
-            {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
-              Apprenez en faisant.
-              <span className="block text-gradient-green">Pas en regardant.</span>
+              {settings.heroTitle}
             </h1>
 
             <p className="text-lg text-slate-300 leading-relaxed mb-6 max-w-lg">
-              Des formations 100% pratiques en marketing digital, création de contenu, développement web et design —
-              conçues pour construire de vraies compétences, un vrai portfolio, dès le premier jour.
+              {settings.heroSubtitle}
             </p>
 
             {/* Learning by doing pills */}
@@ -92,14 +83,14 @@ export default function Hero() {
                 href="/formations"
                 className="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold px-7 py-4 rounded-xl transition-all duration-200 shadow-green-lg hover:-translate-y-1 text-base"
               >
-                Voir les formations
+                {settings.heroCta1}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/a-propos"
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-7 py-4 rounded-xl transition-all duration-200 backdrop-blur-sm text-base"
               >
-                Qui sommes-nous ?
+                {settings.heroCta2}
               </Link>
             </div>
 
@@ -142,7 +133,7 @@ export default function Hero() {
                       <div>
                         <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
                         <p className="text-slate-400 text-xs mt-0.5">
-                          {heroFormation.duration} · {heroFormation.modules.length} modules
+                          {heroFormation.duration} · {heroFormation.level}
                         </p>
                       </div>
                     </div>

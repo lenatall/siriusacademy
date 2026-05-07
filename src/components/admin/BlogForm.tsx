@@ -6,6 +6,9 @@ import { Loader2, Save, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 import type { BlogPost } from '@/types'
 import Link from 'next/link'
 
+const slugify = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
 interface Props {
   initial?: Partial<BlogPost>
   mode: 'create' | 'edit'
@@ -31,10 +34,23 @@ export default function BlogForm({ initial = {}, mode }: Props) {
     readTime: initial.readTime ?? 5,
     category: initial.category ?? 'Conseils',
     tags: initial.tags?.join(', ') ?? '',
-    authorName: initial.author?.name ?? 'Marie Dupont',
-    authorTitle: initial.author?.title ?? 'Responsable Pédagogique',
-    authorAvatar: initial.author?.avatar ?? 'https://ui-avatars.com/api/?name=Marie+Dupont&background=10B981&color=fff&size=200',
+    authorName: initial.author?.name ?? 'Léna Badiane',
+    authorTitle: initial.author?.title ?? 'Fondatrice — Sirius Academy',
+    authorAvatar: initial.author?.avatar ?? 'https://ui-avatars.com/api/?name=Lena+Badiane&background=F59E0B&color=0B1F3A&size=200',
+    slug: initial.slug ?? '',
+    metaTitle: initial.metaTitle ?? '',
+    metaDescription: initial.metaDescription ?? '',
+    isFeatured: initial.isFeatured ?? false,
+    published: initial.published !== false,
   })
+
+  const handleTitleChange = (title: string) => {
+    setForm((f) => ({
+      ...f,
+      title,
+      slug: mode === 'create' ? slugify(title) : f.slug,
+    }))
+  }
 
   const renderMarkdown = (text: string) =>
     text
@@ -61,6 +77,11 @@ export default function BlogForm({ initial = {}, mode }: Props) {
         title: form.authorTitle,
         avatar: form.authorAvatar,
       },
+      slug: form.slug || slugify(form.title),
+      metaTitle: form.metaTitle || undefined,
+      metaDescription: form.metaDescription || undefined,
+      isFeatured: form.isFeatured,
+      published: form.published,
     }
 
     try {
@@ -122,7 +143,7 @@ export default function BlogForm({ initial = {}, mode }: Props) {
                 <h2 className="font-bold text-navy-900 border-b border-gray-100 pb-3">Contenu</h2>
                 <div>
                   <label className="label">Titre de l&apos;article *</label>
-                  <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input text-lg font-semibold" placeholder="Comment choisir sa formation en 2024 ?" required />
+                  <input type="text" value={form.title} onChange={(e) => handleTitleChange(e.target.value)} className="input text-lg font-semibold" placeholder="Comment choisir sa formation en 2025 ?" required />
                 </div>
                 <div>
                   <label className="label">Chapô (résumé court) *</label>
@@ -171,6 +192,22 @@ export default function BlogForm({ initial = {}, mode }: Props) {
         <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
             <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Publication</h2>
+
+            {/* Published toggle */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200">
+              <div>
+                <p className="text-sm font-semibold text-gray-700">{form.published ? 'Publié' : 'Brouillon'}</p>
+                <p className="text-xs text-gray-400">{form.published ? 'Visible sur le site' : 'Non visible sur le site'}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, published: !form.published })}
+                className={`relative w-11 h-6 rounded-full transition-colors ${form.published ? 'bg-brand-green' : 'bg-gray-300'}`}
+              >
+                <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${form.published ? 'left-5.5 translate-x-0.5' : 'left-0.5'}`} />
+              </button>
+            </div>
+
             <div>
               <label className="label">Catégorie</label>
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="input">
@@ -189,6 +226,40 @@ export default function BlogForm({ initial = {}, mode }: Props) {
               <label className="label">Tags</label>
               <input type="text" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} className="input" placeholder="SEO, Marketing, Conseils" />
               <p className="text-xs text-gray-400 mt-1">Séparés par des virgules</p>
+            </div>
+            <div>
+              <label className="label">Slug (URL)</label>
+              <input type="text" value={form.slug} onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })} className="input font-mono text-xs" placeholder="mon-article" />
+              <p className="text-xs text-gray-400 mt-1">/blog/{form.slug || 'slug-auto'}</p>
+            </div>
+            {/* Article mis en avant */}
+            <label className="flex items-center gap-3 cursor-pointer">
+              <div className="relative">
+                <input type="checkbox" checked={form.isFeatured} onChange={(e) => setForm({ ...form, isFeatured: e.target.checked })} className="sr-only" />
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${form.isFeatured ? 'bg-brand-green border-brand-green' : 'border-gray-300'}`}>
+                  {form.isFeatured && (
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+              <span className="text-sm text-gray-700">Article mis en avant</span>
+            </label>
+          </div>
+
+          {/* SEO */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">SEO</h2>
+            <div>
+              <label className="label">Méta titre</label>
+              <input type="text" value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} className="input" placeholder={form.title || 'Titre pour les moteurs de recherche'} />
+              <p className="text-xs text-gray-400 mt-1">{form.metaTitle.length}/60 caractères recommandés</p>
+            </div>
+            <div>
+              <label className="label">Méta description</label>
+              <textarea rows={3} value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} className="input resize-none" placeholder={form.excerpt || 'Description pour les moteurs de recherche (150-160 caractères)'} />
+              <p className="text-xs text-gray-400 mt-1">{form.metaDescription.length}/155 caractères recommandés</p>
             </div>
           </div>
 

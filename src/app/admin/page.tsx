@@ -4,92 +4,36 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   GraduationCap,
-  BookOpen,
   FileText,
   Users,
-  TrendingUp,
   Plus,
   ArrowRight,
-  Eye,
+  Settings,
+  Mail,
+  CheckCircle2,
 } from 'lucide-react'
-
-interface Stats {
-  formations: number
-  cours: number
-  articles: number
-}
+import type { Formation, BlogPost, Prospect } from '@/types'
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({ formations: 0, cours: 0, articles: 0 })
+  const [formations, setFormations] = useState<Formation[]>([])
+  const [waitlist, setWaitlist] = useState<Prospect[]>([])
+  const [blog, setBlog] = useState<BlogPost[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
       fetch('/api/admin/formations').then((r) => r.json()),
-      fetch('/api/admin/cours').then((r) => r.json()),
+      fetch('/api/prospects').then((r) => r.json()),
       fetch('/api/admin/blog').then((r) => r.json()),
-    ]).then(([formations, cours, blog]) => {
-      setStats({ formations: formations.length, cours: cours.length, articles: blog.length })
+    ]).then(([f, w, b]) => {
+      setFormations(Array.isArray(f) ? f : [])
+      setWaitlist(Array.isArray(w) ? w : [])
+      setBlog(Array.isArray(b) ? b : [])
+      setLoading(false)
     })
   }, [])
 
-  const statCards = [
-    {
-      icon: GraduationCap,
-      label: 'Formations payantes',
-      value: stats.formations,
-      color: 'bg-blue-50 text-blue-600',
-      href: '/admin/formations',
-    },
-    {
-      icon: BookOpen,
-      label: 'Cours gratuits',
-      value: stats.cours,
-      color: 'bg-emerald-50 text-emerald-600',
-      href: '/admin/cours',
-    },
-    {
-      icon: FileText,
-      label: 'Articles de blog',
-      value: stats.articles,
-      color: 'bg-amber-50 text-amber-600',
-      href: '/admin/blog',
-    },
-    {
-      icon: Users,
-      label: 'Apprenants (simulé)',
-      value: '3 075',
-      color: 'bg-purple-50 text-purple-600',
-      href: '#',
-    },
-  ]
-
-  const quickActions = [
-    {
-      label: 'Nouvelle formation payante',
-      href: '/admin/formations/nouvelle',
-      color: 'bg-navy-900 hover:bg-navy-800 text-white',
-      icon: Plus,
-    },
-    {
-      label: 'Nouveau cours gratuit',
-      href: '/admin/cours/nouveau',
-      color: 'bg-brand-green hover:bg-brand-green-dark text-white',
-      icon: Plus,
-    },
-    {
-      label: 'Nouvel article de blog',
-      href: '/admin/blog/nouvel-article',
-      color: 'bg-amber-500 hover:bg-amber-600 text-white',
-      icon: Plus,
-    },
-    {
-      label: 'Voir le site public',
-      href: '/',
-      color: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
-      icon: Eye,
-      target: '_blank',
-    },
-  ]
+  const ouvertes = formations.filter((f) => f.status === 'ouvert').length
 
   return (
     <div>
@@ -101,81 +45,187 @@ export default function AdminDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map((card) => {
-          const Icon = card.icon
-          return (
-            <Link key={card.label} href={card.href} className="group">
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
-                <div
-                  className={`w-10 h-10 ${card.color} rounded-xl flex items-center justify-center mb-3`}
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="text-2xl font-black text-navy-900">{card.value}</div>
-                <div className="text-xs text-gray-500 mt-0.5">{card.label}</div>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Quick actions */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
-        <h2 className="font-bold text-navy-900 mb-4">Actions rapides</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {quickActions.map((action) => {
-            const Icon = action.icon
-            return (
-              <Link
-                key={action.label}
-                href={action.href}
-                target={(action as { target?: string }).target}
-                className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${action.color}`}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                {action.label}
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Links */}
-      <div className="grid md:grid-cols-3 gap-4">
-        {[
-          {
-            title: 'Gérer les formations',
-            desc: 'Ajouter, modifier ou supprimer des formations payantes.',
-            href: '/admin/formations',
-            color: 'border-blue-200',
-          },
-          {
-            title: 'Gérer les cours gratuits',
-            desc: 'Publier ou modifier des cours accessibles gratuitement.',
-            href: '/admin/cours',
-            color: 'border-emerald-200',
-          },
-          {
-            title: 'Gérer le blog',
-            desc: 'Rédiger et publier des articles de blog avec Markdown.',
-            href: '/admin/blog',
-            color: 'border-amber-200',
-          },
-        ].map((item) => (
-          <Link key={item.href} href={item.href} className="group">
-            <div
-              className={`bg-white rounded-2xl border-2 ${item.color} shadow-sm p-5 hover:shadow-md transition-shadow h-full`}
-            >
-              <h3 className="font-bold text-navy-900 mb-1 group-hover:text-brand-green transition-colors">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-500 mb-3">{item.desc}</p>
-              <div className="flex items-center gap-1 text-xs font-semibold text-brand-green">
-                Accéder <ArrowRight className="w-3.5 h-3.5" />
-              </div>
+        <Link href="/admin/formations" className="group">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3">
+              <GraduationCap className="w-5 h-5" />
             </div>
-          </Link>
-        ))}
+            <div className="text-2xl font-black text-navy-900">{loading ? '—' : formations.length}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Formations</div>
+          </div>
+        </Link>
+
+        <Link href="/admin/formations" className="group">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-3">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div className="text-2xl font-black text-navy-900">{loading ? '—' : ouvertes}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Inscriptions ouvertes</div>
+          </div>
+        </Link>
+
+        <Link href="/admin/liste-attente" className="group">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-3">
+              <Users className="w-5 h-5" />
+            </div>
+            <div className="text-2xl font-black text-navy-900">{loading ? '—' : waitlist.length}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Prospects</div>
+          </div>
+        </Link>
+
+        <Link href="/admin/blog" className="group">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-3">
+              <FileText className="w-5 h-5" />
+            </div>
+            <div className="text-2xl font-black text-navy-900">{loading ? '—' : blog.length}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Articles de blog</div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Main content */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Left: formations list */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-navy-900">Formations</h2>
+              <Link href="/admin/formations/nouvelle" className="inline-flex items-center gap-1.5 bg-navy-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-navy-800 transition-colors">
+                <Plus className="w-3.5 h-3.5" /> Nouvelle
+              </Link>
+            </div>
+            {loading ? (
+              <div className="p-4 space-y-2">
+                {[1, 2, 3].map((i) => <div key={i} className="h-10 bg-gray-100 rounded-lg animate-pulse" />)}
+              </div>
+            ) : formations.length === 0 ? (
+              <div className="p-6 text-center">
+                <p className="text-sm text-gray-400">Aucune formation</p>
+                <Link href="/admin/formations/nouvelle" className="mt-2 inline-flex items-center gap-1 text-xs text-brand-green font-semibold hover:underline">
+                  <Plus className="w-3 h-3" /> Créer la première
+                </Link>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-50">
+                {formations.map((f) => (
+                  <div key={f.id} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-navy-900 truncate">{f.title}</p>
+                      <p className="text-xs text-gray-400">{f.duration} · {f.level}</p>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0 ml-3">
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                        f.status === 'ouvert' ? 'bg-emerald-100 text-emerald-700' :
+                        f.status === 'bientot' ? 'bg-amber-100 text-amber-700' :
+                        'bg-gray-100 text-gray-500'
+                      }`}>
+                        {f.status === 'ouvert' ? 'Ouvert' : f.status === 'bientot' ? 'Bientôt' : 'Brouillon'}
+                      </span>
+                      <Link href={`/admin/formations/${f.slug}`} className="text-xs text-gray-400 hover:text-navy-900 transition-colors">
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Blog preview */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-navy-900">Articles de blog</h2>
+              <Link href="/admin/blog" className="text-xs text-brand-green font-semibold flex items-center gap-1 hover:underline">
+                Voir tout <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            {loading ? (
+              <div className="p-4 space-y-2">
+                {[1, 2, 3].map((i) => <div key={i} className="h-8 bg-gray-100 rounded-lg animate-pulse" />)}
+              </div>
+            ) : blog.length === 0 ? (
+              <div className="p-6 text-center">
+                <p className="text-sm text-gray-400">Aucun article</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-50">
+                {blog.slice(0, 4).map((post) => (
+                  <div key={post.id} className="flex items-center gap-3 px-5 py-3">
+                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${post.published !== false ? 'bg-brand-green' : 'bg-gray-300'}`} />
+                    <p className="text-xs text-navy-900 font-medium truncate flex-1">{post.title}</p>
+                    <span className="text-xs text-gray-400 shrink-0">{post.category}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="space-y-6">
+          {/* Prospects preview */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-navy-900">Derniers prospects</h2>
+              <Link href="/admin/liste-attente" className="text-xs text-brand-green font-semibold flex items-center gap-1 hover:underline">
+                Voir tout <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            {loading ? (
+              <div className="p-4 space-y-2">
+                {[1, 2, 3].map((i) => <div key={i} className="h-8 bg-gray-100 rounded-lg animate-pulse" />)}
+              </div>
+            ) : waitlist.length === 0 ? (
+              <div className="p-6 text-center">
+                <p className="text-sm text-gray-400">Aucun prospect</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-50">
+                {[...waitlist].reverse().slice(0, 5).map((entry, i) => (
+                  <div key={i} className="flex items-center gap-3 px-4 py-3">
+                    <div className="w-7 h-7 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-xs shrink-0">
+                      {entry.prenom?.[0]}{entry.nom?.[0]}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-navy-900 truncate">{entry.prenom} {entry.nom}</p>
+                      <p className="text-xs text-gray-400 truncate">{entry.email}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {waitlist.length > 0 && (
+              <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+                <Link href="/admin/liste-attente" className="flex items-center gap-1.5 text-xs text-brand-green font-semibold hover:underline">
+                  <Mail className="w-3.5 h-3.5" />
+                  Gérer les prospects ({waitlist.length})
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Quick actions */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <h2 className="font-bold text-navy-900 mb-3 text-sm">Actions rapides</h2>
+            <div className="space-y-2">
+              <Link href="/admin/formations/nouvelle" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-navy-900 text-white text-sm font-semibold hover:bg-navy-800 transition-colors">
+                <Plus className="w-4 h-4 shrink-0" />
+                Nouvelle formation
+              </Link>
+              <Link href="/admin/blog/nouvel-article" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">
+                <Plus className="w-4 h-4 shrink-0" />
+                Nouvel article
+              </Link>
+              <Link href="/admin/parametres" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">
+                <Settings className="w-4 h-4 shrink-0" />
+                Paramètres du site
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

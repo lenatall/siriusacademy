@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { getFeaturedFormations } from '@/data/formations'
+import { store } from '@/lib/store'
 import FormationCard from '@/components/formations/FormationCard'
 
 export default function FeaturedFormations() {
-  const formations = getFeaturedFormations()
+  const formations = store.formations.getAll().filter((f) => f.isFeatured && f.status !== 'brouillon')
 
   return (
     <section className="py-24 bg-white">
