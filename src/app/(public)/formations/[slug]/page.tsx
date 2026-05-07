@@ -19,6 +19,7 @@ import { getFormationBySlug, formations } from '@/data/formations'
 import ModuleAccordion from '@/components/formations/ModuleAccordion'
 import Badge from '@/components/ui/Badge'
 import FormationCard from '@/components/formations/FormationCard'
+import WaitlistForm from '@/components/formations/WaitlistForm'
 
 interface Props {
   params: { slug: string }
@@ -134,7 +135,7 @@ export default function FormationDetailPage({ params }: Props) {
               <div className="flex flex-wrap items-center gap-5 text-sm text-slate-300 mb-6">
                 <div className="flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-brand-green" />
-                  <span>Petits groupes · accompagnement personnalisé</span>
+                  <span>Suivi pédagogique · retours sur les travaux</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-brand-green" />
@@ -342,28 +343,7 @@ export default function FormationDetailPage({ params }: Props) {
                       </>
                     ) : (
                       <>
-                        {/* Bientôt */}
-                        <div className="text-center py-4 mb-5">
-                          <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <Lock className="w-8 h-8 text-brand-yellow" />
-                          </div>
-                          <h3 className="font-black text-navy-900 text-lg mb-2">
-                            Formation bientôt disponible
-                          </h3>
-                          <p className="text-sm text-gray-500 leading-relaxed">
-                            La prochaine session n&apos;est pas encore ouverte. Laissez votre contact pour être prévenu en priorité.
-                          </p>
-                        </div>
-                        <Link
-                          href={`/contact?sujet=Je suis intéressé par : ${formation.title}`}
-                          className="w-full flex items-center justify-center gap-2 bg-brand-yellow hover:bg-amber-400 text-navy-900 font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 mb-3"
-                        >
-                          Être notifié à l&apos;ouverture
-                          <ArrowRight className="w-4 h-4" />
-                        </Link>
-                        <p className="text-xs text-center text-gray-400">
-                          Gratuit · Aucun engagement
-                        </p>
+                        <WaitlistForm formationSlug={formation.slug} formationTitle={formation.title} />
                       </>
                     )}
 
@@ -376,7 +356,7 @@ export default function FormationDetailPage({ params }: Props) {
                         { icon: Clock, text: `${formation.duration} de formation` },
                         { icon: BookOpen, text: `${totalLessons > 0 ? `${totalLessons} leçons` : `${formation.modules.length} modules`}` },
                         { icon: Zap, text: 'Projets concrets & portfolio' },
-                        { icon: Users, text: 'Petits groupes · suivi personnalisé' },
+                        { icon: Users, text: 'Suivi pédagogique inclus' },
                         { icon: Award, text: 'Attestation de réussite' },
                       ].map(({ icon: Icon, text }) => (
                         <div key={text} className="flex items-center gap-3 text-sm text-gray-600">

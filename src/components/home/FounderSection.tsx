@@ -1,80 +1,73 @@
-import Link from 'next/link'
-import { ArrowRight, Award, Briefcase, GraduationCap, Zap } from 'lucide-react'
+import { FileText, Layers, Download, BookOpen, RefreshCw } from 'lucide-react'
+
+const steps = [
+  {
+    icon: Layers,
+    title: 'Exercices corrigés',
+    description: 'Chaque module propose des exercices pratiques avec corrections pour valider votre compréhension.',
+  },
+  {
+    icon: FileText,
+    title: 'Projets guidés',
+    description: 'Vous travaillez sur des projets réels, étape par étape, avec des consignes claires et un cadre structuré.',
+  },
+  {
+    icon: Download,
+    title: 'Supports pratiques',
+    description: 'Des ressources téléchargeables : fiches mémo, templates, guides d\'application selon les modules.',
+  },
+  {
+    icon: BookOpen,
+    title: 'Ressources gratuites',
+    description: 'Des contenus d\'introduction accessibles à tous pour découvrir les bases avant de s\'engager.',
+  },
+  {
+    icon: RefreshCw,
+    title: 'Amélioration continue',
+    description: 'Les programmes sont régulièrement mis à jour pour rester alignés avec les pratiques actuelles du digital.',
+  },
+]
 
 export default function FounderSection() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 bg-navy-900/5 text-navy-900 text-sm font-semibold px-4 py-2 rounded-full mb-4">
-            <span>La fondatrice</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-3">
-            Léna Badiane
+        <div className="max-w-2xl mb-14">
+          <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-4">
+            Comment se passe une formation<br />
+            <span className="text-brand-green">chez Sirius Academy ?</span>
           </h2>
-          <p className="text-gray-500 text-base max-w-lg mx-auto">
-            Professionnelle du digital, elle a fondé Sirius Academy pour transmettre ce qui marche vraiment sur le terrain.
+          <p className="text-gray-500 text-base leading-relaxed">
+            Pas de cours magistraux. Chaque session est pensée pour que vous produisiez quelque chose — un exercice, un projet, une réalisation que vous pouvez montrer.
           </p>
         </div>
 
-        {/* Card centrale */}
-        <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-3xl p-8 md:p-10 text-white relative overflow-hidden mb-8">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-yellow/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
-            {/* Identity */}
-            <div className="flex items-center gap-4 md:shrink-0">
-              <div className="w-20 h-20 rounded-2xl bg-brand-yellow flex items-center justify-center font-black text-navy-900 text-2xl shadow-lg shrink-0">
-                LB
-              </div>
-              <div>
-                <h3 className="text-xl font-black">Léna Badiane</h3>
-                <p className="text-slate-400 text-sm">Fondatrice · Sirius Academy</p>
-                <div className="flex items-center gap-1.5 mt-2">
-                  <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-                  <span className="text-brand-green text-xs font-semibold">Active</span>
+        {/* Steps */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+          {steps.map((step, i) => {
+            const Icon = step.icon
+            return (
+              <div key={step.title} className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-brand-green/10 rounded-xl flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4 text-brand-green" />
+                  </div>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Étape {i + 1}</span>
                 </div>
+                <h3 className="font-bold text-navy-900 text-base">{step.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
               </div>
-            </div>
-
-            {/* Divider */}
-            <div className="hidden md:block w-px h-20 bg-white/10 shrink-0" />
-
-            {/* Quote */}
-            <blockquote>
-              <p className="text-slate-200 text-base leading-relaxed italic">
-                "On apprend en faisant — pas en regardant des diaporamas. Chaque formation Sirius Academy se termine avec un projet concret que vous pouvez montrer."
-              </p>
-            </blockquote>
-          </div>
+            )
+          })}
         </div>
 
-        {/* Credentials + CTA */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {[
-            { icon: GraduationCap, label: 'Licence Génie Logiciel & Réseaux', color: 'text-blue-500' },
-            { icon: Award, label: 'Référente Digitale — Sonatel Academy', color: 'text-brand-green' },
-            { icon: Briefcase, label: 'Head of Product — EDACY', color: 'text-amber-500' },
-            { icon: Zap, label: 'Accompagnement entreprises · Digital', color: 'text-purple-500' },
-          ].map(({ icon: Icon, label, color }) => (
-            <div key={label} className="flex items-start gap-3 bg-gray-50 rounded-xl p-4 border border-gray-100">
-              <Icon className={`w-5 h-5 ${color} shrink-0 mt-0.5`} />
-              <span className="text-sm text-gray-700 font-medium leading-snug">{label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <Link
-            href="/a-propos"
-            className="inline-flex items-center gap-2 text-brand-green font-semibold hover:gap-3 transition-all duration-200"
-          >
-            En savoir plus
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        {/* Final phrase */}
+        <div className="bg-navy-900 rounded-2xl px-8 py-7">
+          <p className="text-white text-lg font-semibold leading-relaxed text-center">
+            Vous ne venez pas seulement écouter un cours :{' '}
+            <span className="text-brand-green">vous venez pratiquer, produire et progresser.</span>
+          </p>
         </div>
 
       </div>
