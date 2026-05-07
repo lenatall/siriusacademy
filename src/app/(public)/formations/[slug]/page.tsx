@@ -5,7 +5,6 @@ import Link from 'next/link'
 import {
   Clock,
   Users,
-  BookOpen,
   Award,
   CheckCircle,
   ArrowRight,
@@ -14,12 +13,13 @@ import {
   CalendarDays,
   Lock,
   Sparkles,
+  Target,
 } from 'lucide-react'
 import { store } from '@/lib/store'
-import ModuleAccordion from '@/components/formations/ModuleAccordion'
 import Badge from '@/components/ui/Badge'
 import FormationCard from '@/components/formations/FormationCard'
 import WaitlistForm from '@/components/formations/WaitlistForm'
+import PdfDownloadForm from '@/components/formations/PdfDownloadForm'
 
 interface Props {
   params: { slug: string }
@@ -27,11 +27,11 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const formation = store.formations.getBySlug(params.slug)
-  if (!formation) return { title: 'Formation introuvable' }
+  if (!formation || formation.status === 'brouillon') return { title: 'Formation introuvable' }
   return {
-    title: formation.title,
-    description: formation.shortDescription,
-  }
+    title: formation.metaTitle || formation.title,
+    description: formation.metaDescription || formation.shortDescription,
+  } as Metadata & { metaTitle?: string; metaDescription?: string }
 }
 
 export const dynamic = 'force-dynamic'
@@ -45,40 +45,32 @@ const levelVariant: Record<string, 'green' | 'blue' | 'yellow' | 'navy'> = {
 
 export default function FormationDetailPage({ params }: Props) {
   const formation = store.formations.getBySlug(params.slug)
-  if (!formation) notFound()
+  if (!formation || formation.status === 'brouillon') notFound()
 
-  const relatedFormations = store.formations.getAll()
-    .filter((f) => f.id !== formation.id && f.category === formation.category)
+  const relatedFormations = store.formations
+    .getAll()
+    .filter((f) => f.id !== formation.id && f.category === formation.category && f.status !== 'brouillon')
     .slice(0, 2)
 
   const discount = formation.originalPrice
     ? Math.round(((formation.originalPrice - formation.price) / formation.originalPrice) * 100)
     : null
 
-  const totalLessons = formation.modules.reduce((sum, m) => sum + m.lessons, 0)
-
   return (
     <>
       {/* Hero */}
       <div className="bg-hero-gradient pt-28 pb-0">
         <div className="container-custom">
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-slate-400 mb-6">
-            <Link href="/" className="hover:text-white transition-colors">
-              Accueil
-            </Link>
+            <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
             <ChevronRight className="w-4 h-4" />
-            <Link href="/formations" className="hover:text-white transition-colors">
-              Formations
-            </Link>
+            <Link href="/formations" className="hover:text-white transition-colors">Formations</Link>
             <ChevronRight className="w-4 h-4" />
             <span className="text-white">{formation.title}</span>
           </nav>
 
           <div className="grid lg:grid-cols-3 gap-8 pb-12">
-            {/* Left content */}
             <div className="lg:col-span-2">
-              {/* Status + badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 {formation.status === 'ouvert' ? (
                   <span className="inline-flex items-center gap-1.5 bg-brand-green text-white text-xs font-bold px-3 py-1.5 rounded-lg">
@@ -131,19 +123,14 @@ export default function FormationDetailPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Meta */}
               <div className="flex flex-wrap items-center gap-5 text-sm text-slate-300 mb-6">
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-brand-green" />
-                  <span>Suivi pédagogique · retours sur les travaux</span>
-                </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-brand-green" />
                   <span>{formation.duration}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-brand-green" />
-                  <span>{totalLessons} leçons</span>
+                  <Users className="w-4 h-4 text-brand-green" />
+                  <span>Suivi pédagogique inclus</span>
                 </div>
                 {formation.certificate && (
                   <div className="flex items-center gap-1.5">
@@ -151,9 +138,14 @@ export default function FormationDetailPage({ params }: Props) {
                     <span>Attestation de réussite</span>
                   </div>
                 )}
+                {formation.maxPlaces && (
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-brand-yellow" />
+                    <span>{formation.maxPlaces} places max.</span>
+                  </div>
+                )}
               </div>
 
-              {/* Instructor preview */}
               <div className="flex items-center gap-3">
                 <Image
                   src={formation.instructor.avatar}
@@ -169,8 +161,6 @@ export default function FormationDetailPage({ params }: Props) {
                 </div>
               </div>
             </div>
-
-            {/* Right — Sticky pricing card (mobile: below) */}
             <div className="lg:col-span-1 hidden lg:block" />
           </div>
         </div>
@@ -182,7 +172,8 @@ export default function FormationDetailPage({ params }: Props) {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Content */}
             <div className="lg:col-span-2 space-y-10">
-              {/* Key points — points essentiels */}
+
+              {/* Key points */}
               {formation.keyPoints.length > 0 && (
                 <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-2xl p-8 shadow-sm">
                   <div className="flex items-center gap-2 mb-5">
@@ -200,54 +191,69 @@ export default function FormationDetailPage({ params }: Props) {
                 </div>
               )}
 
-              {/* About */}
+              {/* Public cible */}
+              {formation.targetAudience && (
+                <div className="bg-white rounded-2xl p-8 shadow-sm">
+                  <h2 className="text-xl font-bold text-navy-900 mb-4">Cette formation est faite pour vous si...</h2>
+                  <p className="text-gray-600 leading-relaxed">{formation.targetAudience}</p>
+                </div>
+              )}
+
+              {/* À propos */}
               <div className="bg-white rounded-2xl p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-navy-900 mb-4">À propos de la formation</h2>
                 <p className="text-gray-600 leading-relaxed">{formation.fullDescription}</p>
               </div>
 
-              {/* Objectives */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
-                <h2 className="text-xl font-bold text-navy-900 mb-6">
-                  Ce que vous apprendrez
-                </h2>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {formation.objectives.map((obj) => (
-                    <div key={obj} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-brand-green shrink-0 mt-0.5" />
-                      <span className="text-sm text-gray-600">{obj}</span>
-                    </div>
-                  ))}
+              {/* Compétences visées */}
+              {(formation.skillsTargeted?.length || 0) > 0 && (
+                <div className="bg-white rounded-2xl p-8 shadow-sm">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Target className="w-5 h-5 text-brand-green" />
+                    <h2 className="text-xl font-bold text-navy-900">Compétences visées</h2>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {(formation.skillsTargeted || []).map((skill) => (
+                      <div key={skill} className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-brand-green shrink-0 mt-0.5" />
+                        <span className="text-sm text-gray-600">{skill}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Modules */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-navy-900">
-                    Programme de la formation
-                  </h2>
-                  <span className="text-sm text-gray-400">
-                    {formation.modules.length} modules · {totalLessons} leçons
-                  </span>
+              {/* Objectifs */}
+              {formation.objectives.length > 0 && (
+                <div className="bg-white rounded-2xl p-8 shadow-sm">
+                  <h2 className="text-xl font-bold text-navy-900 mb-6">Ce que vous apprendrez</h2>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {formation.objectives.map((obj) => (
+                      <div key={obj} className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-brand-green shrink-0 mt-0.5" />
+                        <span className="text-sm text-gray-600">{obj}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <ModuleAccordion modules={formation.modules} />
-              </div>
+              )}
 
-              {/* Prerequisites */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
-                <h2 className="text-xl font-bold text-navy-900 mb-4">Prérequis</h2>
-                <ul className="space-y-2">
-                  {formation.prerequisites.map((req) => (
-                    <li key={req} className="flex items-center gap-3 text-sm text-gray-600">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0" />
-                      {req}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Prérequis */}
+              {formation.prerequisites.length > 0 && (
+                <div className="bg-white rounded-2xl p-8 shadow-sm">
+                  <h2 className="text-xl font-bold text-navy-900 mb-4">Prérequis</h2>
+                  <ul className="space-y-2">
+                    {formation.prerequisites.map((req) => (
+                      <li key={req} className="flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0" />
+                        {req}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              {/* Instructor */}
+              {/* Formateur */}
               <div className="bg-white rounded-2xl p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-navy-900 mb-6">Votre formateur</h2>
                 <div className="flex items-start gap-5">
@@ -260,34 +266,28 @@ export default function FormationDetailPage({ params }: Props) {
                   />
                   <div>
                     <h3 className="font-bold text-navy-900 text-lg">{formation.instructor.name}</h3>
-                    <p className="text-sm text-brand-green font-medium mb-3">
-                      {formation.instructor.title}
-                    </p>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {formation.instructor.bio}
-                    </p>
+                    <p className="text-sm text-brand-green font-medium mb-3">{formation.instructor.title}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{formation.instructor.bio}</p>
                   </div>
                 </div>
               </div>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {formation.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {formation.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {formation.tags.map((tag) => (
+                    <span key={tag} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Sticky Pricing Card */}
             <div className="lg:col-span-1">
               <div className="sticky top-28">
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-                  {/* Formation image */}
                   <div className="relative h-44">
                     <Image
                       src={formation.image}
@@ -306,8 +306,13 @@ export default function FormationDetailPage({ params }: Props) {
                   <div className="p-6">
                     {formation.status === 'ouvert' ? (
                       <>
-                        {/* Price */}
+                        {/* Prix */}
                         <div className="mb-5">
+                          {formation.registrationFee && (
+                            <div className="text-xs text-gray-500 mb-1">
+                              Frais d&apos;inscription : <span className="font-semibold text-navy-900">{formation.registrationFee.toLocaleString('fr-FR')} FCFA</span>
+                            </div>
+                          )}
                           {formation.monthlyPrice ? (
                             <>
                               <div className="flex items-baseline gap-2 mb-1">
@@ -333,25 +338,22 @@ export default function FormationDetailPage({ params }: Props) {
                               )}
                             </div>
                           )}
-                          {discount && !formation.monthlyPrice && (
-                            <p className="text-xs text-brand-green font-semibold mt-1">
-                              Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} FCFA
-                            </p>
-                          )}
                         </div>
+
                         <Link
                           href={`/inscription?formation=${formation.slug}`}
                           className="w-full flex items-center justify-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-green-lg hover:-translate-y-0.5 mb-3"
                         >
-                          S&apos;inscrire à cette formation
+                          Demander l&apos;inscription
                           <ArrowRight className="w-4 h-4" />
                         </Link>
-                        <Link
-                          href="/contact"
-                          className="w-full flex items-center justify-center gap-2 border-2 border-gray-200 text-gray-600 hover:border-navy-800 hover:text-navy-800 font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
-                        >
-                          Demander des informations
-                        </Link>
+
+                        <PdfDownloadForm
+                          formationSlug={formation.slug}
+                          formationTitle={formation.title}
+                          programPdfUrl={formation.programPdfUrl}
+                        />
+
                         {/* Modalités paiement mensuel */}
                         {formation.monthlyPrice && formation.paymentMonths && (
                           <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-xl p-4">
@@ -366,26 +368,24 @@ export default function FormationDetailPage({ params }: Props) {
                             </div>
                           </div>
                         )}
+
                         <p className="text-xs text-center text-gray-400 mt-4">
-                          Paiement sécurisé · Paiement en plusieurs fois possible
+                          Aucun paiement en ligne · L&apos;équipe vous contacte sous 48h
                         </p>
                       </>
                     ) : (
-                      <>
-                        <WaitlistForm formationSlug={formation.slug} formationTitle={formation.title} />
-                      </>
+                      <WaitlistForm formationSlug={formation.slug} formationTitle={formation.title} />
                     )}
 
-                    {/* Includes — always visible */}
+                    {/* Ce que ça inclut */}
                     <div className="mt-6 pt-5 border-t border-gray-100 space-y-3">
                       <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Cette formation inclut :
                       </p>
                       {[
                         { icon: Clock, text: `${formation.duration} de formation` },
-                        { icon: BookOpen, text: `${totalLessons > 0 ? `${totalLessons} leçons` : `${formation.modules.length} modules`}` },
-                        { icon: Zap, text: 'Projets concrets & portfolio' },
-                        { icon: Users, text: 'Suivi pédagogique inclus' },
+                        { icon: Zap, text: 'Projets concrets & exercices pratiques' },
+                        { icon: Users, text: 'Suivi pédagogique personnalisé' },
                         { icon: Award, text: 'Attestation de réussite' },
                       ].map(({ icon: Icon, text }) => (
                         <div key={text} className="flex items-center gap-3 text-sm text-gray-600">
@@ -400,7 +400,7 @@ export default function FormationDetailPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Related formations */}
+          {/* Related */}
           {relatedFormations.length > 0 && (
             <div className="mt-16">
               <h2 className="text-2xl font-bold text-navy-900 mb-6">Formations similaires</h2>

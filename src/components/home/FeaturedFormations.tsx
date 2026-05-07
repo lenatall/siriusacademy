@@ -4,7 +4,7 @@ import { store } from '@/lib/store'
 import FormationCard from '@/components/formations/FormationCard'
 
 export default function FeaturedFormations() {
-  const formations = store.formations.getAll().filter((f) => f.isFeatured)
+  const formations = store.formations.getAll().filter((f) => f.isFeatured && f.status !== 'brouillon')
 
   return (
     <section className="py-24 bg-white">
@@ -12,14 +12,14 @@ export default function FeaturedFormations() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
           <div>
             <div className="inline-flex items-center gap-2 bg-navy-900/5 text-navy-900 text-sm font-semibold px-4 py-2 rounded-full mb-4">
-              <span>Nos formations</span>
+              <span>Nos formations phares</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-3">
               Des formations{' '}
               <span className="text-brand-green">pratiques et concrètes</span>
             </h2>
             <p className="text-gray-500 text-base max-w-xl">
-              Exercices pratiques, projets guidés et suivi pédagogique — repartez avec des réalisations concrètes.
+              Petits groupes, accompagnement personnalisé, projets réels — repartez avec un portfolio présentable.
             </p>
           </div>
           <Link

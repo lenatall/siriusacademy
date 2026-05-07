@@ -23,10 +23,16 @@ export default function WaitlistForm({ formationSlug, formationTitle }: { format
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/waitlist', {
+      const res = await fetch('/api/prospects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, formationSlug }),
+        body: JSON.stringify({
+          ...form,
+          formationSlug,
+          source: 'liste-attente',
+          status: 'nouveau',
+          createdAt: new Date().toISOString(),
+        }),
       })
       if (res.ok) {
         setSuccess(true)

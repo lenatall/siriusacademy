@@ -1,13 +1,29 @@
 import { formations as defaultFormations } from '@/data/formations'
 import { coursgratuits as defaultCours } from '@/data/cours'
 import { blogPosts as defaultBlog } from '@/data/blog'
-import type { Formation, FreeCourse, BlogPost } from '@/types'
+import type { Formation, FreeCourse, BlogPost, Prospect, SiteSettings } from '@/types'
 
-// In-memory store — initialized with static data, replaced by a real DB later
+// In-memory store — initialized with static data, replace with a real DB later
 let _formations: Formation[] = JSON.parse(JSON.stringify(defaultFormations))
 let _cours: FreeCourse[] = JSON.parse(JSON.stringify(defaultCours))
 let _blog: BlogPost[] = JSON.parse(JSON.stringify(defaultBlog))
-let _settings = { heroFormationSlug: 'marketing-digital-reseaux-sociaux' }
+let _prospects: Prospect[] = []
+let _settings: SiteSettings = {
+  heroFormationSlug: 'marketing-digital-reseaux-sociaux',
+  siteName: 'Sirius Academy',
+  slogan: 'Apprendre le digital en pratiquant.',
+  country: "Sénégal — Afrique de l'Ouest",
+  currency: 'FCFA',
+  contactEmail: 'contact@siriusacademy.sn',
+  whatsappNumber: '+221 77 000 00 00',
+  whatsappLink: 'https://wa.me/221770000000',
+  heroTitle: 'Apprendre le digital en pratiquant.',
+  heroSubtitle:
+    "Pour les étudiants, entrepreneurs et personnes en reconversion qui veulent maîtriser le digital.",
+  heroCta1: 'Voir les formations',
+  heroCta2: 'Notre approche',
+  footerText: '© 2025 Sirius Academy — Tous droits réservés.',
+}
 
 function slugify(str: string): string {
   return str
@@ -21,7 +37,7 @@ function slugify(str: string): string {
 export const store = {
   settings: {
     get: () => _settings,
-    update: (updates: Partial<typeof _settings>) => {
+    update: (updates: Partial<SiteSettings>) => {
       _settings = { ..._settings, ...updates }
       return _settings
     },
@@ -32,11 +48,7 @@ export const store = {
     getBySlug: (slug: string) => _formations.find((f) => f.slug === slug),
     create: (data: Omit<Formation, 'id' | 'slug'> & { slug?: string }): Formation => {
       const slug = data.slug || slugify(data.title)
-      const f: Formation = {
-        ...data,
-        id: String(Date.now()),
-        slug,
-      } as Formation
+      const f: Formation = { ...data, id: String(Date.now()), slug } as Formation
       _formations.push(f)
       return f
     },
@@ -94,6 +106,30 @@ export const store = {
       const prev = _blog.length
       _blog = _blog.filter((p) => p.slug !== slug)
       return _blog.length < prev
+    },
+  },
+
+  prospects: {
+    getAll: () => _prospects,
+    getById: (id: string) => _prospects.find((p) => p.id === id),
+    create: (data: Omit<Prospect, 'id'>): Prospect => {
+      const p: Prospect = {
+        ...data,
+        id: String(Date.now()) + Math.random().toString(36).slice(2, 7),
+      }
+      _prospects.push(p)
+      return p
+    },
+    update: (id: string, updates: Partial<Prospect>): Prospect | null => {
+      const idx = _prospects.findIndex((p) => p.id === id)
+      if (idx < 0) return null
+      _prospects[idx] = { ..._prospects[idx], ...updates }
+      return _prospects[idx]
+    },
+    delete: (id: string): boolean => {
+      const prev = _prospects.length
+      _prospects = _prospects.filter((p) => p.id !== id)
+      return _prospects.length < prev
     },
   },
 }

@@ -1,15 +1,5 @@
 import { NextResponse } from 'next/server'
-
-// In-memory waitlist — replace with DB later
-const waitlist: Array<{
-  formationSlug: string
-  nom: string
-  prenom: string
-  email: string
-  telephone: string
-  statut: string
-  createdAt: string
-}> = []
+import { store } from '@/lib/store'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -19,14 +9,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
   }
 
-  const entry = { formationSlug, nom, prenom, email, telephone: telephone ?? '', statut: statut ?? '', createdAt: new Date().toISOString() }
-  waitlist.push(entry)
+  const prospect = store.prospects.create({
+    nom,
+    prenom,
+    email,
+    telephone: telephone ?? '',
+    formationSlug,
+    source: 'liste-attente',
+    status: 'nouveau',
+    statut: statut ?? '',
+    createdAt: new Date().toISOString(),
+  })
 
-  console.log('Nouvelle inscription liste d\'attente:', entry)
-
-  return NextResponse.json({ success: true })
+  return NextResponse.json({ success: true, id: prospect.id })
 }
 
 export async function GET() {
-  return NextResponse.json(waitlist)
+  const entries = store.prospects
+    .getAll()
+    .filter((p) => p.source === 'liste-attente')
+  return NextResponse.json(entries)
 }
