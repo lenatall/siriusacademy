@@ -54,10 +54,10 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            {/* Founder credibility badge */}
-            <div className="inline-flex items-center gap-2 bg-brand-yellow/20 border border-brand-yellow/30 text-brand-yellow text-xs font-semibold px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
-              <Star className="w-3.5 h-3.5 fill-current" />
-              <span>Fondée par Léna Badiane · Référente Digitale certifiée · Sonatel Academy</span>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-brand-green/20 border border-brand-green/30 text-brand-green text-xs font-semibold px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Learning by Doing · 100% pratique · Sénégal</span>
             </div>
 
             {/* Headline */}
