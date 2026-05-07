@@ -156,8 +156,8 @@ export default function Hero() {
                   <Star className="w-5 h-5 text-brand-yellow fill-current" />
                 </div>
                 <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">4.9/5</p>
-                  <p className="text-xs text-gray-400">Satisfaction</p>
+                  <p className="font-black text-navy-900 text-lg leading-none">Portfolio</p>
+                  <p className="text-xs text-gray-400">Projets concrets inclus</p>
                 </div>
               </div>
             </div>
