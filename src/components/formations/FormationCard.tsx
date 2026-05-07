@@ -144,14 +144,26 @@ export default function FormationCard({ formation }: FormationCardProps) {
           <div className="flex items-center justify-between">
             {isOpen ? (
               <div className="text-right w-full">
-                {formation.originalPrice && (
-                  <div className="text-xs text-gray-400 line-through">
-                    {formation.originalPrice.toLocaleString('fr-FR')} FCFA
-                  </div>
+                {formation.monthlyPrice ? (
+                  <>
+                    <div className="text-lg font-bold text-navy-900">
+                      {formation.monthlyPrice.toLocaleString('fr-FR')} FCFA
+                      <span className="text-xs font-normal text-gray-400 ml-1">/ mois</span>
+                    </div>
+                    <div className="text-xs text-gray-400">{formation.price.toLocaleString('fr-FR')} FCFA total</div>
+                  </>
+                ) : (
+                  <>
+                    {formation.originalPrice && (
+                      <div className="text-xs text-gray-400 line-through">
+                        {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                      </div>
+                    )}
+                    <div className="text-lg font-bold text-navy-900">
+                      {formation.price.toLocaleString('fr-FR')} FCFA
+                    </div>
+                  </>
                 )}
-                <div className="text-lg font-bold text-navy-900">
-                  {formation.price.toLocaleString('fr-FR')} FCFA
-                </div>
               </div>
             ) : (
               <div className="w-full text-right">

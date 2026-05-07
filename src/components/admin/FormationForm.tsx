@@ -40,8 +40,10 @@ export default function FormationForm({ initial = {}, mode }: Props) {
     shortDescription: initial.shortDescription ?? '',
     fullDescription: initial.fullDescription ?? '',
     image: initial.image ?? '',
-    price: initial.price ?? 0,
-    originalPrice: initial.originalPrice ?? '',
+    price: initial.price ? String(initial.price) : '',
+    originalPrice: initial.originalPrice ? String(initial.originalPrice) : '',
+    monthlyPrice: initial.monthlyPrice ? String(initial.monthlyPrice) : '',
+    paymentMonths: initial.paymentMonths ? String(initial.paymentMonths) : '',
     duration: initial.duration ?? '',
     level: initial.level ?? 'Débutant',
     category: initial.category ?? 'Marketing',
@@ -80,8 +82,10 @@ export default function FormationForm({ initial = {}, mode }: Props) {
 
     const payload = {
       ...form,
-      price: Number(form.price),
+      price: Number(form.price) || 0,
       originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
+      monthlyPrice: form.monthlyPrice ? Number(form.monthlyPrice) : undefined,
+      paymentMonths: form.paymentMonths ? Number(form.paymentMonths) : undefined,
       tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
       objectives: form.objectives.split('\n').map((o) => o.trim()).filter(Boolean),
       prerequisites: form.prerequisites.split('\n').map((p) => p.trim()).filter(Boolean),
@@ -181,7 +185,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
             <h2 className="font-bold text-navy-900 text-base border-b border-gray-100 pb-3">Informations générales</h2>
             <Field label="Titre de la formation" required>
-              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input" placeholder="Marketing Digital & Réseaux Sociaux" required />
+              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="input" placeholder="Référent Digital Junior" required />
             </Field>
             <Field label="Description courte" required hint="Affichée sur les cards — 1 à 2 phrases max">
               <textarea rows={2} value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} className="input resize-none" required />
@@ -246,7 +250,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
                     value={mod.title}
                     onChange={(e) => updateModule(mod.id, 'title', e.target.value)}
                     className="input text-sm"
-                    placeholder="Titre du module"
+                    placeholder="ex : Introduction au marketing digital"
                     required
                   />
                   <textarea
@@ -265,12 +269,12 @@ export default function FormationForm({ initial = {}, mode }: Props) {
                       placeholder="Durée (ex: 1 week-end)"
                     />
                     <input
-                      type="number"
-                      value={mod.lessons}
-                      onChange={(e) => updateModule(mod.id, 'lessons', Number(e.target.value))}
+                      type="text"
+                      inputMode="numeric"
+                      value={mod.lessons || ''}
+                      onChange={(e) => updateModule(mod.id, 'lessons', Number(e.target.value.replace(/\D/g, '')) || 0)}
                       className="input text-sm"
                       placeholder="Nb leçons"
-                      min={0}
                     />
                   </div>
                 </div>
@@ -286,7 +290,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label="Nom du formateur">
-                <input type="text" value={form.instructorName} onChange={(e) => setForm({ ...form, instructorName: e.target.value })} className="input" />
+                <input type="text" value={form.instructorName} onChange={(e) => setForm({ ...form, instructorName: e.target.value })} className="input" placeholder="Mamadou Ndiaye" />
               </Field>
               <Field label="Titre / Poste">
                 <input type="text" value={form.instructorTitle} onChange={(e) => setForm({ ...form, instructorTitle: e.target.value })} className="input" />
@@ -369,11 +373,17 @@ export default function FormationForm({ initial = {}, mode }: Props) {
           {/* Tarification */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
             <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Tarification & Détails</h2>
-            <Field label="Prix (FCFA)" required>
-              <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="input" min={0} required />
+            <Field label="Prix total (FCFA)" required>
+              <input type="text" inputMode="numeric" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value.replace(/\D/g, '') })} className="input" placeholder="150000" required />
             </Field>
-            <Field label="Prix barré (FCFA)" hint="Optionnel — prix original avant réduction">
-              <input type="number" value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value })} className="input" min={0} />
+            <Field label="Prix barré (FCFA)" hint="Optionnel — prix avant réduction">
+              <input type="text" inputMode="numeric" value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value.replace(/\D/g, '') })} className="input" placeholder="200000" />
+            </Field>
+            <Field label="Prix mensuel (FCFA)" hint="Optionnel — si paiement en plusieurs fois">
+              <input type="text" inputMode="numeric" value={form.monthlyPrice} onChange={(e) => setForm({ ...form, monthlyPrice: e.target.value.replace(/\D/g, '') })} className="input" placeholder="50000" />
+            </Field>
+            <Field label="Nombre de mensualités" hint="Ex : 3 pour 3 paiements mensuels">
+              <input type="text" inputMode="numeric" value={form.paymentMonths} onChange={(e) => setForm({ ...form, paymentMonths: e.target.value.replace(/\D/g, '') })} className="input" placeholder="3" />
             </Field>
             <Field label="Durée" required>
               <input type="text" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="input" placeholder="3 mois" required />

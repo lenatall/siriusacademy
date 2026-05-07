@@ -15,7 +15,7 @@ import {
   Lock,
   Sparkles,
 } from 'lucide-react'
-import { getFormationBySlug, formations } from '@/data/formations'
+import { store } from '@/lib/store'
 import ModuleAccordion from '@/components/formations/ModuleAccordion'
 import Badge from '@/components/ui/Badge'
 import FormationCard from '@/components/formations/FormationCard'
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const formation = getFormationBySlug(params.slug)
+  const formation = store.formations.getBySlug(params.slug)
   if (!formation) return { title: 'Formation introuvable' }
   return {
     title: formation.title,
@@ -44,10 +44,10 @@ const levelVariant: Record<string, 'green' | 'blue' | 'yellow' | 'navy'> = {
 }
 
 export default function FormationDetailPage({ params }: Props) {
-  const formation = getFormationBySlug(params.slug)
+  const formation = store.formations.getBySlug(params.slug)
   if (!formation) notFound()
 
-  const relatedFormations = formations
+  const relatedFormations = store.formations.getAll()
     .filter((f) => f.id !== formation.id && f.category === formation.category)
     .slice(0, 2)
 
@@ -308,17 +308,32 @@ export default function FormationDetailPage({ params }: Props) {
                       <>
                         {/* Price */}
                         <div className="mb-5">
-                          <div className="flex items-baseline gap-3">
-                            <span className="text-3xl font-black text-navy-900">
-                              {formation.price.toLocaleString('fr-FR')} FCFA
-                            </span>
-                            {formation.originalPrice && (
-                              <span className="text-gray-400 line-through text-base">
-                                {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                          {formation.monthlyPrice ? (
+                            <>
+                              <div className="flex items-baseline gap-2 mb-1">
+                                <span className="text-3xl font-black text-navy-900">
+                                  {formation.monthlyPrice.toLocaleString('fr-FR')} FCFA
+                                </span>
+                                <span className="text-gray-500 font-semibold text-sm">/ mois</span>
+                              </div>
+                              <p className="text-xs text-gray-400">
+                                Soit {formation.price.toLocaleString('fr-FR')} FCFA au total
+                                {formation.paymentMonths ? ` (${formation.paymentMonths} versements)` : ''}
+                              </p>
+                            </>
+                          ) : (
+                            <div className="flex items-baseline gap-3">
+                              <span className="text-3xl font-black text-navy-900">
+                                {formation.price.toLocaleString('fr-FR')} FCFA
                               </span>
-                            )}
-                          </div>
-                          {discount && (
+                              {formation.originalPrice && (
+                                <span className="text-gray-400 line-through text-base">
+                                  {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {discount && !formation.monthlyPrice && (
                             <p className="text-xs text-brand-green font-semibold mt-1">
                               Économisez {(formation.originalPrice! - formation.price).toLocaleString('fr-FR')} FCFA
                             </p>
@@ -337,7 +352,21 @@ export default function FormationDetailPage({ params }: Props) {
                         >
                           Demander des informations
                         </Link>
-                        <p className="text-xs text-center text-gray-400 mt-5">
+                        {/* Modalités paiement mensuel */}
+                        {formation.monthlyPrice && formation.paymentMonths && (
+                          <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                            <p className="text-xs font-bold text-emerald-800 mb-2">Modalités de paiement</p>
+                            <div className="space-y-1.5">
+                              {Array.from({ length: formation.paymentMonths }, (_, i) => (
+                                <div key={i} className="flex items-center justify-between text-xs text-emerald-700">
+                                  <span>{i === 0 ? '1er versement — Début de formation' : `${i + 1}e versement — Mois ${i + 1}`}</span>
+                                  <span className="font-bold">{formation.monthlyPrice!.toLocaleString('fr-FR')} FCFA</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        <p className="text-xs text-center text-gray-400 mt-4">
                           Paiement sécurisé · Paiement en plusieurs fois possible
                         </p>
                       </>

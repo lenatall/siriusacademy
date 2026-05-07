@@ -25,6 +25,8 @@ export interface Formation {
   image: string
   price: number
   originalPrice?: number
+  monthlyPrice?: number
+  paymentMonths?: number
   duration: string
   level: 'Débutant' | 'Intermédiaire' | 'Avancé' | 'Tous niveaux'
   modules: Module[]
