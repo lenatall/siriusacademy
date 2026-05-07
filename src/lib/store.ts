@@ -7,6 +7,7 @@ import type { Formation, FreeCourse, BlogPost } from '@/types'
 let _formations: Formation[] = JSON.parse(JSON.stringify(defaultFormations))
 let _cours: FreeCourse[] = JSON.parse(JSON.stringify(defaultCours))
 let _blog: BlogPost[] = JSON.parse(JSON.stringify(defaultBlog))
+let _settings = { heroFormationSlug: 'marketing-digital-reseaux-sociaux' }
 
 function slugify(str: string): string {
   return str
@@ -18,6 +19,14 @@ function slugify(str: string): string {
 }
 
 export const store = {
+  settings: {
+    get: () => _settings,
+    update: (updates: Partial<typeof _settings>) => {
+      _settings = { ..._settings, ...updates }
+      return _settings
+    },
+  },
+
   formations: {
     getAll: () => _formations,
     getBySlug: (slug: string) => _formations.find((f) => f.slug === slug),

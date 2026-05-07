@@ -1,7 +1,16 @@
 import Link from 'next/link'
 import { ArrowRight, Star, Users, BookOpen, Award, Zap, CheckCircle } from 'lucide-react'
+import { store } from '@/lib/store'
 
 export default function Hero() {
+  const settings = store.settings.get()
+  const heroFormation =
+    store.formations.getBySlug(settings.heroFormationSlug) ??
+    store.formations.getAll()[0]
+
+  const heroPoints = heroFormation?.keyPoints?.slice(0, 3) ??
+    heroFormation?.modules?.slice(0, 3).map((m) => m.title) ?? []
+
   return (
     <section className="relative min-h-screen bg-hero-gradient overflow-hidden flex items-center">
       {/* Decorative Background Elements */}
@@ -20,22 +29,22 @@ export default function Hero() {
           }}
         />
 
-        {/* Floating stars */}
+        {/* Floating dots */}
         {[
           { top: '15%', left: '8%', size: 'w-2 h-2', opacity: 'opacity-40', delay: '0s' },
           { top: '30%', right: '12%', size: 'w-1.5 h-1.5', opacity: 'opacity-30', delay: '1s' },
           { top: '60%', left: '5%', size: 'w-3 h-3', opacity: 'opacity-20', delay: '2s' },
           { top: '75%', right: '8%', size: 'w-2 h-2', opacity: 'opacity-40', delay: '0.5s' },
           { top: '20%', left: '40%', size: 'w-1 h-1', opacity: 'opacity-60', delay: '1.5s' },
-        ].map((star, i) => (
+        ].map((dot, i) => (
           <div
             key={i}
-            className={`absolute ${star.size} ${star.opacity} rounded-full bg-brand-yellow animate-float`}
+            className={`absolute ${dot.size} ${dot.opacity} rounded-full bg-brand-yellow animate-float`}
             style={{
-              top: star.top,
-              left: (star as { left?: string }).left,
-              right: (star as { right?: string }).right,
-              animationDelay: star.delay,
+              top: dot.top,
+              left: (dot as { left?: string }).left,
+              right: (dot as { right?: string }).right,
+              animationDelay: dot.delay,
             }}
           />
         ))}
@@ -119,83 +128,91 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right — Floating Cards */}
-          <div className="hidden lg:block relative">
-            <div className="relative w-full h-[520px]">
-              {/* Founder card */}
-              <div className="absolute top-0 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-12 h-12 rounded-xl shrink-0 bg-brand-yellow flex items-center justify-center font-black text-navy-900 text-lg"
+          {/* Right — Dynamic formation card */}
+          {heroFormation && (
+            <div className="hidden lg:block relative">
+              <div className="relative w-full h-[520px]">
+                {/* Main formation card */}
+                <div className="absolute top-0 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center shrink-0">
+                        <BookOpen className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
+                        <p className="text-slate-400 text-xs mt-0.5">
+                          {heroFormation.duration} · {heroFormation.modules.length} modules
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-white font-black text-base">
+                        {heroFormation.price.toLocaleString('fr-FR')} FCFA
+                      </p>
+                      {heroFormation.originalPrice && (
+                        <p className="text-slate-400 text-xs line-through">
+                          {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Key points */}
+                  <div className="space-y-2 mb-4">
+                    {heroPoints.map((point) => (
+                      <div key={point} className="flex items-start gap-2 text-xs text-slate-300">
+                        <CheckCircle className="w-3.5 h-3.5 text-brand-green shrink-0 mt-0.5" />
+                        <span className="line-clamp-1">{point}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Status */}
+                  <div className="flex items-center gap-2 mb-4">
+                    {heroFormation.status === 'ouvert' ? (
+                      <span className="inline-flex items-center gap-1.5 bg-brand-green/20 text-brand-green text-xs font-bold px-3 py-1 rounded-lg border border-brand-green/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                        Inscriptions ouvertes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 bg-brand-yellow/20 text-brand-yellow text-xs font-bold px-3 py-1 rounded-lg border border-brand-yellow/30">
+                        Bientôt disponible
+                      </span>
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/formations/${heroFormation.slug}`}
+                    className="flex items-center justify-center gap-2 bg-brand-green text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors"
                   >
-                    LB
+                    Découvrir cette formation <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Bottom mini cards */}
+                <div className="absolute bottom-0 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                    <Users className="w-5 h-5 text-brand-green" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-sm">Léna Badiane</p>
-                    <p className="text-slate-400 text-xs">Fondatrice & Formatrice principale</p>
-                  </div>
-                  <div className="ml-auto">
-                    <span className="text-xs bg-brand-green/20 text-brand-green font-semibold px-2 py-1 rounded-lg border border-brand-green/30">
-                      Active
-                    </span>
+                    <p className="font-black text-navy-900 text-base leading-none">Petits groupes</p>
+                    <p className="text-xs text-gray-400">Suivi individualisé</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  {[
-                    'Référente Digitale · Sonatel Academy',
-                    'Head of Product · EDACY',
-                    'Accompagnement d\'entreprises en digital',
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-slate-300">
-                      <CheckCircle className="w-3 h-3 text-brand-green shrink-0" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Method card */}
-              <div className="absolute top-52 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-brand-yellow rounded-xl flex items-center justify-center">
-                    <Zap className="w-4 h-4 text-navy-900" />
+                <div className="absolute bottom-0 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-brand-yellow" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-sm">Learning by Doing</p>
-                    <p className="text-slate-400 text-xs">Notre méthode pédagogique</p>
+                    <p className="font-black text-navy-900 text-base leading-none">100% Pratique</p>
+                    <p className="text-xs text-gray-400">Zéro rembourrage théorique</p>
                   </div>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {['Projet réel', 'Feedback direct', 'Portfolio final'].map((item) => (
-                    <div key={item} className="bg-white/10 rounded-lg p-2 text-center">
-                      <p className="text-white text-xs font-semibold">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Stats cards */}
-              <div className="absolute bottom-0 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                  <Users className="w-5 h-5 text-brand-green" />
-                </div>
-                <div>
-                  <p className="font-black text-navy-900 text-base leading-none">Petits groupes</p>
-                  <p className="text-xs text-gray-400">Suivi individualisé</p>
-                </div>
-              </div>
-
-              <div className="absolute bottom-0 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-brand-yellow" />
-                </div>
-                <div>
-                  <p className="font-black text-navy-900 text-base leading-none">100% Pratique</p>
-                  <p className="text-xs text-gray-400">Zéro rembourrage théorique</p>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
