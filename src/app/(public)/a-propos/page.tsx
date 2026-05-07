@@ -1,20 +1,20 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, Target, Heart, Zap, Users, Award, ArrowRight } from 'lucide-react'
+import { Star, Target, Heart, Zap, Users, Award, ArrowRight, GraduationCap, Briefcase, CheckCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'À Propos',
   description:
-    'Découvrez l\'histoire, la mission et l\'équipe de Sirius Academy — votre partenaire pour la formation digitale.',
+    'Découvrez l\'histoire, la mission et l\'équipe de Sirius Academy — votre partenaire pour la formation digitale au Sénégal.',
 }
 
 const team = [
   {
     name: 'Léna Badiane',
-    role: 'Fondatrice & Formatrice Marketing Digital',
+    role: 'Fondatrice & Formatrice principale',
     avatar: 'https://ui-avatars.com/api/?name=Lena+Badiane&background=10B981&color=fff&size=200',
-    bio: 'Référente Digitale certifiée avec plus de 5 ans d\'expérience en marketing digital, création de contenu, gestion de réseaux sociaux et accompagnement d\'entreprises. Fondatrice de Sirius Academy.',
+    bio: 'Fondatrice de Sirius Academy. Titulaire d\'une Licence en Génie Logiciel & Réseaux, certifiée Référente Digitale par la Sonatel Academy et Head of Product par EDACY. Elle accompagne des entreprises dans leur transformation digitale, marketing digital et gestion des réseaux sociaux.',
   },
   {
     name: 'Cheikh Sarr',
@@ -161,8 +161,88 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* Values */}
+      {/* Founder spotlight */}
       <section className="py-20 bg-gray-50">
+        <div className="container-custom">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-navy-900/5 text-navy-900 text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                <Star className="w-4 h-4 text-brand-yellow fill-current" />
+                <span>La fondatrice</span>
+              </div>
+              <h2 className="text-3xl font-black text-navy-900">Léna Badiane</h2>
+              <p className="text-brand-green font-semibold mt-1">Fondatrice & Formatrice principale de Sirius Academy</p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-10 items-start">
+              {/* Credentials */}
+              <div className="space-y-4">
+                <h3 className="font-bold text-navy-900 text-base mb-4">Formations & certifications</h3>
+                {[
+                  {
+                    icon: GraduationCap,
+                    title: 'Licence Génie Logiciel & Réseaux',
+                    sub: 'Formation académique en informatique et réseaux',
+                    color: 'bg-blue-50 text-blue-600',
+                  },
+                  {
+                    icon: Award,
+                    title: 'Référente Digitale certifiée',
+                    sub: 'Sonatel Academy — certification reconnue dans l\'écosystème digital',
+                    color: 'bg-emerald-50 text-emerald-600',
+                  },
+                  {
+                    icon: Briefcase,
+                    title: 'Head of Product',
+                    sub: 'EDACY — formation leadership produit & stratégie digitale',
+                    color: 'bg-amber-50 text-amber-700',
+                  },
+                ].map(({ icon: Icon, title, sub, color }) => (
+                  <div key={title} className="flex items-start gap-4 bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                    <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center shrink-0`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-navy-900 text-sm">{title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Expertise */}
+              <div className="space-y-4">
+                <h3 className="font-bold text-navy-900 text-base mb-4">Domaines d'expertise</h3>
+                <div className="space-y-2">
+                  {[
+                    'Marketing digital & stratégie de contenu',
+                    'Gestion des réseaux sociaux & community management',
+                    'Publicité en ligne (Meta Ads, Google Ads)',
+                    'Accompagnement en transformation digitale d\'entreprises',
+                    'Développement produit & stratégie UX',
+                    'Formation professionnelle et pédagogie pratique',
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-2.5">
+                      <CheckCircle className="w-4 h-4 text-brand-green shrink-0 mt-0.5" />
+                      <span className="text-sm text-gray-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-navy-900 rounded-xl p-4 mt-4">
+                  <p className="text-slate-300 text-sm leading-relaxed italic">
+                    "Ma mission avec Sirius Academy est simple : transmettre ce que j'ai appris sur le terrain, avec des méthodes qui marchent vraiment — le Learning by Doing. Pas de théorie creuse. Des compétences concrètes, applicables dès le premier jour."
+                  </p>
+                  <p className="text-brand-yellow text-xs font-semibold mt-3">— Léna Badiane, Fondatrice</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="py-20 bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-4">Nos valeurs</h2>

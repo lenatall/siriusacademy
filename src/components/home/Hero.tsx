@@ -1,7 +1,16 @@
 import Link from 'next/link'
-import { ArrowRight, Star, Users, BookOpen, Award } from 'lucide-react'
+import { ArrowRight, Star, Users, BookOpen, Award, Zap, CheckCircle } from 'lucide-react'
+import { store } from '@/lib/store'
 
 export default function Hero() {
+  const settings = store.settings.get()
+  const heroFormation =
+    store.formations.getBySlug(settings.heroFormationSlug) ??
+    store.formations.getAll()[0]
+
+  const heroPoints = heroFormation?.keyPoints?.slice(0, 3) ??
+    heroFormation?.modules?.slice(0, 3).map((m) => m.title) ?? []
+
   return (
     <section className="relative min-h-screen bg-hero-gradient overflow-hidden flex items-center">
       {/* Decorative Background Elements */}
@@ -20,22 +29,22 @@ export default function Hero() {
           }}
         />
 
-        {/* Floating stars */}
+        {/* Floating dots */}
         {[
           { top: '15%', left: '8%', size: 'w-2 h-2', opacity: 'opacity-40', delay: '0s' },
           { top: '30%', right: '12%', size: 'w-1.5 h-1.5', opacity: 'opacity-30', delay: '1s' },
           { top: '60%', left: '5%', size: 'w-3 h-3', opacity: 'opacity-20', delay: '2s' },
           { top: '75%', right: '8%', size: 'w-2 h-2', opacity: 'opacity-40', delay: '0.5s' },
           { top: '20%', left: '40%', size: 'w-1 h-1', opacity: 'opacity-60', delay: '1.5s' },
-        ].map((star, i) => (
+        ].map((dot, i) => (
           <div
             key={i}
-            className={`absolute ${star.size} ${star.opacity} rounded-full bg-brand-yellow animate-float`}
+            className={`absolute ${dot.size} ${dot.opacity} rounded-full bg-brand-yellow animate-float`}
             style={{
-              top: star.top,
-              left: (star as { left?: string }).left,
-              right: (star as { right?: string }).right,
-              animationDelay: star.delay,
+              top: dot.top,
+              left: (dot as { left?: string }).left,
+              right: (dot as { right?: string }).right,
+              animationDelay: dot.delay,
             }}
           />
         ))}
@@ -45,23 +54,37 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            {/* Top badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm px-4 py-2 rounded-full mb-8 backdrop-blur-sm">
-              <Star className="w-4 h-4 text-brand-yellow fill-current" />
-              <span className="font-medium">Académie digitale basée au Sénégal</span>
+            {/* Founder credibility badge */}
+            <div className="inline-flex items-center gap-2 bg-brand-yellow/20 border border-brand-yellow/30 text-brand-yellow text-xs font-semibold px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
+              <Star className="w-3.5 h-3.5 fill-current" />
+              <span>Fondée par Léna Badiane · Référente Digitale certifiée · Sonatel Academy</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
-              Construisez des
-              <span className="block text-gradient-green">compétences digitales</span>
-              visibles et concrètes
+              Apprenez en faisant.
+              <span className="block text-gradient-green">Pas en regardant.</span>
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8 max-w-lg">
-              Marketing digital, création de contenu, réseaux sociaux, design — des formations
-              pratiques, en petits groupes, avec des projets concrets et un accompagnement personnalisé.
+            <p className="text-lg text-slate-300 leading-relaxed mb-6 max-w-lg">
+              Des formations 100% pratiques en marketing digital, création de contenu, développement web et design —
+              conçues pour construire de vraies compétences, un vrai portfolio, dès le premier jour.
             </p>
+
+            {/* Learning by doing pills */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {[
+                { icon: Zap, text: 'Learning by doing' },
+                { icon: BookOpen, text: '100% pratique' },
+                { icon: CheckCircle, text: 'Portfolio inclus' },
+                { icon: Users, text: 'Petits groupes' },
+              ].map(({ icon: Icon, text }) => (
+                <span key={text} className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full backdrop-blur-sm">
+                  <Icon className="w-3 h-3 text-brand-green" />
+                  {text}
+                </span>
+              ))}
+            </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 mb-12">
@@ -73,11 +96,10 @@ export default function Hero() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                href="/inscription"
+                href="/a-propos"
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-7 py-4 rounded-xl transition-all duration-200 backdrop-blur-sm text-base"
               >
-                S&apos;inscrire
-                <ArrowRight className="w-5 h-5" />
+                Qui sommes-nous ?
               </Link>
             </div>
 
@@ -106,62 +128,91 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right — Floating Cards */}
-          <div className="hidden lg:block relative">
-            <div className="relative w-full h-[500px]">
-              {/* Main card */}
-              <div className="absolute top-10 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-white" />
+          {/* Right — Dynamic formation card */}
+          {heroFormation && (
+            <div className="hidden lg:block relative">
+              <div className="relative w-full h-[520px]">
+                {/* Main formation card */}
+                <div className="absolute top-0 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center shrink-0">
+                        <BookOpen className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
+                        <p className="text-slate-400 text-xs mt-0.5">
+                          {heroFormation.duration} · {heroFormation.modules.length} modules
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-white font-black text-base">
+                        {heroFormation.price.toLocaleString('fr-FR')} FCFA
+                      </p>
+                      {heroFormation.originalPrice && (
+                        <p className="text-slate-400 text-xs line-through">
+                          {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Key points */}
+                  <div className="space-y-2 mb-4">
+                    {heroPoints.map((point) => (
+                      <div key={point} className="flex items-start gap-2 text-xs text-slate-300">
+                        <CheckCircle className="w-3.5 h-3.5 text-brand-green shrink-0 mt-0.5" />
+                        <span className="line-clamp-1">{point}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Status */}
+                  <div className="flex items-center gap-2 mb-4">
+                    {heroFormation.status === 'ouvert' ? (
+                      <span className="inline-flex items-center gap-1.5 bg-brand-green/20 text-brand-green text-xs font-bold px-3 py-1 rounded-lg border border-brand-green/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                        Inscriptions ouvertes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 bg-brand-yellow/20 text-brand-yellow text-xs font-bold px-3 py-1 rounded-lg border border-brand-yellow/30">
+                        Bientôt disponible
+                      </span>
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/formations/${heroFormation.slug}`}
+                    className="flex items-center justify-center gap-2 bg-brand-green text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors"
+                  >
+                    Découvrir cette formation <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Bottom mini cards */}
+                <div className="absolute bottom-0 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                    <Users className="w-5 h-5 text-brand-green" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-sm">Développement Web Full-Stack</p>
-                    <p className="text-slate-400 text-xs">4 mois · 12 modules</p>
-                  </div>
-                  <div className="ml-auto text-right">
-                    <p className="text-white font-black text-lg">800 000 FCFA</p>
-                    <p className="text-slate-400 text-xs line-through">1 200 000 FCFA</p>
+                    <p className="font-black text-navy-900 text-base leading-none">Petits groupes</p>
+                    <p className="text-xs text-gray-400">Suivi individualisé</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  {['React & Next.js', 'Node.js & Express', 'Bases de données'].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-slate-300">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-green" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  href="/formations/developpement-web-full-stack"
-                  className="mt-4 flex items-center justify-center gap-2 bg-brand-green text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors"
-                >
-                  Découvrir <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
 
-              {/* Stats cards */}
-              <div className="absolute -bottom-6 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                  <Users className="w-5 h-5 text-brand-green" />
-                </div>
-                <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">Petits groupes</p>
-                  <p className="text-xs text-gray-400">Suivi individualisé</p>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                  <Star className="w-5 h-5 text-brand-yellow fill-current" />
-                </div>
-                <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">Portfolio</p>
-                  <p className="text-xs text-gray-400">Projets concrets inclus</p>
+                <div className="absolute bottom-0 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-brand-yellow" />
+                  </div>
+                  <div>
+                    <p className="font-black text-navy-900 text-base leading-none">100% Pratique</p>
+                    <p className="text-xs text-gray-400">Zéro rembourrage théorique</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

@@ -1,6 +1,9 @@
+export const dynamic = 'force-dynamic'
+
 import Hero from '@/components/home/Hero'
 import Stats from '@/components/home/Stats'
 import Features from '@/components/home/Features'
+import FounderSection from '@/components/home/FounderSection'
 import FeaturedFormations from '@/components/home/FeaturedFormations'
 import Testimonials from '@/components/home/Testimonials'
 import Link from 'next/link'
@@ -12,6 +15,7 @@ export default function HomePage() {
       <Hero />
       <Stats />
       <Features />
+      <FounderSection />
       <FeaturedFormations />
       <Testimonials />
 
