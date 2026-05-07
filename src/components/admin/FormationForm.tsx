@@ -59,13 +59,31 @@ export default function FormationForm({ initial = {}, mode }: Props) {
     targetAudience: initial.targetAudience ?? '',
     skillsTargeted: (initial.skillsTargeted ?? []).join('\n'),
     maxPlaces: initial.maxPlaces ? String(initial.maxPlaces) : '',
-    registrationFee: initial.registrationFee ? String(initial.registrationFee) : '',
     programPdfUrl: initial.programPdfUrl ?? '',
     instructorName: initial.instructor?.name ?? DEFAULT_INSTRUCTOR.name,
     instructorTitle: initial.instructor?.title ?? DEFAULT_INSTRUCTOR.title,
     instructorAvatar: initial.instructor?.avatar ?? DEFAULT_INSTRUCTOR.avatar,
     instructorBio: initial.instructor?.bio ?? DEFAULT_INSTRUCTOR.bio,
   })
+
+  const [paymentType, setPaymentType] = useState<'unique' | 'tranches'>(
+    (initial.paymentType as 'unique' | 'tranches') ?? 'unique'
+  )
+  const [tranches, setTranches] = useState<Array<{ id: string; nom: string; montant: string; echeance: string }>>(
+    initial.tranches?.map((t: { nom: string; montant: number; echeance: string }) => ({
+      id: Math.random().toString(36).slice(2),
+      nom: t.nom,
+      montant: String(t.montant),
+      echeance: t.echeance,
+    })) ?? [
+      { id: Math.random().toString(36).slice(2), nom: 'Paiement à l\'inscription', montant: '', echeance: 'À l\'inscription' },
+      { id: Math.random().toString(36).slice(2), nom: 'Deuxième paiement', montant: '', echeance: 'Au début du 2e mois' },
+    ]
+  )
+
+  const emptyTranche = () => ({ id: Math.random().toString(36).slice(2), nom: '', montant: '', echeance: '' })
+  const trancheSomme = tranches.reduce((acc, t) => acc + (Number(t.montant) || 0), 0)
+  const trancheValid = paymentType === 'unique' || trancheSomme === Number(form.price)
 
   const [modules, setModules] = useState<Module[]>(
     initial.modules?.length ? initial.modules : [emptyModule()]
@@ -83,6 +101,12 @@ export default function FormationForm({ initial = {}, mode }: Props) {
     setLoading(true)
     setError('')
 
+    if (!trancheValid) {
+      setError('La somme des tranches ne correspond pas au montant total de la formation.')
+      setLoading(false)
+      return
+    }
+
     const payload = {
       ...form,
       price: Number(form.price),
@@ -95,7 +119,10 @@ export default function FormationForm({ initial = {}, mode }: Props) {
       targetAudience: form.targetAudience || undefined,
       skillsTargeted: form.skillsTargeted.split('\n').map((s) => s.trim()).filter(Boolean),
       maxPlaces: form.maxPlaces ? Number(form.maxPlaces) : undefined,
-      registrationFee: form.registrationFee ? Number(form.registrationFee) : undefined,
+      paymentType,
+      tranches: paymentType === 'tranches'
+        ? tranches.map((t) => ({ nom: t.nom, montant: Number(t.montant), echeance: t.echeance }))
+        : [],
       programPdfUrl: form.programPdfUrl || undefined,
       startDate: form.startDate || undefined,
       endDate: form.endDate || undefined,
@@ -388,16 +415,133 @@ export default function FormationForm({ initial = {}, mode }: Props) {
 
           {/* Tarification */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Tarification & Détails</h2>
-            <Field label="Frais d'inscription (FCFA)" hint="Montant dû à l'inscription (frais de dossier)">
-              <input type="text" inputMode="numeric" value={form.registrationFee} onChange={(e) => setForm({ ...form, registrationFee: e.target.value.replace(/\D/g, '') })} className="input" placeholder="25000" />
+            <h2 className="font-bold text-navy-900 text-sm border-b border-gray-100 pb-3">Tarification</h2>
+
+            {/* Type de paiement */}
+            <Field label="Type de paiement" required>
+              <div className="grid grid-cols-2 gap-3">
+                {([['unique', 'Paiement unique'], ['tranches', 'Paiement par tranches']] as const).map(([val, lab]) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setPaymentType(val)}
+                    className={`py-3 px-4 rounded-xl border-2 text-sm font-semibold transition-colors text-left ${
+                      paymentType === val
+                        ? 'border-brand-green bg-emerald-50 text-brand-green'
+                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                    }`}
+                  >
+                    {lab}
+                  </button>
+                ))}
+              </div>
             </Field>
-            <Field label="Prix total (FCFA)" required>
-              <input type="text" inputMode="numeric" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value.replace(/\D/g, '') })} className="input" placeholder="150000" required />
+
+            {/* Prix total */}
+            <Field label="Montant total (FCFA)" required>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value.replace(/\D/g, '') })}
+                className="input"
+                placeholder="150000"
+                required
+              />
             </Field>
+
+            {/* Prix barré */}
             <Field label="Prix barré (FCFA)" hint="Optionnel — prix original avant réduction">
-              <input type="number" value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value })} className="input" min={0} />
+              <input
+                type="text"
+                inputMode="numeric"
+                value={form.originalPrice}
+                onChange={(e) => setForm({ ...form, originalPrice: e.target.value.replace(/\D/g, '') })}
+                className="input"
+                placeholder="200000"
+              />
             </Field>
+
+            {/* Tranches */}
+            {paymentType === 'tranches' && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-gray-700">Tranches de paiement</p>
+                  {/* Validation indicator */}
+                  {Number(form.price) > 0 && (
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                      trancheValid
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-red-100 text-red-600'
+                    }`}>
+                      {trancheSomme.toLocaleString('fr-FR')} / {Number(form.price).toLocaleString('fr-FR')} FCFA
+                    </span>
+                  )}
+                </div>
+                {tranches.map((tranche, idx) => (
+                  <div key={tranche.id} className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-200">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-xs font-bold text-gray-600 uppercase tracking-wide">Tranche {idx + 1}</p>
+                      {tranches.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setTranches((prev) => prev.filter((t) => t.id !== tranche.id))}
+                          className="text-xs text-red-400 hover:text-red-600 transition-colors"
+                        >
+                          Supprimer
+                        </button>
+                      )}
+                    </div>
+                    <div>
+                      <label className="label text-xs">Nom de la tranche</label>
+                      <input
+                        type="text"
+                        value={tranche.nom}
+                        onChange={(e) => setTranches((prev) => prev.map((t) => t.id === tranche.id ? { ...t, nom: e.target.value } : t))}
+                        className="input text-sm"
+                        placeholder="Premier paiement à l'inscription"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="label text-xs">Montant (FCFA)</label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={tranche.montant}
+                          onChange={(e) => setTranches((prev) => prev.map((t) => t.id === tranche.id ? { ...t, montant: e.target.value.replace(/\D/g, '') } : t))}
+                          className="input text-sm"
+                          placeholder="75000"
+                        />
+                      </div>
+                      <div>
+                        <label className="label text-xs">Échéance</label>
+                        <input
+                          type="text"
+                          value={tranche.echeance}
+                          onChange={(e) => setTranches((prev) => prev.map((t) => t.id === tranche.id ? { ...t, echeance: e.target.value } : t))}
+                          className="input text-sm"
+                          placeholder="À l'inscription"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setTranches((prev) => [...prev, emptyTranche()])}
+                  className="w-full py-2.5 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-brand-green hover:text-brand-green transition-colors font-medium"
+                >
+                  + Ajouter une tranche
+                </button>
+                {!trancheValid && Number(form.price) > 0 && (
+                  <p className="text-xs text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                    La somme des tranches ({trancheSomme.toLocaleString('fr-FR')} FCFA) ne correspond pas au montant total ({Number(form.price).toLocaleString('fr-FR')} FCFA).
+                  </p>
+                )}
+              </div>
+            )}
+
             <Field label="Nombre de places" hint="Laisser vide si non limité">
               <input type="text" inputMode="numeric" value={form.maxPlaces} onChange={(e) => setForm({ ...form, maxPlaces: e.target.value.replace(/\D/g, '') })} className="input" placeholder="20" />
             </Field>

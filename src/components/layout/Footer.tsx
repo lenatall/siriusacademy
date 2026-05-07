@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram } from 'lucide-react'
+import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
 
 const footerLinks = {
   formations: [
@@ -14,21 +14,62 @@ const footerLinks = {
   ],
   support: [
     { label: 'Contact', href: '/contact' },
-    { label: 'S\'inscrire', href: '/inscription' },
+    { label: "S'inscrire", href: '/inscription' },
     { label: 'FAQ', href: '/contact#faq' },
   ],
 }
 
+const socialLinks = [
+  { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  { icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: Youtube, href: '#', label: 'YouTube' },
+  { icon: Instagram, href: '#', label: 'Instagram' },
+]
+
+const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
+
 export default function Footer() {
   return (
     <footer className="bg-navy-950 text-slate-300">
-      {/* Main Footer */}
+
+      {/* ── WhatsApp CTA Banner ──────────────────────────────── */}
+      <div className="bg-brand-green">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                <MessageCircle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-white font-bold text-lg leading-snug">
+                  Vous avez une question ?
+                </p>
+                <p className="text-emerald-100 text-sm">
+                  Notre équipe répond sur WhatsApp, souvent en quelques minutes.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://wa.me/221770000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-brand-green font-bold px-6 py-3 rounded-xl text-sm transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Écrire sur WhatsApp →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main Footer ─────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* Brand */}
+
+          {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 bg-gradient-to-br from-brand-yellow to-amber-500 rounded-xl flex items-center justify-center">
+            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <Star className="w-5 h-5 text-navy-900 fill-current" />
               </div>
               <div>
@@ -36,39 +77,43 @@ export default function Footer() {
                 <span className="text-brand-yellow font-bold text-xl"> Academy</span>
               </div>
             </Link>
-            <p className="text-sm leading-relaxed text-slate-400 mb-6">
+
+            <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
               Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à
               construire des compétences concrètes, visibles et utiles grâce à un accompagnement
               personnalisé en petits groupes.
             </p>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-3">
+
+            {/* Contact info */}
+            <ul className="space-y-3 text-sm mb-7">
+              <li className="flex items-center gap-3 text-slate-400">
                 <Mail className="w-4 h-4 text-brand-green shrink-0" />
-                <span>contact@sirius-academy.sn</span>
-              </div>
-              <div className="flex items-center gap-3">
+                <a href="mailto:contact@sirius-academy.sn" className="hover:text-brand-green transition-colors">
+                  contact@sirius-academy.sn
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-slate-400">
                 <Phone className="w-4 h-4 text-brand-green shrink-0" />
-                <span>+221 77 000 00 00</span>
-              </div>
-              <div className="flex items-center gap-3">
+                <a href="tel:+221770000000" className="hover:text-brand-green transition-colors">
+                  +221 77 000 00 00
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-slate-400">
                 <MapPin className="w-4 h-4 text-brand-green shrink-0" />
                 <span>Dakar, Sénégal (et 100% en ligne)</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 mt-6">
-              {[
-                { icon: Linkedin, href: '#', label: 'LinkedIn' },
-                { icon: Twitter, href: '#', label: 'Twitter' },
-                { icon: Youtube, href: '#', label: 'YouTube' },
-                { icon: Instagram, href: '#', label: 'Instagram' },
-              ].map(({ icon: Icon, href, label }) => (
+              </li>
+            </ul>
+
+            {/* Social icons */}
+            <div className="grid grid-cols-4 gap-2 max-w-[176px]">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-white/5 hover:bg-brand-green hover:text-white flex items-center justify-center transition-all duration-200"
+                  className="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-green text-slate-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-105"
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                 </a>
               ))}
             </div>
@@ -76,7 +121,8 @@ export default function Footer() {
 
           {/* Formations */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
+              <span className="w-5 h-0.5 bg-brand-green rounded-full" />
               Formations
             </h3>
             <ul className="space-y-3">
@@ -84,8 +130,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-brand-green transition-colors"
+                    className="group flex items-center gap-1.5 text-sm text-slate-400 hover:text-brand-green transition-colors"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-green text-xs">→</span>
                     {link.label}
                   </Link>
                 </li>
@@ -95,7 +142,8 @@ export default function Footer() {
 
           {/* Ressources */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
+              <span className="w-5 h-0.5 bg-brand-green rounded-full" />
               Ressources
             </h3>
             <ul className="space-y-3">
@@ -103,8 +151,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-brand-green transition-colors"
+                    className="group flex items-center gap-1.5 text-sm text-slate-400 hover:text-brand-green transition-colors"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-green text-xs">→</span>
                     {link.label}
                   </Link>
                 </li>
@@ -112,37 +161,42 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Support + Newsletter */}
           <div>
-            <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
+              <span className="w-5 h-0.5 bg-brand-green rounded-full" />
               Support
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mb-8">
               {footerLinks.support.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-slate-400 hover:text-brand-green transition-colors"
+                    className="group flex items-center gap-1.5 text-sm text-slate-400 hover:text-brand-green transition-colors"
                   >
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-brand-green text-xs">→</span>
                     {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
 
-            {/* Newsletter mini */}
-            <div className="mt-8">
-              <p className="text-sm font-semibold text-white mb-3">Newsletter</p>
-              <p className="text-xs text-slate-400 mb-3">
+            {/* Newsletter */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
+                <p className="text-sm font-semibold text-white">Newsletter</p>
+              </div>
+              <p className="text-xs text-slate-400 mb-3 leading-relaxed">
                 Conseils, ressources et actus chaque semaine.
               </p>
               <div className="flex gap-2">
                 <input
                   type="email"
                   placeholder="votre@email.fr"
-                  className="flex-1 min-w-0 bg-white/5 border border-white/10 text-white text-sm px-3 py-2 rounded-lg focus:outline-none focus:border-brand-green transition-colors placeholder-slate-500"
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 text-white text-sm px-3 py-2 rounded-lg focus:outline-none focus:border-brand-green focus:bg-white/10 transition-all duration-200 placeholder-slate-500"
                 />
-                <button className="bg-brand-green hover:bg-brand-green-dark text-white text-sm px-3 py-2 rounded-lg transition-colors font-medium">
+                <button className="bg-brand-green hover:bg-brand-green-dark text-white text-sm px-3 py-2 rounded-lg transition-colors font-semibold shrink-0">
                   OK
                 </button>
               </div>
@@ -151,21 +205,30 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* ── Bottom bar ───────────────────────────────────────── */}
       <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">
             © {new Date().getFullYear()} Sirius Academy. Tous droits réservés.
           </p>
-          <div className="flex items-center gap-6">
-            {['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies'].map((item) => (
-              <a key={item} href="#" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
-                {item}
-              </a>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            {legalLinks.map((item, index) => (
+              <span key={item} className="flex items-center gap-3">
+                {index > 0 && (
+                  <span className="text-slate-600 select-none">|</span>
+                )}
+                <a
+                  href="#"
+                  className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  {item}
+                </a>
+              </span>
             ))}
           </div>
         </div>
       </div>
+
     </footer>
   )
 }

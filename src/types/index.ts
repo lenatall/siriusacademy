@@ -15,6 +15,13 @@ export interface Instructor {
 
 export type FormationStatus = 'ouvert' | 'bientot' | 'brouillon'
 export type FormationSchedule = 'date-fixe' | 'weekend' | 'sans-date'
+export type PaymentType = 'unique' | 'tranches'
+
+export interface PaymentTranche {
+  nom: string
+  montant: number
+  echeance: string
+}
 
 export interface Formation {
   id: string
@@ -25,9 +32,8 @@ export interface Formation {
   image: string
   price: number
   originalPrice?: number
-  monthlyPrice?: number
-  paymentMonths?: number
-  registrationFee?: number
+  paymentType?: PaymentType
+  tranches?: PaymentTranche[]
   duration: string
   level: 'Débutant' | 'Intermédiaire' | 'Avancé' | 'Tous niveaux'
   modules: Module[]

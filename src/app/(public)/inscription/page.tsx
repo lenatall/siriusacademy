@@ -5,12 +5,19 @@ import { useSearchParams } from 'next/navigation'
 import { CheckCircle, Loader2, Star, Award, Users, ArrowRight, Phone } from 'lucide-react'
 import Link from 'next/link'
 
+interface PaymentTranche {
+  nom: string
+  montant: number
+  echeance: string
+}
+
 interface Formation {
   slug: string
   title: string
   price: number
-  monthlyPrice?: number
-  registrationFee?: number
+  originalPrice?: number
+  paymentType?: 'unique' | 'tranches'
+  tranches?: PaymentTranche[]
   duration: string
   level: string
   status: string
@@ -234,7 +241,9 @@ function InscriptionForm() {
                   <option value="">Sélectionnez une formation</option>
                   {formations.map((f) => (
                     <option key={f.slug} value={f.slug}>
-                      {f.title}{f.monthlyPrice ? ` — ${f.monthlyPrice.toLocaleString('fr-FR')} FCFA/mois` : ` — ${f.price.toLocaleString('fr-FR')} FCFA`}
+                      {f.title}{f.paymentType === 'tranches' && f.tranches?.length
+                        ? ` — ${f.tranches[0].montant.toLocaleString('fr-FR')} FCFA à l'inscription`
+                        : ` — ${f.price.toLocaleString('fr-FR')} FCFA`}
                     </option>
                   ))}
                 </select>
@@ -296,15 +305,22 @@ function InscriptionForm() {
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Formation choisie</p>
             <h3 className="font-bold text-navy-900 text-sm mb-1">{selectedFormation.title}</h3>
             <p className="text-xs text-gray-500 mb-3">{selectedFormation.duration} · {selectedFormation.level}</p>
-            {selectedFormation.registrationFee && (
-              <p className="text-xs text-gray-500 mb-1">Frais d&apos;inscription : <span className="font-semibold">{selectedFormation.registrationFee.toLocaleString('fr-FR')} FCFA</span></p>
+            {selectedFormation.paymentType === 'tranches' && selectedFormation.tranches?.length ? (
+              <>
+                <div className="text-2xl font-black text-navy-900">
+                  {selectedFormation.tranches[0].montant.toLocaleString('fr-FR')} FCFA
+                  <span className="text-sm font-normal text-gray-400 ml-1">à l&apos;inscription</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  Paiement en {selectedFormation.tranches.length} tranches · total {selectedFormation.price.toLocaleString('fr-FR')} FCFA
+                </p>
+              </>
+            ) : (
+              <div className="text-2xl font-black text-navy-900">
+                {selectedFormation.price.toLocaleString('fr-FR')} FCFA
+                <span className="text-sm font-normal text-gray-400 ml-1">· paiement unique</span>
+              </div>
             )}
-            <div className="text-2xl font-black text-navy-900">
-              {selectedFormation.monthlyPrice
-                ? <>{selectedFormation.monthlyPrice.toLocaleString('fr-FR')} FCFA<span className="text-base font-normal text-gray-400"> /mois</span></>
-                : <>{selectedFormation.price.toLocaleString('fr-FR')} FCFA</>
-              }
-            </div>
           </div>
         )}
 
