@@ -306,37 +306,52 @@ export default function FormationDetailPage({ params }: Props) {
                   <div className="p-6">
                     {formation.status === 'ouvert' ? (
                       <>
-                        {/* Prix */}
+                        {/* Modalités de paiement */}
                         <div className="mb-5">
-                          {formation.registrationFee && (
-                            <div className="text-xs text-gray-500 mb-1">
-                              Frais d&apos;inscription : <span className="font-semibold text-navy-900">{formation.registrationFee.toLocaleString('fr-FR')} FCFA</span>
-                            </div>
-                          )}
-                          {formation.monthlyPrice ? (
+                          {formation.paymentType === 'tranches' && formation.tranches?.length ? (
                             <>
-                              <div className="flex items-baseline gap-2 mb-1">
+                              <div className="flex items-baseline gap-3 mb-1">
                                 <span className="text-3xl font-black text-navy-900">
-                                  {formation.monthlyPrice.toLocaleString('fr-FR')} FCFA
+                                  {formation.tranches[0].montant.toLocaleString('fr-FR')} FCFA
                                 </span>
-                                <span className="text-gray-500 font-semibold text-sm">/ mois</span>
+                                {formation.originalPrice && (
+                                  <span className="text-gray-400 line-through text-base">
+                                    {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                                  </span>
+                                )}
                               </div>
-                              <p className="text-xs text-gray-400">
-                                Soit {formation.price.toLocaleString('fr-FR')} FCFA au total
-                                {formation.paymentMonths ? ` (${formation.paymentMonths} versements)` : ''}
+                              <p className="text-xs text-gray-500 mb-4">
+                                Paiement en {formation.tranches.length} tranches · montant total : <span className="font-semibold text-navy-900">{formation.price.toLocaleString('fr-FR')} FCFA</span>
                               </p>
+                              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 mb-4">
+                                <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide mb-3">Modalités de paiement</p>
+                                <div className="space-y-2">
+                                  {formation.tranches.map((t, i) => (
+                                    <div key={i} className="flex items-start justify-between gap-2 text-xs text-emerald-700">
+                                      <span className="leading-relaxed">{t.nom} <span className="text-emerald-500">· {t.echeance}</span></span>
+                                      <span className="font-bold shrink-0">{t.montant.toLocaleString('fr-FR')} FCFA</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                <p className="text-xs text-emerald-600 mt-3 pt-2 border-t border-emerald-200">
+                                  L&apos;accès à la formation est maintenu lorsque les paiements sont à jour.
+                                </p>
+                              </div>
                             </>
                           ) : (
-                            <div className="flex items-baseline gap-3">
-                              <span className="text-3xl font-black text-navy-900">
-                                {formation.price.toLocaleString('fr-FR')} FCFA
-                              </span>
-                              {formation.originalPrice && (
-                                <span className="text-gray-400 line-through text-base">
-                                  {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                            <>
+                              <div className="flex items-baseline gap-3 mb-1">
+                                <span className="text-3xl font-black text-navy-900">
+                                  {formation.price.toLocaleString('fr-FR')} FCFA
                                 </span>
-                              )}
-                            </div>
+                                {formation.originalPrice && (
+                                  <span className="text-gray-400 line-through text-base">
+                                    {formation.originalPrice.toLocaleString('fr-FR')} FCFA
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-400 mb-4">Paiement unique avant le démarrage</p>
+                            </>
                           )}
                         </div>
 
@@ -353,21 +368,6 @@ export default function FormationDetailPage({ params }: Props) {
                           formationTitle={formation.title}
                           programPdfUrl={formation.programPdfUrl}
                         />
-
-                        {/* Modalités paiement mensuel */}
-                        {formation.monthlyPrice && formation.paymentMonths && (
-                          <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-xl p-4">
-                            <p className="text-xs font-bold text-emerald-800 mb-2">Modalités de paiement</p>
-                            <div className="space-y-1.5">
-                              {Array.from({ length: formation.paymentMonths }, (_, i) => (
-                                <div key={i} className="flex items-center justify-between text-xs text-emerald-700">
-                                  <span>{i === 0 ? '1er versement — Début de formation' : `${i + 1}e versement — Mois ${i + 1}`}</span>
-                                  <span className="font-bold">{formation.monthlyPrice!.toLocaleString('fr-FR')} FCFA</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
 
                         <p className="text-xs text-center text-gray-400 mt-4">
                           Aucun paiement en ligne · L&apos;équipe vous contacte sous 48h
