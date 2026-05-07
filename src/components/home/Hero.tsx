@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Star, Users, BookOpen, Award } from 'lucide-react'
+import { ArrowRight, Star, Users, BookOpen, Award, Zap, CheckCircle } from 'lucide-react'
 
 export default function Hero() {
   return (
@@ -45,23 +45,37 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            {/* Top badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm px-4 py-2 rounded-full mb-8 backdrop-blur-sm">
-              <Star className="w-4 h-4 text-brand-yellow fill-current" />
-              <span className="font-medium">Académie digitale basée au Sénégal</span>
+            {/* Founder credibility badge */}
+            <div className="inline-flex items-center gap-2 bg-brand-yellow/20 border border-brand-yellow/30 text-brand-yellow text-xs font-semibold px-4 py-2 rounded-full mb-4 backdrop-blur-sm">
+              <Star className="w-3.5 h-3.5 fill-current" />
+              <span>Fondée par Léna Badiane · Référente Digitale certifiée · Sonatel Academy</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
-              Construisez des
-              <span className="block text-gradient-green">compétences digitales</span>
-              visibles et concrètes
+              Apprenez en faisant.
+              <span className="block text-gradient-green">Pas en regardant.</span>
             </h1>
 
-            <p className="text-lg text-slate-300 leading-relaxed mb-8 max-w-lg">
-              Marketing digital, création de contenu, réseaux sociaux, design — des formations
-              pratiques, en petits groupes, avec des projets concrets et un accompagnement personnalisé.
+            <p className="text-lg text-slate-300 leading-relaxed mb-6 max-w-lg">
+              Des formations 100% pratiques en marketing digital, création de contenu, développement web et design —
+              conçues pour construire de vraies compétences, un vrai portfolio, dès le premier jour.
             </p>
+
+            {/* Learning by doing pills */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {[
+                { icon: Zap, text: 'Learning by doing' },
+                { icon: BookOpen, text: '100% pratique' },
+                { icon: CheckCircle, text: 'Portfolio inclus' },
+                { icon: Users, text: 'Petits groupes' },
+              ].map(({ icon: Icon, text }) => (
+                <span key={text} className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full backdrop-blur-sm">
+                  <Icon className="w-3 h-3 text-brand-green" />
+                  {text}
+                </span>
+              ))}
+            </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 mb-12">
@@ -73,11 +87,10 @@ export default function Hero() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                href="/inscription"
+                href="/a-propos"
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-7 py-4 rounded-xl transition-all duration-200 backdrop-blur-sm text-base"
               >
-                S&apos;inscrire
-                <ArrowRight className="w-5 h-5" />
+                Qui sommes-nous ?
               </Link>
             </div>
 
@@ -108,56 +121,77 @@ export default function Hero() {
 
           {/* Right — Floating Cards */}
           <div className="hidden lg:block relative">
-            <div className="relative w-full h-[500px]">
-              {/* Main card */}
-              <div className="absolute top-10 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
+            <div className="relative w-full h-[520px]">
+              {/* Founder card */}
+              <div className="absolute top-0 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center">
-                    <BookOpen className="w-5 h-5 text-white" />
+                  <div
+                    className="w-12 h-12 rounded-xl shrink-0 bg-brand-yellow flex items-center justify-center font-black text-navy-900 text-lg"
+                  >
+                    LB
                   </div>
                   <div>
-                    <p className="text-white font-bold text-sm">Développement Web Full-Stack</p>
-                    <p className="text-slate-400 text-xs">4 mois · 12 modules</p>
+                    <p className="text-white font-bold text-sm">Léna Badiane</p>
+                    <p className="text-slate-400 text-xs">Fondatrice & Formatrice principale</p>
                   </div>
-                  <div className="ml-auto text-right">
-                    <p className="text-white font-black text-lg">800 000 FCFA</p>
-                    <p className="text-slate-400 text-xs line-through">1 200 000 FCFA</p>
+                  <div className="ml-auto">
+                    <span className="text-xs bg-brand-green/20 text-brand-green font-semibold px-2 py-1 rounded-lg border border-brand-green/30">
+                      Active
+                    </span>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  {['React & Next.js', 'Node.js & Express', 'Bases de données'].map((item) => (
+                  {[
+                    'Référente Digitale · Sonatel Academy',
+                    'Head of Product · EDACY',
+                    'Accompagnement d\'entreprises en digital',
+                  ].map((item) => (
                     <div key={item} className="flex items-center gap-2 text-xs text-slate-300">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-green" />
+                      <CheckCircle className="w-3 h-3 text-brand-green shrink-0" />
                       {item}
                     </div>
                   ))}
                 </div>
-                <Link
-                  href="/formations/developpement-web-full-stack"
-                  className="mt-4 flex items-center justify-center gap-2 bg-brand-green text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors"
-                >
-                  Découvrir <ArrowRight className="w-4 h-4" />
-                </Link>
+              </div>
+
+              {/* Method card */}
+              <div className="absolute top-52 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 bg-brand-yellow rounded-xl flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-navy-900" />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-sm">Learning by Doing</p>
+                    <p className="text-slate-400 text-xs">Notre méthode pédagogique</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {['Projet réel', 'Feedback direct', 'Portfolio final'].map((item) => (
+                    <div key={item} className="bg-white/10 rounded-lg p-2 text-center">
+                      <p className="text-white text-xs font-semibold">{item}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Stats cards */}
-              <div className="absolute -bottom-6 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+              <div className="absolute bottom-0 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
                 <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
                   <Users className="w-5 h-5 text-brand-green" />
                 </div>
                 <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">Petits groupes</p>
+                  <p className="font-black text-navy-900 text-base leading-none">Petits groupes</p>
                   <p className="text-xs text-gray-400">Suivi individualisé</p>
                 </div>
               </div>
 
-              <div className="absolute -bottom-6 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+              <div className="absolute bottom-0 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
                 <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                  <Star className="w-5 h-5 text-brand-yellow fill-current" />
+                  <BookOpen className="w-5 h-5 text-brand-yellow" />
                 </div>
                 <div>
-                  <p className="font-black text-navy-900 text-lg leading-none">Portfolio</p>
-                  <p className="text-xs text-gray-400">Projets concrets inclus</p>
+                  <p className="font-black text-navy-900 text-base leading-none">100% Pratique</p>
+                  <p className="text-xs text-gray-400">Zéro rembourrage théorique</p>
                 </div>
               </div>
             </div>
