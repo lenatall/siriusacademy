@@ -9,7 +9,6 @@ const footerLinks = {
     { label: 'Data Science & IA', href: '/formations/data-science-ia' },
   ],
   ressources: [
-    { label: 'Cours Gratuits', href: '/cours-gratuits' },
     { label: 'Blog', href: '/blog' },
     { label: 'À Propos', href: '/a-propos' },
   ],

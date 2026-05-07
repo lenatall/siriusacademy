@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Play, Star, Users, BookOpen, Award } from 'lucide-react'
+import { ArrowRight, Star, Users, BookOpen, Award } from 'lucide-react'
 
 export default function Hero() {
   return (
@@ -73,11 +73,11 @@ export default function Hero() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                href="/cours-gratuits"
+                href="/inscription"
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-7 py-4 rounded-xl transition-all duration-200 backdrop-blur-sm text-base"
               >
-                <Play className="w-5 h-5 fill-current text-brand-yellow" />
-                Cours gratuits
+                S&apos;inscrire
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
 

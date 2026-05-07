@@ -15,12 +15,11 @@ export default function FeaturedFormations() {
               <span>Nos formations phares</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-navy-900 mb-3">
-              Des formations pour{' '}
-              <span className="text-brand-green">booster votre carrière</span>
+              Des formations{' '}
+              <span className="text-brand-green">pratiques et concrètes</span>
             </h2>
             <p className="text-gray-500 text-base max-w-xl">
-              Des programmes intensifs et pratiques, créés et animés par des professionnels
-              reconnus dans leur domaine.
+              Petits groupes, accompagnement personnalisé, projets réels — repartez avec un portfolio présentable.
             </p>
           </div>
           <Link

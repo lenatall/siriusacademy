@@ -13,6 +13,9 @@ export interface Instructor {
   bio: string
 }
 
+export type FormationStatus = 'ouvert' | 'bientot'
+export type FormationSchedule = 'date-fixe' | 'weekend' | 'sans-date'
+
 export interface Formation {
   id: string
   slug: string
@@ -27,14 +30,17 @@ export interface Formation {
   modules: Module[]
   instructor: Instructor
   tags: string[]
-  students?: number
-  rating?: number
-  reviewCount?: number
   isFeatured: boolean
   objectives: string[]
   prerequisites: string[]
+  keyPoints: string[]
   certificate: boolean
   category: string
+  status: FormationStatus
+  schedule: FormationSchedule
+  startDate?: string
+  endDate?: string
+  weekendDates?: string[]
 }
 
 export interface FreeCourse {

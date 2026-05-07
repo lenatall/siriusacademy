@@ -2,7 +2,6 @@ import Hero from '@/components/home/Hero'
 import Stats from '@/components/home/Stats'
 import Features from '@/components/home/Features'
 import FeaturedFormations from '@/components/home/FeaturedFormations'
-import FreeCoursesBanner from '@/components/home/FreeCoursesBanner'
 import Testimonials from '@/components/home/Testimonials'
 import Link from 'next/link'
 import { ArrowRight, Mail } from 'lucide-react'
@@ -14,7 +13,6 @@ export default function HomePage() {
       <Stats />
       <Features />
       <FeaturedFormations />
-      <FreeCoursesBanner />
       <Testimonials />
 
       {/* CTA Section */}

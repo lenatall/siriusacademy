@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Pencil, Trash2, Eye, Star, Users, BookOpen } from 'lucide-react'
+import { Plus, Pencil, Trash2, Eye, Star, BookOpen, Lock } from 'lucide-react'
 import type { Formation } from '@/types'
 
 export default function AdminFormationsPage() {
@@ -68,8 +68,16 @@ export default function AdminFormationsPage() {
                 <h3 className="font-bold text-navy-900 truncate">{f.title}</h3>
                 <div className="flex items-center gap-4 mt-1.5 text-xs text-gray-500">
                   <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{f.modules.length} modules</span>
-                  <span className="flex items-center gap-1"><Users className="w-3 h-3" />{f.students.toLocaleString('fr-FR')} élèves</span>
-                  <span className="font-bold text-navy-900">{f.price.toLocaleString('fr-FR')} €</span>
+                  <span className="font-bold text-navy-900">{f.price.toLocaleString('fr-FR')} FCFA</span>
+                  {f.status === 'ouvert' ? (
+                    <span className="flex items-center gap-1 text-brand-green font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-green" /> Ouvert
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-amber-600 font-semibold">
+                      <Lock className="w-3 h-3" /> Bientôt
+                    </span>
+                  )}
                 </div>
               </div>
 
