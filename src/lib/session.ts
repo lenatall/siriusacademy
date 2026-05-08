@@ -1,8 +1,8 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 
-export const COOKIE_NAME = 'sirius_admin_session'
-export const SESSION_DURATION_SECONDS = 2 * 60 * 60 // 2 hours
+export const COOKIE_NAME = 'admin_session'
+export const SESSION_DURATION_SECONDS = 2 * 60 * 60 // 2h
 
 export const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -14,7 +14,7 @@ export const COOKIE_OPTIONS = {
 
 function getSecret(): Uint8Array {
   const secret = process.env.SESSION_SECRET
-  if (!secret) throw new Error('SESSION_SECRET is not set')
+  if (!secret) throw new Error('SESSION_SECRET manquant')
   return new TextEncoder().encode(secret)
 }
 
