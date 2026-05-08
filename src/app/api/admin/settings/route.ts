@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { store } from '@/lib/store'
 
 export async function GET() {
@@ -8,5 +9,7 @@ export async function GET() {
 export async function PUT(request: Request) {
   const body = await request.json()
   const updated = store.settings.update(body)
+  // Invalidate Next.js cache for all public pages so Footer/Header re-render
+  revalidatePath('/', 'layout')
   return NextResponse.json(updated)
 }

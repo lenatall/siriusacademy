@@ -59,6 +59,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [openSections, setOpenSections] = useState<string[]>(['Formations', 'Blog'])
   const [newProspects, setNewProspects] = useState(0)
+  const [logoUrl, setLogoUrl] = useState<string | undefined>()
+  const [siteName, setSiteName] = useState('Sirius Academy')
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then((r) => r.json())
+      .then((s) => {
+        setLogoUrl(s.logoUrl || undefined)
+        if (s.siteName) setSiteName(s.siteName)
+      })
+      .catch(() => {})
+  }, [pathname])
 
   useEffect(() => {
     const fetchCount = () => {
@@ -107,18 +119,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (pathname === '/admin/login') return <>{children}</>
 
+  const LogoBlock = ({ small = false }: { small?: boolean }) => (
+    logoUrl ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={logoUrl}
+        alt={siteName}
+        className={`${small ? 'h-7' : 'h-8'} w-auto object-contain brightness-0 invert`}
+      />
+    ) : (
+      <>
+        <div className={`${small ? 'w-7 h-7' : 'w-8 h-8'} bg-brand-yellow rounded-lg flex items-center justify-center shrink-0`}>
+          <Star className={`${small ? 'w-3.5 h-3.5' : 'w-4 h-4'} text-navy-900 fill-current`} />
+        </div>
+        <div className="leading-none">
+          <p className={`text-white font-bold ${small ? 'text-xs' : 'text-sm'}`}>{siteName}</p>
+          {!small && <p className="text-slate-400 text-xs">Administration</p>}
+        </div>
+      </>
+    )
+  )
+
   const Sidebar = () => (
     <aside className="w-64 bg-navy-950 min-h-screen flex flex-col">
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/10">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-brand-yellow rounded-lg flex items-center justify-center">
-            <Star className="w-4 h-4 text-navy-900 fill-current" />
-          </div>
-          <div className="leading-none">
-            <p className="text-white font-bold text-sm">Sirius Academy</p>
-            <p className="text-slate-400 text-xs">Administration</p>
-          </div>
+          <LogoBlock />
+          {logoUrl && (
+            <div className="leading-none ml-1">
+              <p className="text-slate-400 text-xs">Administration</p>
+            </div>
+          )}
         </Link>
       </div>
 
@@ -241,12 +273,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 min-w-0">
         {/* Mobile top bar */}
         <div className="lg:hidden bg-navy-950 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-brand-yellow rounded-lg flex items-center justify-center">
-              <Star className="w-4 h-4 text-navy-900 fill-current" />
-            </div>
-            <span className="text-white font-bold text-sm">Admin</span>
-          </div>
+          <Link href="/admin" className="flex items-center gap-2">
+            <LogoBlock small />
+            {logoUrl && <span className="text-white font-bold text-sm ml-1">Admin</span>}
+          </Link>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white p-1">
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

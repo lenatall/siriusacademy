@@ -121,6 +121,14 @@ const DEFAULT_SETTINGS: SiteSettings = {
       description: 'Aide à mieux comprendre les métiers du digital et choisir une spécialisation adaptée à votre profil.',
     },
   ],
+  showTestimonials: true,
+  socialTiktok: '',
+  socialYoutube: '',
+  notificationEmail: '',
+  formConfirmationContact: 'Merci pour votre message ! Nous vous répondrons dans les 48h.',
+  formConfirmationInscription: 'Votre demande d\'inscription a bien été reçue. Notre équipe vous contactera sous 48h.',
+  formConfirmationPdf: 'Le programme a été envoyé à votre adresse email.',
+  formLegalText: 'En soumettant ce formulaire, vous acceptez que vos données soient utilisées pour traiter votre demande.',
   processSteps: [
     {
       title: 'Exercices corrigés',

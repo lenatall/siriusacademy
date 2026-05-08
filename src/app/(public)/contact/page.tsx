@@ -15,7 +15,7 @@ export default function ContactPage() {
     whatsappLink: settings.whatsappLink,
   }
 
-  const faq = settings.faq ?? []
+  const faq = (settings.faq ?? []).filter((item) => item.visible !== false)
 
   return (
     <>

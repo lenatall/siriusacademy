@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
 import { store } from '@/lib/store'
+import SiteLogo from './SiteLogo'
 
 const footerLinks = {
   formations: [
@@ -22,7 +23,12 @@ const footerLinks = {
 
 const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
 
-export default function Footer() {
+interface FooterProps {
+  logoUrl?: string
+  siteName?: string
+}
+
+export default function Footer({ logoUrl, siteName }: FooterProps) {
   const settings = store.settings.get()
 
   const socialLinks = [
@@ -71,14 +77,8 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <Star className="w-5 h-5 text-navy-900 fill-current" />
-              </div>
-              <div>
-                <span className="text-white font-bold text-xl">{settings.siteName?.split(' ')[0] ?? 'Sirius'}</span>
-                <span className="text-brand-yellow font-bold text-xl"> {settings.siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
-              </div>
+            <Link href="/" className="inline-flex mb-5 group">
+              <SiteLogo logoUrl={logoUrl} siteName={siteName ?? settings.siteName} />
             </Link>
 
             <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">

@@ -4,9 +4,9 @@ import { store } from '@/lib/store'
 
 export default function Testimonials() {
   const settings = store.settings.get()
-  const testimonials = settings.testimonials ?? []
+  const testimonials = (settings.testimonials ?? []).filter((t) => t.visible !== false)
 
-  if (testimonials.length === 0) return null
+  if (!settings.showTestimonials || testimonials.length === 0) return null
 
   return (
     <section className="py-24 bg-gray-50">
