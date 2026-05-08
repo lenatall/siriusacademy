@@ -1,19 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Star, Loader2, Eye, EyeOff, Lock } from 'lucide-react'
+import { Suspense } from 'react'
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [form, setForm] = useState({ username: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPass, setShowPass] = useState(false)
-
-  useEffect(() => {
-    if (localStorage.getItem('admin_auth') === 'true') router.push('/admin')
-  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,10 +25,10 @@ export default function AdminLoginPage() {
       })
       const data = await res.json()
       if (data.success) {
-        localStorage.setItem('admin_auth', 'true')
-        router.push('/admin')
+        const redirect = searchParams.get('redirect') || '/admin'
+        router.push(redirect)
       } else {
-        setError(data.message || 'Identifiants incorrects')
+        setError(data.message || 'Identifiants incorrects.')
       }
     } catch {
       setError('Erreur réseau. Réessayez.')
@@ -63,7 +61,7 @@ export default function AdminLoginPage() {
             <Lock className="w-5 h-5 text-navy-800" />
             <div className="text-sm">
               <p className="font-semibold text-navy-900">Accès restreint</p>
-              <p className="text-gray-500 text-xs">Login : <code className="bg-gray-100 px-1 rounded">admin</code> · Mot de passe : <code className="bg-gray-100 px-1 rounded">sirius2024</code></p>
+              <p className="text-gray-500 text-xs">Espace réservé à l&apos;administration Sirius Academy.</p>
             </div>
           </div>
 
@@ -74,9 +72,9 @@ export default function AdminLoginPage() {
                 type="text"
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                placeholder="admin"
                 className="input"
                 autoComplete="username"
+                required
               />
             </div>
             <div>
@@ -89,11 +87,13 @@ export default function AdminLoginPage() {
                   placeholder="••••••••"
                   className="input pr-10"
                   autoComplete="current-password"
+                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -118,5 +118,13 @@ export default function AdminLoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }

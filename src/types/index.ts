@@ -47,6 +47,9 @@ export interface Formation {
   targetAudience?: string
   maxPlaces?: number
   programPdfUrl?: string
+  metaTitle?: string
+  metaDescription?: string
+  showDetailedProgram?: boolean
   certificate: boolean
   category: string
   status: FormationStatus
