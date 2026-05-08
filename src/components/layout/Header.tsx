@@ -13,7 +13,13 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
-export default function Header() {
+interface HeaderProps {
+  logoUrl?: string
+  siteName?: string
+  whatsappLink?: string
+}
+
+export default function Header({ logoUrl, siteName = 'Sirius Academy', whatsappLink = 'https://wa.me/221770000000' }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
@@ -48,13 +54,24 @@ export default function Header() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-amber-400/40 group-hover:scale-105 transition-all duration-200">
-                <Star className="w-5 h-5 text-navy-900 fill-current" />
-              </div>
-              <div className="leading-none">
-                <span className="text-white font-bold text-xl">Sirius</span>
-                <span className="text-brand-yellow font-bold text-xl"> Academy</span>
-              </div>
+              {logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={logoUrl}
+                  alt={siteName}
+                  className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+                />
+              ) : (
+                <>
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-amber-400/40 group-hover:scale-105 transition-all duration-200">
+                    <Star className="w-5 h-5 text-navy-900 fill-current" />
+                  </div>
+                  <div className="leading-none">
+                    <span className="text-white font-bold text-xl">{siteName.split(' ')[0]}</span>
+                    <span className="text-brand-yellow font-bold text-xl"> {siteName.split(' ').slice(1).join(' ')}</span>
+                  </div>
+                </>
+              )}
             </Link>
 
             {/* Desktop Navigation */}
@@ -87,7 +104,7 @@ export default function Header() {
             <div className="hidden lg:flex items-center gap-4">
               {/* WhatsApp link */}
               <a
-                href="https://wa.me/221770000000"
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden lg:flex items-center gap-1.5 text-xs text-slate-400 hover:text-brand-green transition-colors"
@@ -144,7 +161,7 @@ export default function Header() {
               <div className="pt-4 px-4 border-t border-white/10 mt-2 space-y-3">
                 {/* WhatsApp link in mobile */}
                 <a
-                  href="https://wa.me/221770000000"
+                  href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full text-sm text-slate-400 hover:text-brand-green border border-white/10 hover:border-brand-green/30 py-2.5 rounded-xl transition-all duration-200"
