@@ -1,6 +1,5 @@
 'use client'
 
-// Admin layout — navigation sidebar with auth guard
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -55,14 +54,16 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [checked, setChecked] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [openSections, setOpenSections] = useState<string[]>(['Formations', 'Blog'])
   const [newProspects, setNewProspects] = useState(0)
   const [logoUrl, setLogoUrl] = useState<string | undefined>()
   const [siteName, setSiteName] = useState('Sirius Academy')
 
+  const isLoginPage = pathname === '/admin/login'
+
   useEffect(() => {
+    if (isLoginPage) return
     fetch('/api/admin/settings')
       .then((r) => r.json())
       .then((s) => {
@@ -70,9 +71,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         if (s.siteName) setSiteName(s.siteName)
       })
       .catch(() => {})
-  }, [pathname])
+  }, [pathname, isLoginPage])
 
   useEffect(() => {
+    if (isLoginPage) return
     const fetchCount = () => {
       fetch('/api/prospects')
         .then((r) => r.json())
@@ -86,20 +88,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetchCount()
     const interval = setInterval(fetchCount, 30000)
     return () => clearInterval(interval)
-  }, [])
+  }, [isLoginPage])
 
-  useEffect(() => {
-    if (pathname === '/admin/login') { setChecked(true); return }
-    const auth = localStorage.getItem('admin_auth')
-    if (auth !== 'true') {
-      router.push('/admin/login')
-    } else {
-      setChecked(true)
-    }
-  }, [pathname, router])
+  if (isLoginPage) return <>{children}</>
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_auth')
+  const handleLogout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' })
     router.push('/admin/login')
   }
 
@@ -108,16 +102,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       prev.includes(label) ? prev.filter((s) => s !== label) : [...prev, label]
     )
   }
-
-  if (!checked) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-navy-900 border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
-  }
-
-  if (pathname === '/admin/login') return <>{children}</>
 
   const LogoBlock = ({ small = false }: { small?: boolean }) => (
     logoUrl ? (

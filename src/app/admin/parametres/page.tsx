@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import {
   Globe, Phone, Home, FileText, Quote, HelpCircle, Share2, BookOpen,
   Save, Check, Loader2, Plus, Trash2, ChevronUp, ChevronDown, Search,
-  Eye, EyeOff, Image as ImageIcon, Bell, MessageSquare, X,
+  Eye, EyeOff, Image as ImageIcon, Bell, MessageSquare, X, Shield, KeyRound,
 } from 'lucide-react'
 import type { FaqItem, TestimonialItem, StatItem, FeatureItem, ProcessStep } from '@/types'
 
@@ -53,6 +53,7 @@ const TABS = [
   { id: 'faq',          label: 'FAQ',             icon: HelpCircle,    keywords: ['faq', 'question', 'réponse', 'fréquent'] },
   { id: 'reseaux',      label: 'Réseaux sociaux', icon: Share2,        keywords: ['facebook', 'instagram', 'linkedin', 'twitter', 'tiktok', 'youtube', 'réseau'] },
   { id: 'footer',       label: 'Footer & légal',  icon: BookOpen,      keywords: ['footer', 'mentions légales', 'confidentialité', 'pied de page', 'cgv'] },
+  { id: 'securite',    label: 'Sécurité',        icon: Shield,        keywords: ['sécurité', 'mot de passe', 'password', 'identifiant', 'connexion', 'admin'] },
 ] as const
 
 type TabId = typeof TABS[number]['id']
@@ -129,6 +130,11 @@ export default function ParametresPage() {
   const [saved, setSaved] = useState(false)
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' })
+  const [pwSaving, setPwSaving] = useState(false)
+  const [pwMsg, setPwMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
+  const [pwShowCurrent, setPwShowCurrent] = useState(false)
+  const [pwShowNext, setPwShowNext] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -772,6 +778,108 @@ export default function ParametresPage() {
           </Section>
 
           <div className="flex justify-end"><SaveBtn label="Sauvegarder le footer & légal" /></div>
+        </>}
+
+        {/* ══ 9. SÉCURITÉ ═══════════════════════════════════ */}
+        {activeTab === 'securite' && <>
+          <Section title="Changer le mot de passe administrateur" description="Saisissez votre mot de passe actuel pour en définir un nouveau.">
+            <div className="space-y-4">
+              <Field label="Mot de passe actuel">
+                <div className="relative">
+                  <input
+                    type={pwShowCurrent ? 'text' : 'password'}
+                    value={pwForm.current}
+                    onChange={(e) => setPwForm({ ...pwForm, current: e.target.value })}
+                    className={`${inputClass} pr-10`}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                  />
+                  <button type="button" onClick={() => setPwShowCurrent(!pwShowCurrent)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" tabIndex={-1}>
+                    {pwShowCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </Field>
+              <Field label="Nouveau mot de passe" hint="Minimum 8 caractères.">
+                <div className="relative">
+                  <input
+                    type={pwShowNext ? 'text' : 'password'}
+                    value={pwForm.next}
+                    onChange={(e) => setPwForm({ ...pwForm, next: e.target.value })}
+                    className={`${inputClass} pr-10`}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                  />
+                  <button type="button" onClick={() => setPwShowNext(!pwShowNext)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" tabIndex={-1}>
+                    {pwShowNext ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </Field>
+              <Field label="Confirmer le nouveau mot de passe">
+                <input
+                  type="password"
+                  value={pwForm.confirm}
+                  onChange={(e) => setPwForm({ ...pwForm, confirm: e.target.value })}
+                  className={inputClass}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                />
+                {pwForm.confirm && pwForm.next !== pwForm.confirm && (
+                  <p className="text-xs text-red-500 mt-1">Les mots de passe ne correspondent pas.</p>
+                )}
+              </Field>
+
+              {pwMsg && (
+                <div className={`flex items-center gap-2 text-sm px-4 py-3 rounded-xl ${pwMsg.type === 'ok' ? 'bg-brand-green/10 text-brand-green border border-brand-green/20' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                  {pwMsg.type === 'ok' ? <Check className="w-4 h-4 shrink-0" /> : <X className="w-4 h-4 shrink-0" />}
+                  {pwMsg.text}
+                </div>
+              )}
+
+              <button
+                onClick={async () => {
+                  if (!pwForm.current || !pwForm.next) return
+                  if (pwForm.next !== pwForm.confirm) { setPwMsg({ type: 'err', text: 'Les mots de passe ne correspondent pas.' }); return }
+                  if (pwForm.next.length < 8) { setPwMsg({ type: 'err', text: 'Le nouveau mot de passe doit contenir au moins 8 caractères.' }); return }
+                  setPwSaving(true); setPwMsg(null)
+                  const res = await fetch('/api/admin/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword: pwForm.current, newPassword: pwForm.next }),
+                  })
+                  const data = await res.json()
+                  setPwSaving(false)
+                  if (res.ok) {
+                    setPwMsg({ type: 'ok', text: 'Mot de passe mis à jour avec succès.' })
+                    setPwForm({ current: '', next: '', confirm: '' })
+                  } else {
+                    setPwMsg({ type: 'err', text: data.error || 'Erreur lors du changement de mot de passe.' })
+                  }
+                }}
+                disabled={pwSaving || !pwForm.current || !pwForm.next || pwForm.next !== pwForm.confirm}
+                className="inline-flex items-center gap-2 bg-navy-900 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-navy-800 transition-colors disabled:opacity-50"
+              >
+                {pwSaving ? <><Loader2 className="w-4 h-4 animate-spin" /> Enregistrement...</> : <><KeyRound className="w-4 h-4" /> Changer le mot de passe</>}
+              </button>
+            </div>
+          </Section>
+
+          <Section title="Informations de sécurité">
+            <div className="space-y-3">
+              {[
+                { label: 'Session admin', value: '2 heures d\'inactivité' },
+                { label: 'Blocage après tentatives', value: '3 échecs → 1 min · 3 cycles → 24 h' },
+                { label: 'Stockage du mot de passe', value: 'Hashé avec bcrypt (coût 12)' },
+                { label: 'Cookie de session', value: 'httpOnly · Secure en production · SameSite=Lax' },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                  <span className="text-sm text-gray-600">{label}</span>
+                  <span className="text-sm font-semibold text-navy-900 text-right">{value}</span>
+                </div>
+              ))}
+            </div>
+          </Section>
         </>}
 
       </div>

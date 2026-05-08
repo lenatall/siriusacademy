@@ -212,7 +212,7 @@ export default function AProposPage() {
 
               {/* Expertise */}
               <div className="space-y-4">
-                <h3 className="font-bold text-navy-900 text-base mb-4">Domaines d'expertise</h3>
+                <h3 className="font-bold text-navy-900 text-base mb-4">Domaines d&apos;expertise</h3>
                 <div className="space-y-2">
                   {[
                     'Marketing digital & stratégie de contenu',
@@ -231,7 +231,7 @@ export default function AProposPage() {
 
                 <div className="bg-navy-900 rounded-xl p-4 mt-4">
                   <p className="text-slate-300 text-sm leading-relaxed italic">
-                    "Ma mission avec Sirius Academy est simple : transmettre ce que j'ai appris sur le terrain, avec des méthodes qui marchent vraiment — le Learning by Doing. Pas de théorie creuse. Des compétences concrètes, applicables dès le premier jour."
+                    &ldquo;Ma mission avec Sirius Academy est simple : transmettre ce que j&apos;ai appris sur le terrain, avec des méthodes qui marchent vraiment — le Learning by Doing. Pas de théorie creuse. Des compétences concrètes, applicables dès le premier jour.&rdquo;
                   </p>
                   <p className="text-brand-yellow text-xs font-semibold mt-3">— Léna Badiane, Fondatrice</p>
                 </div>

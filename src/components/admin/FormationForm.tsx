@@ -443,7 +443,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
                 type="text"
                 inputMode="numeric"
                 value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value.replace(/\D/g, '') })}
+                onChange={(e) => setForm({ ...form, price: Number(e.target.value.replace(/\D/g, '')) || 0 })}
                 className="input"
                 placeholder="150000"
                 required
