@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { getSession } from '@/lib/session'
+import { createSessionToken, COOKIE_NAME, COOKIE_OPTIONS } from '@/lib/session'
 import { checkRateLimit, recordFailedAttempt, recordSuccessfulLogin } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
@@ -53,10 +53,8 @@ export async function POST(request: Request) {
 
   recordSuccessfulLogin(ip, username)
 
-  const session = await getSession()
-  session.isAdmin = true
-  session.lastActivity = Date.now()
-  await session.save()
-
-  return NextResponse.json({ success: true })
+  const token = await createSessionToken()
+  const response = NextResponse.json({ success: true })
+  response.cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
+  return response
 }

@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { COOKIE_NAME } from '@/lib/session'
 
 export const runtime = 'nodejs'
 
 export async function POST() {
-  const session = await getSession()
-  session.destroy()
-  await session.save()
-  return NextResponse.json({ success: true })
+  const response = NextResponse.json({ success: true })
+  response.cookies.set(COOKIE_NAME, '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/',
+  })
+  return response
 }
