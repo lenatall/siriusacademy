@@ -224,28 +224,6 @@ export default function Hero() {
                   </div>
                 </div>
               </div>
-
-              {/* Mini-cards sous la carte */}
-              <div className="flex gap-3 mt-3">
-                <div className="flex-1 bg-white rounded-xl shadow-xl p-3.5 flex items-center gap-2.5">
-                  <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
-                    <Users className="w-4 h-4 text-brand-green" />
-                  </div>
-                  <div>
-                    <p className="font-black text-navy-900 text-sm leading-none">Petits groupes</p>
-                    <p className="text-xs text-gray-400">Suivi individualisé</p>
-                  </div>
-                </div>
-                <div className="flex-1 bg-white rounded-xl shadow-xl p-3.5 flex items-center gap-2.5">
-                  <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center shrink-0">
-                    <Zap className="w-4 h-4 text-brand-yellow" />
-                  </div>
-                  <div>
-                    <p className="font-black text-navy-900 text-sm leading-none">100% Pratique</p>
-                    <p className="text-xs text-gray-400">Zéro théorie inutile</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
         </div>
