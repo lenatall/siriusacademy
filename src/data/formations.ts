@@ -12,6 +12,12 @@ export const formations: Formation[] = [
     image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&q=80',
     price: 590000,
     originalPrice: 800000,
+    paymentType: 'tranches' as const,
+    tranches: [
+      { nom: 'Tranche 1', montant: 200000, echeance: 'À l\'inscription' },
+      { nom: 'Tranche 2', montant: 200000, echeance: '30 jours après' },
+      { nom: 'Tranche 3', montant: 190000, echeance: '60 jours après' },
+    ],
     duration: '3 mois',
     level: 'Débutant',
     category: 'Marketing',
