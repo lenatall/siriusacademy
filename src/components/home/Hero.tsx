@@ -53,7 +53,7 @@ export default function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-[1fr_340px] gap-12 items-center">
 
           {/* Colonne gauche */}
           <div>
@@ -160,53 +160,33 @@ export default function Hero() {
                   {pricing && (
                     <div className="bg-navy-900/40 border border-white/10 rounded-xl p-4">
                       {pricing.type === 'tranches' ? (
-                        <div className="space-y-2">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">Inscription</p>
-                              <p className="text-white font-black text-2xl leading-none mt-0.5">
-                                {pricing.inscriptionAmount!.toLocaleString('fr-FR')}
-                                <span className="text-sm font-semibold text-slate-300 ml-1">FCFA</span>
-                              </p>
-                              {pricing.suivantLabel && (
-                                <p className="text-slate-400 text-xs mt-0.5">{pricing.suivantLabel}</p>
-                              )}
-                            </div>
-                            <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-brand-yellow/30 shrink-0">
-                              <CreditCard className="w-3 h-3" />
-                              {pricing.nbTranches} tranches
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                            <p className="text-slate-400 text-xs">
-                              Total formation
-                              <span className="text-white font-semibold ml-1.5">
-                                {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
-                              </span>
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-1">Inscription</p>
+                            <p className="text-white font-black text-[1.75rem] leading-none">
+                              {pricing.inscriptionAmount!.toLocaleString('fr-FR')}
+                              <span className="text-sm font-semibold text-slate-300 ml-1.5">FCFA</span>
                             </p>
-                            {pricing.originalPrice && (
-                              <p className="text-slate-500 text-xs line-through">
-                                {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
-                              </p>
+                            {pricing.suivantLabel && (
+                              <p className="text-slate-400 text-xs mt-2">{pricing.suivantLabel}</p>
                             )}
                           </div>
+                          <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-brand-yellow/30 shrink-0 mt-0.5">
+                            <CreditCard className="w-3 h-3" />
+                            {pricing.nbTranches} tranches
+                          </span>
                         </div>
                       ) : (
-                        <div className="flex items-end justify-between gap-2">
+                        <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">Paiement unique</p>
-                            <p className="text-white font-black text-2xl leading-none mt-0.5">
+                            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-1">Paiement unique</p>
+                            <p className="text-white font-black text-[1.75rem] leading-none">
                               {pricing.totalPrice.toLocaleString('fr-FR')}
-                              <span className="text-sm font-semibold text-slate-300 ml-1">FCFA</span>
+                              <span className="text-sm font-semibold text-slate-300 ml-1.5">FCFA</span>
                             </p>
-                            {pricing.originalPrice && (
-                              <p className="text-slate-500 text-xs line-through mt-0.5">
-                                {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
-                              </p>
-                            )}
-                            <p className="text-slate-400 text-xs mt-1">À régler avant le démarrage</p>
+                            <p className="text-slate-400 text-xs mt-2">À régler avant le démarrage</p>
                           </div>
-                          <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border border-white/20 shrink-0">
+                          <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border border-white/20 shrink-0 mt-0.5">
                             <Wallet className="w-3 h-3" />
                             Unique
                           </span>

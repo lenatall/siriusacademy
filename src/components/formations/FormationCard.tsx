@@ -171,39 +171,25 @@ export default function FormationCard({ formation }: FormationCardProps) {
               <div className="min-w-0">
                 {pricing.type === 'tranches' ? (
                   <>
-                    <p className="text-xs text-gray-500 mb-0.5">Inscription</p>
-                    <p className="text-lg font-bold text-navy-900 leading-tight">
-                      {pricing.inscriptionAmount!.toLocaleString('fr-FR')} FCFA
+                    <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">Inscription</p>
+                    <p className="text-xl font-black text-navy-900 leading-tight">
+                      {pricing.inscriptionAmount!.toLocaleString('fr-FR')}
+                      <span className="text-sm font-semibold text-gray-400 ml-1">FCFA</span>
                     </p>
                     {pricing.suivantLabel && (
-                      <p className="text-xs text-gray-400 mt-0.5">{pricing.suivantLabel}</p>
+                      <p className="text-xs text-gray-400 mt-1">{pricing.suivantLabel}</p>
                     )}
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className="text-xs text-brand-green font-medium">
-                        Total : {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
-                      </span>
-                      {pricing.originalPrice && (
-                        <span className="text-xs text-gray-300 line-through">
-                          {pricing.originalPrice.toLocaleString('fr-FR')}
-                        </span>
-                      )}
-                    </div>
-                    <span className="inline-block mt-1 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                      Paiement en {pricing.nbTranches} tranches
+                    <span className="inline-block mt-1.5 text-[11px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                      {pricing.nbTranches} tranches
                     </span>
                   </>
                 ) : (
                   <>
-                    <p className="text-xs text-gray-500 mb-0.5">Paiement unique</p>
-                    <p className="text-lg font-bold text-navy-900 leading-tight">
-                      {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
+                    <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">Paiement unique</p>
+                    <p className="text-xl font-black text-navy-900 leading-tight">
+                      {pricing.totalPrice.toLocaleString('fr-FR')}
+                      <span className="text-sm font-semibold text-gray-400 ml-1">FCFA</span>
                     </p>
-                    {pricing.originalPrice && (
-                      <p className="text-xs text-gray-300 line-through mt-0.5">
-                        {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">À régler avant le démarrage</p>
                   </>
                 )}
               </div>
