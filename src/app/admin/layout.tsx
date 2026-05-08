@@ -66,11 +66,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetch('/api/admin/settings')
       .then((r) => r.json())
       .then((s) => {
-        if (s.logoUrl) setLogoUrl(s.logoUrl)
+        setLogoUrl(s.logoUrl || undefined)
         if (s.siteName) setSiteName(s.siteName)
       })
       .catch(() => {})
-  }, [])
+  }, [pathname])
 
   useEffect(() => {
     const fetchCount = () => {
