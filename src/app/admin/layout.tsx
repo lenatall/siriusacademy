@@ -58,6 +58,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [checked, setChecked] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [openSections, setOpenSections] = useState<string[]>(['Formations', 'Blog'])
+  const [newProspects, setNewProspects] = useState(0)
+
+  useEffect(() => {
+    const fetchCount = () => {
+      fetch('/api/prospects')
+        .then((r) => r.json())
+        .then((data: Array<{ status: string }>) => {
+          if (Array.isArray(data)) {
+            setNewProspects(data.filter((p) => p.status === 'nouveau').length)
+          }
+        })
+        .catch(() => {})
+    }
+    fetchCount()
+    const interval = setInterval(fetchCount, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (pathname === '/admin/login') { setChecked(true); return }
@@ -111,6 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           const Icon = item.icon
           if (!item.children) {
             const active = pathname === item.href
+            const isProspects = item.href === '/admin/liste-attente'
             return (
               <Link
                 key={item.href}
@@ -123,7 +141,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                {item.label}
+                <span className="flex-1">{item.label}</span>
+                {isProspects && newProspects > 0 && (
+                  <span className="shrink-0 min-w-[20px] h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5 leading-none">
+                    {newProspects > 99 ? '99+' : newProspects}
+                  </span>
+                )}
               </Link>
             )
           }

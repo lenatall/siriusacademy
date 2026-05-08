@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Users, Mail, Phone, Copy, Check, Download, Filter, MessageSquare, X, Search, Trash2, ChevronDown } from 'lucide-react'
+import { Users, Mail, Phone, Copy, Check, Download, Filter, MessageSquare, X, Search, Trash2, ChevronDown, RefreshCw } from 'lucide-react'
 
 type ProspectSource = 'inscription' | 'pdf' | 'contact' | 'liste-attente'
 type ProspectStatus = 'nouveau' | 'contacte' | 'interesse' | 'attente-paiement' | 'inscrit' | 'relancer' | 'non-interesse'
@@ -67,9 +67,23 @@ export default function ProspectsPage() {
   const [filterStatus, setFilterStatus] = useState('all')
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [copied, setCopied] = useState(false)
   const [noteModal, setNoteModal] = useState<{ id: string; note: string; name: string } | null>(null)
   const [expandedRow, setExpandedRow] = useState<string | null>(null)
+
+  const fetchProspects = (isManual = false) => {
+    if (isManual) setRefreshing(true)
+    fetch('/api/prospects')
+      .then((r) => r.json())
+      .then((p) => {
+        setProspects(Array.isArray(p) ? p : [])
+        setLastUpdated(new Date())
+      })
+      .catch(() => {})
+      .finally(() => setRefreshing(false))
+  }
 
   useEffect(() => {
     Promise.all([
@@ -79,7 +93,10 @@ export default function ProspectsPage() {
       setProspects(Array.isArray(p) ? p : [])
       setFormations(Array.isArray(f) ? f : [])
       setLoading(false)
+      setLastUpdated(new Date())
     })
+    const interval = setInterval(() => fetchProspects(), 30000)
+    return () => clearInterval(interval)
   }, [])
 
   const filtered = prospects
@@ -175,12 +192,28 @@ export default function ProspectsPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-black text-navy-900">Prospects & inscriptions</h1>
-          <p className="text-gray-500 mt-1 text-sm">
-            {prospects.length} prospect{prospects.length > 1 ? 's' : ''} au total
-            {hasFilters ? ` · ${filtered.length} affiché${filtered.length > 1 ? 's' : ''}` : ''}
-          </p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-gray-500 text-sm">
+              {prospects.length} prospect{prospects.length > 1 ? 's' : ''} au total
+              {hasFilters ? ` · ${filtered.length} affiché${filtered.length > 1 ? 's' : ''}` : ''}
+            </p>
+            {lastUpdated && (
+              <span className="text-xs text-gray-400">
+                · Actualisé à {lastUpdated.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => fetchProspects(true)}
+            disabled={refreshing}
+            className="inline-flex items-center gap-2 text-sm font-semibold border border-gray-200 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-40"
+            title="Actualiser"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            Actualiser
+          </button>
           <button
             onClick={copyEmails}
             disabled={filtered.length === 0}
@@ -310,17 +343,22 @@ export default function ProspectsPage() {
               const isExpanded = expandedRow === prospect.id
 
               return (
-                <div key={prospect.id}>
-                  <div className="grid grid-cols-12 gap-3 px-5 py-4 hover:bg-gray-50/50 transition-colors items-center">
+                <div key={prospect.id} className={prospect.status === 'nouveau' ? 'border-l-4 border-blue-500' : ''}>
+                  <div className={`grid grid-cols-12 gap-3 px-5 py-4 hover:bg-gray-50/50 transition-colors items-center ${prospect.status === 'nouveau' ? 'bg-blue-50/20' : ''}`}>
                     <div className="col-span-12 lg:col-span-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-navy-50 border border-navy-100 flex items-center justify-center text-navy-700 font-bold text-xs shrink-0">
+                        <div className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold text-xs shrink-0 ${prospect.status === 'nouveau' ? 'bg-blue-100 border-blue-200 text-blue-700' : 'bg-navy-50 border-navy-100 text-navy-700'}`}>
                           {(prospect.prenom || '?')[0]}{(prospect.nom || '?')[0]}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-navy-900 truncate">
-                            {prospect.prenom} {prospect.nom}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-navy-900 truncate">
+                              {prospect.prenom} {prospect.nom}
+                            </p>
+                            {prospect.status === 'nouveau' && (
+                              <span className="shrink-0 text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded-full leading-none animate-pulse">NEW</span>
+                            )}
+                          </div>
                           {prospect.statut && (
                             <p className="text-xs text-gray-400">{STATUT_LABELS[prospect.statut] || prospect.statut}</p>
                           )}
@@ -368,6 +406,9 @@ export default function ProspectsPage() {
                     <div className="col-span-1 hidden lg:block">
                       <p className="text-xs text-gray-400">
                         {new Date(prospect.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                      </p>
+                      <p className="text-xs text-gray-300">
+                        {new Date(prospect.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
 

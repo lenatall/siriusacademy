@@ -8,13 +8,13 @@ export async function GET() {
 export async function POST(request: Request) {
   const body = await request.json()
 
-  if (!body.email || !body.nom || !body.prenom) {
-    return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
+  if (!body.email || (!body.nom && !body.prenom)) {
+    return NextResponse.json({ error: 'Email et nom requis' }, { status: 400 })
   }
 
   const prospect = store.prospects.create({
-    nom: body.nom,
-    prenom: body.prenom,
+    nom: body.nom || '',
+    prenom: body.prenom || '',
     email: body.email,
     telephone: body.telephone ?? '',
     formationSlug: body.formationSlug,
