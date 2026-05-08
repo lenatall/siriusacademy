@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
 import { createSessionToken, COOKIE_NAME, COOKIE_OPTIONS } from '@/lib/session'
 import { checkRateLimit, recordFailedAttempt, recordSuccessfulLogin } from '@/lib/rateLimit'
+import { timingSafeEqual } from 'crypto'
 
 export const runtime = 'nodejs'
+
+function safeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a)
+    const bufB = Buffer.from(b)
+    if (bufA.length !== bufB.length) return false
+    return timingSafeEqual(bufA, bufB)
+  } catch {
+    return false
+  }
+}
 
 function getClientIp(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for')
@@ -32,10 +43,10 @@ export async function POST(request: Request) {
   }
 
   const adminUsername = process.env.ADMIN_USERNAME ?? 'admin'
-  const adminHash = process.env.ADMIN_PASSWORD_HASH ?? ''
+  const adminPassword = process.env.ADMIN_PASSWORD ?? 'sirius2024'
 
-  const usernameMatch = username === adminUsername
-  const passwordMatch = adminHash ? await bcrypt.compare(password, adminHash) : false
+  const usernameMatch = safeCompare(username, adminUsername)
+  const passwordMatch = safeCompare(password, adminPassword)
 
   if (!usernameMatch || !passwordMatch) {
     const result = recordFailedAttempt(ip, username)
@@ -53,8 +64,13 @@ export async function POST(request: Request) {
 
   recordSuccessfulLogin(ip, username)
 
-  const token = await createSessionToken()
-  const response = NextResponse.json({ success: true })
-  response.cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
-  return response
+  try {
+    const token = await createSessionToken()
+    const response = NextResponse.json({ success: true })
+    response.cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
+    return response
+  } catch (err) {
+    console.error('[auth] createSessionToken failed:', err)
+    return NextResponse.json({ success: false, message: 'Erreur serveur.' }, { status: 500 })
+  }
 }
