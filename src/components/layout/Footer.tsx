@@ -72,13 +72,24 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <Star className="w-5 h-5 text-navy-900 fill-current" />
-              </div>
-              <div>
-                <span className="text-white font-bold text-xl">{settings.siteName?.split(' ')[0] ?? 'Sirius'}</span>
-                <span className="text-brand-yellow font-bold text-xl"> {settings.siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
-              </div>
+              {settings.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={settings.logoUrl}
+                  alt={settings.siteName ?? 'Sirius Academy'}
+                  className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform duration-200"
+                />
+              ) : (
+                <>
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                    <Star className="w-5 h-5 text-navy-900 fill-current" />
+                  </div>
+                  <div>
+                    <span className="text-white font-bold text-xl">{settings.siteName?.split(' ')[0] ?? 'Sirius'}</span>
+                    <span className="text-brand-yellow font-bold text-xl"> {settings.siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
+                  </div>
+                </>
+              )}
             </Link>
 
             <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
