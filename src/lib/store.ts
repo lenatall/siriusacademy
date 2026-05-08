@@ -2,13 +2,34 @@ import { formations as defaultFormations } from '@/data/formations'
 import { coursgratuits as defaultCours } from '@/data/cours'
 import { blogPosts as defaultBlog } from '@/data/blog'
 import type { Formation, FreeCourse, BlogPost, Prospect, SiteSettings } from '@/types'
+import fs from 'fs'
+import path from 'path'
 
-// In-memory store — initialized with static data, replace with a real DB later
-let _formations: Formation[] = JSON.parse(JSON.stringify(defaultFormations))
-let _cours: FreeCourse[] = JSON.parse(JSON.stringify(defaultCours))
-let _blog: BlogPost[] = JSON.parse(JSON.stringify(defaultBlog))
-let _prospects: Prospect[] = []
-let _settings: SiteSettings = {
+// Persist data to disk so it survives hot reloads and server restarts
+const DATA_DIR = path.join(process.cwd(), '.sirius-data')
+
+function ensureDataDir() {
+  try { fs.mkdirSync(DATA_DIR, { recursive: true }) } catch {}
+}
+
+function readJson<T>(filename: string, fallback: T): T {
+  try {
+    const filePath = path.join(DATA_DIR, filename)
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as T
+    }
+  } catch {}
+  return fallback
+}
+
+function writeJson(filename: string, data: unknown) {
+  ensureDataDir()
+  try {
+    fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf-8')
+  } catch {}
+}
+
+const DEFAULT_SETTINGS: SiteSettings = {
   heroFormationSlug: 'marketing-digital-reseaux-sociaux',
   siteName: 'Sirius Academy',
   slogan: 'Apprendre le digital en pratiquant.',
@@ -124,6 +145,13 @@ let _settings: SiteSettings = {
   ],
 }
 
+// Initialize from disk (survives hot reloads), fall back to defaults
+let _settings: SiteSettings = readJson('settings.json', DEFAULT_SETTINGS)
+let _formations: Formation[] = readJson('formations.json', JSON.parse(JSON.stringify(defaultFormations)))
+let _cours: FreeCourse[] = readJson('cours.json', JSON.parse(JSON.stringify(defaultCours)))
+let _blog: BlogPost[] = readJson('blog.json', JSON.parse(JSON.stringify(defaultBlog)))
+let _prospects: Prospect[] = readJson('prospects.json', [])
+
 function slugify(str: string): string {
   return str
     .toLowerCase()
@@ -138,6 +166,7 @@ export const store = {
     get: () => _settings,
     update: (updates: Partial<SiteSettings>) => {
       _settings = { ..._settings, ...updates }
+      writeJson('settings.json', _settings)
       return _settings
     },
   },
@@ -149,17 +178,20 @@ export const store = {
       const slug = data.slug || slugify(data.title)
       const f: Formation = { ...data, id: String(Date.now()), slug } as Formation
       _formations.push(f)
+      writeJson('formations.json', _formations)
       return f
     },
     update: (slug: string, updates: Partial<Formation>): Formation | null => {
       const idx = _formations.findIndex((f) => f.slug === slug)
       if (idx < 0) return null
       _formations[idx] = { ..._formations[idx], ...updates }
+      writeJson('formations.json', _formations)
       return _formations[idx]
     },
     delete: (slug: string): boolean => {
       const prev = _formations.length
       _formations = _formations.filter((f) => f.slug !== slug)
+      writeJson('formations.json', _formations)
       return _formations.length < prev
     },
   },
@@ -171,17 +203,20 @@ export const store = {
       const slug = data.slug || slugify(data.title)
       const c: FreeCourse = { ...data, id: String(Date.now()), slug } as FreeCourse
       _cours.push(c)
+      writeJson('cours.json', _cours)
       return c
     },
     update: (slug: string, updates: Partial<FreeCourse>): FreeCourse | null => {
       const idx = _cours.findIndex((c) => c.slug === slug)
       if (idx < 0) return null
       _cours[idx] = { ..._cours[idx], ...updates }
+      writeJson('cours.json', _cours)
       return _cours[idx]
     },
     delete: (slug: string): boolean => {
       const prev = _cours.length
       _cours = _cours.filter((c) => c.slug !== slug)
+      writeJson('cours.json', _cours)
       return _cours.length < prev
     },
   },
@@ -193,17 +228,20 @@ export const store = {
       const slug = data.slug || slugify(data.title)
       const p: BlogPost = { ...data, id: String(Date.now()), slug } as BlogPost
       _blog.push(p)
+      writeJson('blog.json', _blog)
       return p
     },
     update: (slug: string, updates: Partial<BlogPost>): BlogPost | null => {
       const idx = _blog.findIndex((p) => p.slug === slug)
       if (idx < 0) return null
       _blog[idx] = { ..._blog[idx], ...updates }
+      writeJson('blog.json', _blog)
       return _blog[idx]
     },
     delete: (slug: string): boolean => {
       const prev = _blog.length
       _blog = _blog.filter((p) => p.slug !== slug)
+      writeJson('blog.json', _blog)
       return _blog.length < prev
     },
   },
@@ -217,17 +255,20 @@ export const store = {
         id: String(Date.now()) + Math.random().toString(36).slice(2, 7),
       }
       _prospects.push(p)
+      writeJson('prospects.json', _prospects)
       return p
     },
     update: (id: string, updates: Partial<Prospect>): Prospect | null => {
       const idx = _prospects.findIndex((p) => p.id === id)
       if (idx < 0) return null
       _prospects[idx] = { ..._prospects[idx], ...updates }
+      writeJson('prospects.json', _prospects)
       return _prospects[idx]
     },
     delete: (id: string): boolean => {
       const prev = _prospects.length
       _prospects = _prospects.filter((p) => p.id !== id)
+      writeJson('prospects.json', _prospects)
       return _prospects.length < prev
     },
   },
