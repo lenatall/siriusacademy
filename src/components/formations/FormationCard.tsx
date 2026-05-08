@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Clock, Users, Award, CalendarDays, Lock, ArrowRight } from 'lucide-react'
 import type { Formation } from '@/types'
 import Badge from '@/components/ui/Badge'
+import { getPricing } from '@/lib/pricing'
 
 interface FormationCardProps {
   formation: Formation
@@ -56,6 +57,7 @@ function ScheduleInfo({ formation }: { formation: Formation }) {
 }
 
 export default function FormationCard({ formation }: FormationCardProps) {
+  const pricing = getPricing(formation)
   const discount = formation.originalPrice
     ? Math.round(((formation.originalPrice - formation.price) / formation.originalPrice) * 100)
     : null
@@ -165,37 +167,48 @@ export default function FormationCard({ formation }: FormationCardProps) {
 
           {/* Price section */}
           {isOpen ? (
-            <div className="flex items-end justify-between">
-              <div>
-                {formation.originalPrice && (
-                  <div className="text-xs text-gray-400 line-through mb-0.5">
-                    {formation.originalPrice.toLocaleString('fr-FR')} FCFA
-                  </div>
-                )}
-                {formation.paymentType === 'tranches' && formation.tranches?.length ? (
+            <div className="flex items-end justify-between gap-2">
+              <div className="min-w-0">
+                {pricing.type === 'tranches' ? (
                   <>
-                    <div className="text-lg font-bold text-navy-900 leading-tight">
-                      À partir de {formation.tranches[0].montant.toLocaleString('fr-FR')} FCFA
+                    <p className="text-xs text-gray-500 mb-0.5">Inscription</p>
+                    <p className="text-lg font-bold text-navy-900 leading-tight">
+                      {pricing.inscriptionAmount!.toLocaleString('fr-FR')} FCFA
+                    </p>
+                    {pricing.suivantLabel && (
+                      <p className="text-xs text-gray-400 mt-0.5">{pricing.suivantLabel}</p>
+                    )}
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="text-xs text-brand-green font-medium">
+                        Total : {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
+                      </span>
+                      {pricing.originalPrice && (
+                        <span className="text-xs text-gray-300 line-through">
+                          {pricing.originalPrice.toLocaleString('fr-FR')}
+                        </span>
+                      )}
                     </div>
                     <span className="inline-block mt-1 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                      Paiement en {formation.tranches.length} tranches
+                      Paiement en {pricing.nbTranches} tranches
                     </span>
                   </>
                 ) : (
                   <>
-                    <div className="text-lg font-bold text-navy-900 leading-tight">
-                      {formation.price.toLocaleString('fr-FR')} FCFA
-                    </div>
-                    <span className="inline-block mt-1 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                      Paiement unique
-                    </span>
+                    <p className="text-xs text-gray-500 mb-0.5">Paiement unique</p>
+                    <p className="text-lg font-bold text-navy-900 leading-tight">
+                      {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
+                    </p>
+                    {pricing.originalPrice && (
+                      <p className="text-xs text-gray-300 line-through mt-0.5">
+                        {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">À régler avant le démarrage</p>
                   </>
                 )}
               </div>
-
-              {/* Hover-reveal CTA */}
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand-green opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                Voir la formation
+              <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand-green opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0">
+                Voir
                 <ArrowRight className="w-4 h-4" />
               </span>
             </div>

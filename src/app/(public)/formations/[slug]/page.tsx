@@ -17,6 +17,7 @@ import {
   RotateCcw,
 } from 'lucide-react'
 import { store } from '@/lib/store'
+import { getPricing } from '@/lib/pricing'
 import Badge from '@/components/ui/Badge'
 import WaitlistForm from '@/components/formations/WaitlistForm'
 import PdfDownloadForm from '@/components/formations/PdfDownloadForm'
@@ -63,9 +64,7 @@ export default function FormationDetailPage({ params }: Props) {
 
   const settings = store.settings.get()
   const isOpen = formation.status === 'ouvert'
-  const firstTranche = formation.paymentType === 'tranches' && formation.tranches?.length
-    ? formation.tranches[0]
-    : null
+  const pricing = getPricing(formation)
   const discount = formation.originalPrice
     ? Math.round(((formation.originalPrice - formation.price) / formation.originalPrice) * 100)
     : null
@@ -171,36 +170,72 @@ export default function FormationDetailPage({ params }: Props) {
                 <div className="p-5">
                   {isOpen ? (
                     <>
-                      {/* Price */}
-                      {firstTranche ? (
-                        <div className="mb-4">
-                          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Première tranche</p>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-black text-navy-900">
-                              {firstTranche.montant.toLocaleString('fr-FR')}
-                            </span>
-                            <span className="text-sm text-gray-400 font-semibold">FCFA</span>
+                      {/* Bloc tarifaire — page détail */}
+                      {pricing.type === 'tranches' ? (
+                        <div className="mb-4 space-y-3">
+                          {/* Inscription */}
+                          <div>
+                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Inscription</p>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-3xl font-black text-navy-900">
+                                {pricing.inscriptionAmount!.toLocaleString('fr-FR')}
+                              </span>
+                              <span className="text-sm text-gray-400 font-semibold">FCFA</span>
+                            </div>
+                            {pricing.suivantLabel && (
+                              <p className="text-sm text-gray-500 mt-0.5">{pricing.suivantLabel}</p>
+                            )}
                           </div>
-                          <p className="text-xs text-gray-500 mt-0.5">
-                            Total : <strong className="text-navy-900">{formation.price.toLocaleString('fr-FR')} FCFA</strong>
-                            {' '}en {formation.tranches!.length} tranches
-                          </p>
+                          {/* Total */}
+                          <div className="pt-2 border-t border-gray-100">
+                            <p className="text-xs text-gray-400 mb-0.5">Total formation</p>
+                            <p className="font-bold text-navy-900">
+                              {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
+                              {pricing.originalPrice && (
+                                <span className="text-gray-300 line-through text-sm font-normal ml-2">
+                                  {pricing.originalPrice.toLocaleString('fr-FR')}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                          {/* Détail complet des tranches */}
+                          {pricing.tranches && pricing.tranches.length > 0 && (
+                            <div className="bg-gray-50 rounded-xl p-3 space-y-1.5">
+                              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                                Échéancier complet
+                              </p>
+                              {pricing.tranches.map((t, i) => (
+                                <div key={i} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-500">
+                                    <span className="w-4 h-4 inline-flex items-center justify-center bg-brand-green/10 text-brand-green rounded-full font-bold mr-1.5">
+                                      {i + 1}
+                                    </span>
+                                    {t.echeance}
+                                  </span>
+                                  <span className="font-semibold text-navy-900">{t.montant.toLocaleString('fr-FR')} FCFA</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <span className="inline-block text-xs text-brand-green bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full font-medium">
+                            Paiement en {pricing.nbTranches} tranches
+                          </span>
                         </div>
                       ) : (
                         <div className="mb-4">
-                          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Tarif</p>
+                          <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Paiement unique</p>
                           <div className="flex items-baseline gap-2">
                             <span className="text-3xl font-black text-navy-900">
-                              {formation.price.toLocaleString('fr-FR')}
+                              {pricing.totalPrice.toLocaleString('fr-FR')}
                             </span>
                             <span className="text-sm text-gray-400 font-semibold">FCFA</span>
-                            {formation.originalPrice && (
+                            {pricing.originalPrice && (
                               <span className="text-gray-300 line-through text-sm">
-                                {formation.originalPrice.toLocaleString('fr-FR')}
+                                {pricing.originalPrice.toLocaleString('fr-FR')}
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-gray-400 mt-0.5">Paiement unique</p>
+                          <p className="text-xs text-gray-400 mt-0.5">À régler une seule fois avant le démarrage</p>
                         </div>
                       )}
 
@@ -392,8 +427,7 @@ export default function FormationDetailPage({ params }: Props) {
       {/* Mobile sticky CTA */}
       <FormationMobileCTA
         slug={formation.slug}
-        price={formation.price}
-        firstTranche={firstTranche?.montant}
+        pricing={pricing}
         isOpen={isOpen}
       />
     </>
