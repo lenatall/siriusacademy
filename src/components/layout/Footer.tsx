@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
+import { store } from '@/lib/store'
 
 const footerLinks = {
   formations: [
@@ -19,16 +20,18 @@ const footerLinks = {
   ],
 }
 
-const socialLinks = [
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
-  { icon: Instagram, href: '#', label: 'Instagram' },
-]
-
 const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
 
 export default function Footer() {
+  const settings = store.settings.get()
+
+  const socialLinks = [
+    { icon: Linkedin, href: settings.socialLinkedin || '#', label: 'LinkedIn' },
+    { icon: Twitter, href: settings.socialTwitter || '#', label: 'Twitter' },
+    { icon: Youtube, href: '#', label: 'YouTube' },
+    { icon: Instagram, href: settings.socialInstagram || '#', label: 'Instagram' },
+  ]
+
   return (
     <footer className="bg-navy-950 text-slate-300">
 
@@ -50,7 +53,7 @@ export default function Footer() {
               </div>
             </div>
             <a
-              href="https://wa.me/221770000000"
+              href={settings.whatsappLink || '#'}
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-brand-green font-bold px-6 py-3 rounded-xl text-sm transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
@@ -73,35 +76,37 @@ export default function Footer() {
                 <Star className="w-5 h-5 text-navy-900 fill-current" />
               </div>
               <div>
-                <span className="text-white font-bold text-xl">Sirius</span>
-                <span className="text-brand-yellow font-bold text-xl"> Academy</span>
+                <span className="text-white font-bold text-xl">{settings.siteName?.split(' ')[0] ?? 'Sirius'}</span>
+                <span className="text-brand-yellow font-bold text-xl"> {settings.siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
               </div>
             </Link>
 
             <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
-              Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à
-              construire des compétences concrètes, visibles et utiles grâce à un accompagnement
-              personnalisé en petits groupes.
+              {settings.siteDescription || "Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à construire des compétences concrètes, visibles et utiles grâce à un accompagnement personnalisé en petits groupes."}
             </p>
 
             {/* Contact info */}
             <ul className="space-y-3 text-sm mb-7">
               <li className="flex items-center gap-3 text-slate-400">
                 <Mail className="w-4 h-4 text-brand-green shrink-0" />
-                <a href="mailto:contact@sirius-academy.sn" className="hover:text-brand-green transition-colors">
-                  contact@sirius-academy.sn
+                <a href={`mailto:${settings.contactEmail}`} className="hover:text-brand-green transition-colors">
+                  {settings.contactEmail}
                 </a>
               </li>
-              <li className="flex items-center gap-3 text-slate-400">
-                <Phone className="w-4 h-4 text-brand-green shrink-0" />
-                <a href="tel:+221770000000" className="hover:text-brand-green transition-colors">
-                  +221 77 000 00 00
-                </a>
-              </li>
-              <li className="flex items-center gap-3 text-slate-400">
-                <MapPin className="w-4 h-4 text-brand-green shrink-0" />
-                <span>Dakar, Sénégal (et 100% en ligne)</span>
-              </li>
+              {settings.contactPhone && (
+                <li className="flex items-center gap-3 text-slate-400">
+                  <Phone className="w-4 h-4 text-brand-green shrink-0" />
+                  <a href={`tel:${settings.contactPhone.replace(/\s/g, '')}`} className="hover:text-brand-green transition-colors">
+                    {settings.contactPhone}
+                  </a>
+                </li>
+              )}
+              {settings.contactAddress && (
+                <li className="flex items-center gap-3 text-slate-400">
+                  <MapPin className="w-4 h-4 text-brand-green shrink-0" />
+                  <span>{settings.contactAddress}</span>
+                </li>
+              )}
             </ul>
 
             {/* Social icons */}
@@ -209,7 +214,7 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} Sirius Academy. Tous droits réservés.
+            {settings.footerText || `© ${new Date().getFullYear()} Sirius Academy. Tous droits réservés.`}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             {legalLinks.map((item, index) => (

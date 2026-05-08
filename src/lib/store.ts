@@ -23,6 +23,105 @@ let _settings: SiteSettings = {
   heroCta1: 'Voir les formations',
   heroCta2: 'Notre approche',
   footerText: '© 2025 Sirius Academy — Tous droits réservés.',
+  siteDescription: "Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à construire des compétences concrètes, visibles et utiles grâce à un accompagnement personnalisé en petits groupes.",
+  contactPhone: '+221 77 000 00 00',
+  contactAddress: 'Dakar, Sénégal (et 100% en ligne)',
+  contactHours: 'Lun–Ven : 9h–18h · Sam : 10h–14h',
+  faq: [
+    {
+      question: "Y a-t-il des prérequis pour s'inscrire ?",
+      answer: "Chaque formation a ses propres prérequis, détaillés sur la page de la formation. La plupart de nos formations sont accessibles aux débutants.",
+    },
+    {
+      question: "Les formations sont-elles en direct ou en replay ?",
+      answer: "Nos formations proposent un mix des deux : les cours sont disponibles en replay à tout moment, avec des sessions live hebdomadaires pour les Q&A et le suivi.",
+    },
+    {
+      question: "Puis-je travailler en même temps que ma formation ?",
+      answer: "Absolument. Nos formations sont conçues pour être compatibles avec une activité professionnelle. Comptez environ 10-15h par semaine selon la formation.",
+    },
+    {
+      question: "Quel est le délai de réponse après mon inscription ?",
+      answer: "Notre équipe vous contacte dans les 48h ouvrées suivant votre demande d'inscription pour un entretien de qualification et pour répondre à toutes vos questions.",
+    },
+  ],
+  testimonials: [
+    {
+      name: 'Fatou Diallo',
+      role: 'Développeuse Frontend · Dakar',
+      avatar: 'https://ui-avatars.com/api/?name=Fatou+Diallo&background=10B981&color=fff&size=200',
+      formation: 'Développement Web Full-Stack',
+      text: "Grâce aux projets concrets, j'ai pu constituer un vrai portfolio dès la fin de la formation. Je me suis lancée en freelance deux semaines après.",
+    },
+    {
+      name: 'Mamadou Sow',
+      role: 'Community Manager Freelance',
+      avatar: 'https://ui-avatars.com/api/?name=Mamadou+Sow&background=F59E0B&color=0B1F3A&size=200',
+      formation: 'Marketing Digital & Réseaux Sociaux',
+      text: "Les exercices sont applicables immédiatement. J'ai décroché mes premiers clients avec exactement ce que j'avais appris en formation.",
+    },
+    {
+      name: 'Amina Traoré',
+      role: 'UI Designer · Agence créative',
+      avatar: 'https://ui-avatars.com/api/?name=Amina+Traore&background=4c6ef5&color=fff&size=200',
+      formation: 'Design UX/UI avec Figma',
+      text: "L'accompagnement individualisé fait vraiment la différence. J'ai un portfolio solide que je peux présenter avec confiance.",
+    },
+  ],
+  stats: [
+    { value: 'Petits groupes', label: 'accompagnement personnalisé' },
+    { value: '4 Formations', label: 'métiers du digital' },
+    { value: '5+ ans', label: "d'expérience terrain" },
+    { value: '100%', label: 'projets concrets & portfolio' },
+  ],
+  features: [
+    {
+      title: 'Formation orientée pratique',
+      description: "Chaque notion est suivie d'un exercice ou d'une application concrète. On apprend en faisant, pas en lisant.",
+    },
+    {
+      title: 'Projets concrets',
+      description: 'Les apprenants travaillent sur des cas réalistes pour mieux comprendre le terrain et construire des réalisations présentables.',
+    },
+    {
+      title: 'Ressources accessibles',
+      description: 'Cours gratuits, supports PDF, vidéos ou contenus structurés selon les modules — disponibles à votre rythme.',
+    },
+    {
+      title: 'Attestation de réussite',
+      description: "Remise aux apprenants ayant suivi et validé leur parcours. Une preuve concrète de votre engagement.",
+    },
+    {
+      title: 'Progression encadrée',
+      description: "Les parcours sont organisés étape par étape pour faciliter l'apprentissage et éviter de se perdre.",
+    },
+    {
+      title: 'Orientation métier',
+      description: 'Aide à mieux comprendre les métiers du digital et choisir une spécialisation adaptée à votre profil.',
+    },
+  ],
+  processSteps: [
+    {
+      title: 'Exercices corrigés',
+      description: 'Chaque module propose des exercices pratiques avec corrections pour valider votre compréhension.',
+    },
+    {
+      title: 'Projets guidés',
+      description: 'Vous travaillez sur des projets réels, étape par étape, avec des consignes claires et un cadre structuré.',
+    },
+    {
+      title: 'Supports pratiques',
+      description: "Des ressources téléchargeables : fiches mémo, templates, guides d'application selon les modules.",
+    },
+    {
+      title: 'Ressources gratuites',
+      description: "Des contenus d'introduction accessibles à tous pour découvrir les bases avant de s'engager.",
+    },
+    {
+      title: 'Amélioration continue',
+      description: 'Les programmes sont régulièrement mis à jour pour rester alignés avec les pratiques actuelles du digital.',
+    },
+  ],
 }
 
 function slugify(str: string): string {
