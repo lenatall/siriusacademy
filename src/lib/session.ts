@@ -1,36 +1,46 @@
-import { getIronSession, IronSession } from 'iron-session'
+import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 
-export interface SessionData {
-  isAdmin?: boolean
-  lastActivity?: number
+export const COOKIE_NAME = 'sirius_admin_session'
+export const SESSION_DURATION_SECONDS = 2 * 60 * 60 // 2 hours
+
+export const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  maxAge: SESSION_DURATION_SECONDS,
+  path: '/',
 }
 
-export const SESSION_DURATION_MS = 2 * 60 * 60 * 1000 // 2 hours
-
-export const sessionOptions = {
-  password: process.env.SESSION_SECRET as string,
-  cookieName: 'sirius_admin_session',
-  cookieOptions: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    maxAge: 60 * 60 * 2, // 2 hours in seconds
-  },
+function getSecret(): Uint8Array {
+  const secret = process.env.SESSION_SECRET
+  if (!secret) throw new Error('SESSION_SECRET is not set')
+  return new TextEncoder().encode(secret)
 }
 
-export async function getSession(): Promise<IronSession<SessionData>> {
-  const cookieStore = await cookies()
-  return getIronSession<SessionData>(cookieStore, sessionOptions)
+export async function createSessionToken(): Promise<string> {
+  return new SignJWT({ isAdmin: true })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('2h')
+    .sign(getSecret())
+}
+
+export async function verifySessionToken(token: string): Promise<boolean> {
+  try {
+    await jwtVerify(token, getSecret())
+    return true
+  } catch {
+    return false
+  }
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
   try {
-    const session = await getSession()
-    if (!session.isAdmin) return false
-    if (!session.lastActivity) return false
-    if (Date.now() - session.lastActivity > SESSION_DURATION_MS) return false
-    return true
+    const cookieStore = await cookies()
+    const token = cookieStore.get(COOKIE_NAME)?.value
+    if (!token) return false
+    return verifySessionToken(token)
   } catch {
     return false
   }

@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getIronSession } from 'iron-session'
-import type { SessionData } from '@/lib/session'
+import { jwtVerify } from 'jose'
 
-const SESSION_DURATION_MS = 2 * 60 * 60 * 1000
+const COOKIE_NAME = 'sirius_admin_session'
+const SESSION_DURATION_SECONDS = 2 * 60 * 60
 
-const sessionOptions = {
-  password: process.env.SESSION_SECRET as string,
-  cookieName: 'sirius_admin_session',
-  cookieOptions: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    maxAge: 60 * 60 * 2,
-  },
+function getSecret(): Uint8Array {
+  const secret = process.env.SESSION_SECRET
+  if (!secret) throw new Error('SESSION_SECRET is not set')
+  return new TextEncoder().encode(secret)
 }
 
 export async function middleware(request: NextRequest) {
@@ -23,30 +18,36 @@ export async function middleware(request: NextRequest) {
 
   if (!isAdminPage && !isAdminApi) return NextResponse.next()
 
-  const response = NextResponse.next()
+  const token = request.cookies.get(COOKIE_NAME)?.value
+
+  if (!token) {
+    return unauthenticated(request, pathname)
+  }
 
   try {
-    const session = await getIronSession<SessionData>(request, response, sessionOptions)
-
-    if (!session.isAdmin || !session.lastActivity) {
-      return unauthenticated(request, pathname)
-    }
-
-    const now = Date.now()
-    if (now - session.lastActivity > SESSION_DURATION_MS) {
-      session.destroy()
-      await session.save()
-      return unauthenticated(request, pathname)
-    }
-
-    // Refresh lastActivity (rolling session)
-    session.lastActivity = now
-    await session.save()
-
-    return response
+    await jwtVerify(token, getSecret())
   } catch {
     return unauthenticated(request, pathname)
   }
+
+  // Rolling session: issue a fresh token to reset the 2h window
+  const response = NextResponse.next()
+  const { SignJWT } = await import('jose')
+  const newToken = await new SignJWT({ isAdmin: true })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('2h')
+    .sign(getSecret())
+
+  response.cookies.set(COOKIE_NAME, newToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: SESSION_DURATION_SECONDS,
+    path: '/',
+  })
+
+  return response
 }
 
 function unauthenticated(request: NextRequest, pathname: string) {
