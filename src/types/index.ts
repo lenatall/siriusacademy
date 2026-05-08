@@ -50,6 +50,7 @@ export interface Formation {
   metaTitle?: string
   metaDescription?: string
   showDetailedProgram?: boolean
+  showRelatedFormations?: boolean
   certificate: boolean
   category: string
   status: FormationStatus
