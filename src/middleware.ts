@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { jwtVerify } from 'jose'
+import { jwtVerify, SignJWT } from 'jose'
 
 const COOKIE_NAME = 'sirius_admin_session'
 const SESSION_DURATION_SECONDS = 2 * 60 * 60
@@ -31,14 +31,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // Rolling session: issue a fresh token to reset the 2h window
-  const response = NextResponse.next()
-  const { SignJWT } = await import('jose')
   const newToken = await new SignJWT({ isAdmin: true })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('2h')
     .sign(getSecret())
 
+  const response = NextResponse.next()
   response.cookies.set(COOKIE_NAME, newToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
