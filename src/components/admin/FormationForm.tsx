@@ -65,6 +65,7 @@ export default function FormationForm({ initial = {}, mode }: Props) {
     isFeatured: initial.isFeatured ?? false,
     certificate: initial.certificate ?? true,
     showDetailedProgram: initial.showDetailedProgram ?? false,
+    showRelatedFormations: initial.showRelatedFormations ?? false,
     tags: initial.tags?.join(', ') ?? '',
     objectives: initial.objectives?.join('\n') ?? '',
     prerequisites: initial.prerequisites?.join('\n') ?? '',
@@ -721,6 +722,12 @@ export default function FormationForm({ initial = {}, mode }: Props) {
                 onChange={(v) => set('certificate', v)}
                 label="Attestation de réussite incluse"
                 hint="Visible sur la page formation et dans le Hero"
+              />
+              <Toggle
+                checked={form.showRelatedFormations}
+                onChange={(v) => set('showRelatedFormations', v)}
+                label="Afficher les formations similaires"
+                hint="Par défaut masqué pour éviter de distraire le visiteur"
               />
             </div>
           </Section>
