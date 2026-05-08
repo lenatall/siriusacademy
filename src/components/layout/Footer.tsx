@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
 import { store } from '@/lib/store'
+import FooterLogo from './FooterLogo'
 
 const footerLinks = {
   formations: [
@@ -22,16 +23,8 @@ const footerLinks = {
 
 const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
 
-interface FooterProps {
-  logoUrl?: string
-  siteName?: string
-}
-
-export default function Footer({ logoUrl: logoUrlProp, siteName: siteNameProp }: FooterProps) {
+export default function Footer() {
   const settings = store.settings.get()
-  // Props from layout take priority (always fresh from the same render pass)
-  const logoUrl = logoUrlProp !== undefined ? logoUrlProp : settings.logoUrl
-  const siteName = siteNameProp ?? settings.siteName
 
   const socialLinks = [
     { icon: Linkedin, href: settings.socialLinkedin || '#', label: 'LinkedIn' },
@@ -79,26 +72,7 @@ export default function Footer({ logoUrl: logoUrlProp, siteName: siteNameProp }:
 
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              {logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoUrl}
-                  alt={siteName ?? 'Sirius Academy'}
-                  className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform duration-200"
-                />
-              ) : (
-                <>
-                  <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                    <Star className="w-5 h-5 text-navy-900 fill-current" />
-                  </div>
-                  <div>
-                    <span className="text-white font-bold text-xl">{siteName?.split(' ')[0] ?? 'Sirius'}</span>
-                    <span className="text-brand-yellow font-bold text-xl"> {siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
-                  </div>
-                </>
-              )}
-            </Link>
+            <FooterLogo />
 
             <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
               {settings.siteDescription || "Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à construire des compétences concrètes, visibles et utiles grâce à un accompagnement personnalisé en petits groupes."}
