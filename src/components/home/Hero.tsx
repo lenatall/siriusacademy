@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Star, Users, BookOpen, Award, Zap, CheckCircle } from 'lucide-react'
+import { ArrowRight, Star, Users, BookOpen, Award, Zap, CheckCircle, CreditCard, Wallet } from 'lucide-react'
 import { store } from '@/lib/store'
 
 export default function Hero() {
@@ -122,31 +122,71 @@ export default function Hero() {
           {/* Right — Dynamic formation card */}
           {heroFormation && (
             <div className="hidden lg:block relative">
-              <div className="relative w-full h-[520px]">
+              <div className="relative w-full h-[600px]">
                 {/* Main formation card */}
                 <div className="absolute top-0 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center shrink-0">
-                        <BookOpen className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
-                        <p className="text-slate-400 text-xs mt-0.5">
-                          {heroFormation.duration} · {heroFormation.level}
-                        </p>
-                      </div>
+                  {/* Header */}
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                      <BookOpen className="w-5 h-5 text-white" />
                     </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-white font-black text-base">
-                        {heroFormation.price.toLocaleString('fr-FR')} FCFA
+                    <div className="min-w-0">
+                      <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
+                      <p className="text-slate-400 text-xs mt-0.5">
+                        {heroFormation.duration} · {heroFormation.level}
                       </p>
-                      {heroFormation.originalPrice && (
-                        <p className="text-slate-400 text-xs line-through">
-                          {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
-                        </p>
-                      )}
                     </div>
+                  </div>
+
+                  {/* Pricing block */}
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-4">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div>
+                        <p className="text-slate-400 text-[10px] uppercase tracking-wide font-medium mb-0.5">Coût total</p>
+                        <p className="text-white font-black text-2xl leading-none">
+                          {heroFormation.price.toLocaleString('fr-FR')}
+                          <span className="text-sm font-bold text-slate-300 ml-1">FCFA</span>
+                        </p>
+                        {heroFormation.originalPrice && (
+                          <p className="text-slate-500 text-xs line-through mt-0.5">
+                            {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
+                          </p>
+                        )}
+                      </div>
+                      {heroFormation.paymentType === 'tranches' ? (
+                        <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1 rounded-lg border border-brand-yellow/30 shrink-0">
+                          <CreditCard className="w-3 h-3" />
+                          En tranches
+                        </span>
+                      ) : heroFormation.paymentType === 'unique' ? (
+                        <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/20 shrink-0">
+                          <Wallet className="w-3 h-3" />
+                          Paiement unique
+                        </span>
+                      ) : null}
+                    </div>
+
+                    {heroFormation.paymentType === 'tranches' && heroFormation.tranches && heroFormation.tranches.length > 0 ? (
+                      <div className="pt-2 border-t border-white/10">
+                        <p className="text-slate-400 text-[10px] uppercase tracking-wide font-medium mb-1.5">Échéancier</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {heroFormation.tranches.map((tranche, i) => (
+                            <div key={i} className="flex items-center gap-1 bg-white/10 rounded-lg px-2 py-1">
+                              <span className="w-4 h-4 bg-brand-yellow/30 text-brand-yellow rounded-full flex items-center justify-center text-[10px] font-black shrink-0">
+                                {i + 1}
+                              </span>
+                              <span className="text-white text-[11px] font-semibold">
+                                {tranche.montant.toLocaleString('fr-FR')} FCFA
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : heroFormation.paymentType === 'tranches' ? (
+                      <div className="pt-2 border-t border-white/10">
+                        <p className="text-slate-300 text-xs">Paiement échelonné disponible — contactez-nous.</p>
+                      </div>
+                    ) : null}
                   </div>
 
                   {/* Key points */}
