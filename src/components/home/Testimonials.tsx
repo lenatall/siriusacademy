@@ -1,38 +1,16 @@
 import { Star } from 'lucide-react'
 import Image from 'next/image'
-
-const testimonials = [
-  {
-    name: 'Fatou Diallo',
-    role: 'Développeuse Frontend · Dakar',
-    avatar:
-      'https://ui-avatars.com/api/?name=Fatou+Diallo&background=10B981&color=fff&size=200',
-    formation: 'Développement Web Full-Stack',
-    text: "Grâce aux projets concrets, j'ai pu constituer un vrai portfolio dès la fin de la formation. Je me suis lancée en freelance deux semaines après.",
-  },
-  {
-    name: 'Mamadou Sow',
-    role: 'Community Manager Freelance',
-    avatar:
-      'https://ui-avatars.com/api/?name=Mamadou+Sow&background=F59E0B&color=0B1F3A&size=200',
-    formation: 'Marketing Digital & Réseaux Sociaux',
-    text: "Les exercices sont applicables immédiatement. J'ai décroché mes premiers clients avec exactement ce que j'avais appris en formation.",
-  },
-  {
-    name: 'Amina Traoré',
-    role: 'UI Designer · Agence créative',
-    avatar:
-      'https://ui-avatars.com/api/?name=Amina+Traore&background=4c6ef5&color=fff&size=200',
-    formation: 'Design UX/UI avec Figma',
-    text: "L'accompagnement individualisé fait vraiment la différence. J'ai un portfolio solide que je peux présenter avec confiance.",
-  },
-]
+import { store } from '@/lib/store'
 
 export default function Testimonials() {
+  const settings = store.settings.get()
+  const testimonials = settings.testimonials ?? []
+
+  if (testimonials.length === 0) return null
+
   return (
     <section className="py-24 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 bg-brand-green/10 text-brand-green text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
             Témoignages
@@ -45,34 +23,26 @@ export default function Testimonials() {
           </p>
         </div>
 
-        {/* Cards */}
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
+          {testimonials.map((t, i) => (
             <div
-              key={t.name}
+              key={i}
               className="bg-white border-l-4 border-brand-green rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col"
             >
-              {/* Decorative quote */}
               <div className="text-6xl font-black text-brand-yellow/20 leading-none mb-2 select-none">
                 &ldquo;
               </div>
-
-              {/* Star rating */}
               <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 text-brand-yellow fill-current" />
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 text-brand-yellow fill-current" />
                 ))}
               </div>
-
-              {/* Quote */}
               <p className="text-gray-700 text-base leading-relaxed italic flex-grow mb-6">
                 {t.text}
               </p>
-
-              {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 <Image
-                  src={t.avatar}
+                  src={t.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=10B981&color=fff&size=200`}
                   alt={t.name}
                   width={44}
                   height={44}
@@ -81,9 +51,11 @@ export default function Testimonials() {
                 <div>
                   <p className="font-bold text-navy-900 text-sm">{t.name}</p>
                   <p className="text-xs text-gray-400">{t.role}</p>
-                  <span className="inline-block mt-1 text-xs text-brand-green font-semibold bg-brand-green/10 px-2 py-0.5 rounded-full">
-                    {t.formation}
-                  </span>
+                  {t.formation && (
+                    <span className="inline-block mt-1 text-xs text-brand-green font-semibold bg-brand-green/10 px-2 py-0.5 rounded-full">
+                      {t.formation}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

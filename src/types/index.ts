@@ -117,6 +117,34 @@ export interface Prospect {
   createdAt: string
 }
 
+export interface FaqItem {
+  question: string
+  answer: string
+}
+
+export interface TestimonialItem {
+  name: string
+  role: string
+  avatar: string
+  formation: string
+  text: string
+}
+
+export interface StatItem {
+  value: string
+  label: string
+}
+
+export interface FeatureItem {
+  title: string
+  description: string
+}
+
+export interface ProcessStep {
+  title: string
+  description: string
+}
+
 export interface SiteSettings {
   heroFormationSlug: string
   siteName: string
@@ -137,6 +165,16 @@ export interface SiteSettings {
   socialTwitter?: string
   legalMentions?: string
   privacyPolicy?: string
+  logoUrl?: string
+  siteDescription?: string
+  contactPhone?: string
+  contactAddress?: string
+  contactHours?: string
+  faq?: FaqItem[]
+  testimonials?: TestimonialItem[]
+  stats?: StatItem[]
+  features?: FeatureItem[]
+  processSteps?: ProcessStep[]
 }
 
 export interface RegistrationForm {
