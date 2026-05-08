@@ -64,8 +64,13 @@ export async function POST(request: Request) {
 
   recordSuccessfulLogin(ip, username)
 
-  const token = await createSessionToken()
-  const response = NextResponse.json({ success: true })
-  response.cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
-  return response
+  try {
+    const token = await createSessionToken()
+    const response = NextResponse.json({ success: true })
+    response.cookies.set(COOKIE_NAME, token, COOKIE_OPTIONS)
+    return response
+  } catch (err) {
+    console.error('[auth] createSessionToken failed:', err)
+    return NextResponse.json({ success: false, message: 'Erreur serveur.' }, { status: 500 })
+  }
 }

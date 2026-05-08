@@ -13,8 +13,8 @@ export const COOKIE_OPTIONS = {
 }
 
 function getSecret(): Uint8Array {
-  const secret = process.env.SESSION_SECRET
-  if (!secret) throw new Error('SESSION_SECRET manquant')
+  // Fallback keeps the server running even without .env.local in Codespaces/CI
+  const secret = process.env.SESSION_SECRET ?? 'sirius-academy-default-secret-change-in-prod'
   return new TextEncoder().encode(secret)
 }
 

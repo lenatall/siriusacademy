@@ -23,7 +23,13 @@ function LoginForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
-      const data = await res.json()
+      let data: { success?: boolean; message?: string } = {}
+      try {
+        data = await res.json()
+      } catch {
+        setError(`Erreur serveur (${res.status}). Vérifiez les logs du serveur.`)
+        return
+      }
       if (data.success) {
         const redirect = searchParams.get('redirect') || '/admin'
         router.push(redirect)
@@ -31,7 +37,7 @@ function LoginForm() {
         setError(data.message || 'Identifiants incorrects.')
       }
     } catch {
-      setError('Erreur réseau. Réessayez.')
+      setError('Erreur réseau. Vérifiez que le serveur est démarré.')
     } finally {
       setLoading(false)
     }
