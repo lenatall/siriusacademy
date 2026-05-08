@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, Users, BookOpen, Award, Zap, CheckCircle, CreditCard, Wallet } from 'lucide-react'
 import { store } from '@/lib/store'
+import { getPricing } from '@/lib/pricing'
 
 export default function Hero() {
   const settings = store.settings.get()
@@ -14,10 +15,7 @@ export default function Hero() {
     []
   )
 
-  const nbTranches = heroFormation?.tranches?.length ?? 0
-  const minTranche = nbTranches > 0
-    ? Math.min(...heroFormation!.tranches!.map((t) => t.montant))
-    : null
+  const pricing = heroFormation ? getPricing(heroFormation) : null
 
   return (
     <section className="relative min-h-screen bg-hero-gradient overflow-hidden flex items-center">
@@ -158,64 +156,64 @@ export default function Hero() {
                     </div>
                   </div>
 
-                  {/* Bloc tarifaire simplifié */}
-                  <div className="bg-navy-900/40 border border-white/10 rounded-xl p-4">
-                    {heroFormation.paymentType === 'tranches' && nbTranches > 0 ? (
-                      <div className="space-y-2">
-                        {/* Prix d'accroche */}
-                        <div className="flex items-center justify-between gap-2">
+                  {/* Bloc tarifaire */}
+                  {pricing && (
+                    <div className="bg-navy-900/40 border border-white/10 rounded-xl p-4">
+                      {pricing.type === 'tranches' ? (
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">Inscription</p>
+                              <p className="text-white font-black text-2xl leading-none mt-0.5">
+                                {pricing.inscriptionAmount!.toLocaleString('fr-FR')}
+                                <span className="text-sm font-semibold text-slate-300 ml-1">FCFA</span>
+                              </p>
+                              {pricing.suivantLabel && (
+                                <p className="text-slate-400 text-xs mt-0.5">{pricing.suivantLabel}</p>
+                              )}
+                            </div>
+                            <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-brand-yellow/30 shrink-0">
+                              <CreditCard className="w-3 h-3" />
+                              {pricing.nbTranches} tranches
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                            <p className="text-slate-400 text-xs">
+                              Total formation
+                              <span className="text-white font-semibold ml-1.5">
+                                {pricing.totalPrice.toLocaleString('fr-FR')} FCFA
+                              </span>
+                            </p>
+                            {pricing.originalPrice && (
+                              <p className="text-slate-500 text-xs line-through">
+                                {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-end justify-between gap-2">
                           <div>
-                            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">À partir de</p>
+                            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">Paiement unique</p>
                             <p className="text-white font-black text-2xl leading-none mt-0.5">
-                              {minTranche!.toLocaleString('fr-FR')}
+                              {pricing.totalPrice.toLocaleString('fr-FR')}
                               <span className="text-sm font-semibold text-slate-300 ml-1">FCFA</span>
                             </p>
+                            {pricing.originalPrice && (
+                              <p className="text-slate-500 text-xs line-through mt-0.5">
+                                {pricing.originalPrice.toLocaleString('fr-FR')} FCFA
+                              </p>
+                            )}
+                            <p className="text-slate-400 text-xs mt-1">À régler avant le démarrage</p>
                           </div>
-                          <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-brand-yellow/30 shrink-0">
-                            <CreditCard className="w-3 h-3" />
-                            En tranches
+                          <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border border-white/20 shrink-0">
+                            <Wallet className="w-3 h-3" />
+                            Unique
                           </span>
                         </div>
-                        {/* Total + nb tranches */}
-                        <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                          <div>
-                            <p className="text-slate-400 text-xs">Total formation</p>
-                            <p className="text-white font-semibold text-sm">
-                              {heroFormation.price.toLocaleString('fr-FR')} FCFA
-                            </p>
-                          </div>
-                          <p className="text-slate-400 text-xs text-right">
-                            Paiement en {nbTranches} tranche{nbTranches > 1 ? 's' : ''}
-                          </p>
-                        </div>
-                        {heroFormation.originalPrice && (
-                          <p className="text-slate-500 text-xs line-through">
-                            Tarif normal : {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
-                          </p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-end justify-between gap-2">
-                        <div>
-                          <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold">Prix</p>
-                          <p className="text-white font-black text-2xl leading-none mt-0.5">
-                            {heroFormation.price.toLocaleString('fr-FR')}
-                            <span className="text-sm font-semibold text-slate-300 ml-1">FCFA</span>
-                          </p>
-                          {heroFormation.originalPrice && (
-                            <p className="text-slate-500 text-xs line-through mt-0.5">
-                              {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
-                            </p>
-                          )}
-                          <p className="text-slate-400 text-xs mt-1">Aucun paiement en ligne</p>
-                        </div>
-                        <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border border-white/20 shrink-0">
-                          <Wallet className="w-3 h-3" />
-                          Paiement unique
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Points clés */}
                   {heroPoints.length > 0 && (

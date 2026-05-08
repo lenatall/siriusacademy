@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import type { PricingInfo } from '@/lib/pricing'
 
 interface Props {
   slug: string
-  price: number
-  firstTranche?: number
+  pricing: PricingInfo
   isOpen: boolean
 }
 
-export default function FormationMobileCTA({ slug, price, firstTranche, isOpen }: Props) {
+export default function FormationMobileCTA({ slug, pricing, isOpen }: Props) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -19,8 +19,6 @@ export default function FormationMobileCTA({ slug, price, firstTranche, isOpen }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const displayPrice = firstTranche ?? price
 
   return (
     <div
@@ -30,18 +28,20 @@ export default function FormationMobileCTA({ slug, price, firstTranche, isOpen }
     >
       <div className="flex items-center gap-3 max-w-lg mx-auto">
         <div className="flex-1 min-w-0">
-          {firstTranche ? (
+          {pricing.type === 'tranches' ? (
             <>
-              <p className="text-xs text-gray-400 leading-none mb-0.5">À partir de</p>
+              <p className="text-xs text-gray-400 leading-none mb-0.5">Inscription</p>
               <p className="font-black text-navy-900 text-xl leading-none">
-                {displayPrice.toLocaleString('fr-FR')} <span className="text-sm font-semibold text-gray-500">FCFA</span>
+                {pricing.inscriptionAmount!.toLocaleString('fr-FR')}{' '}
+                <span className="text-sm font-semibold text-gray-500">FCFA</span>
               </p>
             </>
           ) : (
             <>
-              <p className="text-xs text-gray-400 leading-none mb-0.5">Tarif</p>
+              <p className="text-xs text-gray-400 leading-none mb-0.5">Paiement unique</p>
               <p className="font-black text-navy-900 text-xl leading-none">
-                {displayPrice.toLocaleString('fr-FR')} <span className="text-sm font-semibold text-gray-500">FCFA</span>
+                {pricing.totalPrice.toLocaleString('fr-FR')}{' '}
+                <span className="text-sm font-semibold text-gray-500">FCFA</span>
               </p>
             </>
           )}
