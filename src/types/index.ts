@@ -49,6 +49,7 @@ export interface Formation {
   programPdfUrl?: string
   metaTitle?: string
   metaDescription?: string
+  showDetailedProgram?: boolean
   certificate: boolean
   category: string
   status: FormationStatus

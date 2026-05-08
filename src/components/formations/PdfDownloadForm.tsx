@@ -16,7 +16,7 @@ interface Props {
   formationSlug: string
   formationTitle: string
   programPdfUrl?: string
-  variant?: 'card' | 'outline'
+  variant?: 'card' | 'outline' | 'section'
 }
 
 export default function PdfDownloadForm({
@@ -73,15 +73,18 @@ export default function PdfDownloadForm({
     setErrors({})
   }
 
-  const buttonClass = variant === 'card'
-    ? 'w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors text-sm border border-white/20'
-    : 'w-full flex items-center justify-center gap-2 border-2 border-gray-200 text-gray-700 hover:border-navy-900 hover:text-navy-900 font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm'
+  const buttonClass =
+    variant === 'card'
+      ? 'w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl transition-colors text-sm border border-white/20'
+      : variant === 'section'
+      ? 'inline-flex items-center gap-2 bg-navy-900 hover:bg-navy-800 text-white font-bold px-6 py-3.5 rounded-xl transition-colors text-sm shadow-sm'
+      : 'w-full flex items-center justify-center gap-2 border-2 border-gray-200 text-gray-700 hover:border-navy-900 hover:text-navy-900 font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm'
 
   return (
     <>
       <button onClick={handleOpen} className={buttonClass}>
         <FileText className="w-4 h-4 shrink-0" />
-        Télécharger le programme complet
+        Recevoir le programme détaillé
       </button>
 
       {open && (
