@@ -22,8 +22,16 @@ const footerLinks = {
 
 const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
 
-export default function Footer() {
+interface FooterProps {
+  logoUrl?: string
+  siteName?: string
+}
+
+export default function Footer({ logoUrl: logoUrlProp, siteName: siteNameProp }: FooterProps) {
   const settings = store.settings.get()
+  // Props from layout take priority (always fresh from the same render pass)
+  const logoUrl = logoUrlProp !== undefined ? logoUrlProp : settings.logoUrl
+  const siteName = siteNameProp ?? settings.siteName
 
   const socialLinks = [
     { icon: Linkedin, href: settings.socialLinkedin || '#', label: 'LinkedIn' },
@@ -72,11 +80,11 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              {settings.logoUrl ? (
+              {logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={settings.logoUrl}
-                  alt={settings.siteName ?? 'Sirius Academy'}
+                  src={logoUrl}
+                  alt={siteName ?? 'Sirius Academy'}
                   className="h-10 w-auto object-contain brightness-0 invert group-hover:scale-105 transition-transform duration-200"
                 />
               ) : (
@@ -85,8 +93,8 @@ export default function Footer() {
                     <Star className="w-5 h-5 text-navy-900 fill-current" />
                   </div>
                   <div>
-                    <span className="text-white font-bold text-xl">{settings.siteName?.split(' ')[0] ?? 'Sirius'}</span>
-                    <span className="text-brand-yellow font-bold text-xl"> {settings.siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
+                    <span className="text-white font-bold text-xl">{siteName?.split(' ')[0] ?? 'Sirius'}</span>
+                    <span className="text-brand-yellow font-bold text-xl"> {siteName?.split(' ').slice(1).join(' ') ?? 'Academy'}</span>
                   </div>
                 </>
               )}
