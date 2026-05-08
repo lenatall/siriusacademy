@@ -253,6 +253,9 @@ export default function Hero() {
                         Recevoir le programme
                       </Link>
                     </div>
+
+                    {/* TEST MARKER — à retirer après validation */}
+                    <p className="text-center text-[10px] text-white/30 mt-2 font-mono">VERSION HERO TEST 08-05-2026</p>
                   </div>
                 </div>
 
