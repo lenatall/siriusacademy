@@ -120,6 +120,7 @@ export interface Prospect {
 export interface FaqItem {
   question: string
   answer: string
+  visible?: boolean
 }
 
 export interface TestimonialItem {
@@ -128,6 +129,7 @@ export interface TestimonialItem {
   avatar: string
   formation: string
   text: string
+  visible?: boolean
 }
 
 export interface StatItem {
@@ -175,6 +177,14 @@ export interface SiteSettings {
   stats?: StatItem[]
   features?: FeatureItem[]
   processSteps?: ProcessStep[]
+  showTestimonials?: boolean
+  socialTiktok?: string
+  socialYoutube?: string
+  notificationEmail?: string
+  formConfirmationContact?: string
+  formConfirmationInscription?: string
+  formConfirmationPdf?: string
+  formLegalText?: string
 }
 
 export interface RegistrationForm {
