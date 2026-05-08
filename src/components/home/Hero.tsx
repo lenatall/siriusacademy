@@ -122,123 +122,159 @@ export default function Hero() {
           {/* Right — Dynamic formation card */}
           {heroFormation && (
             <div className="hidden lg:block relative">
-              <div className="relative w-full h-[600px]">
-                {/* Main formation card */}
-                <div className="absolute top-0 left-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl">
-                  {/* Header */}
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="w-10 h-10 bg-brand-green rounded-xl flex items-center justify-center shrink-0 mt-0.5">
-                      <BookOpen className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
-                      <p className="text-slate-400 text-xs mt-0.5">
-                        {heroFormation.duration} · {heroFormation.level}
-                      </p>
-                    </div>
+              <div className="relative w-full">
+                {/* Decision card */}
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-2xl">
+
+                  {/* Status bar */}
+                  <div className={`px-5 py-2.5 flex items-center gap-2 ${heroFormation.status === 'ouvert' ? 'bg-brand-green/20 border-b border-brand-green/20' : 'bg-brand-yellow/15 border-b border-brand-yellow/20'}`}>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${heroFormation.status === 'ouvert' ? 'bg-brand-green animate-pulse' : 'bg-brand-yellow'}`} />
+                    <span className={`text-xs font-bold tracking-wide ${heroFormation.status === 'ouvert' ? 'text-brand-green' : 'text-brand-yellow'}`}>
+                      {heroFormation.status === 'ouvert' ? 'Inscriptions ouvertes' : 'Bientôt disponible'}
+                    </span>
                   </div>
 
-                  {/* Pricing block */}
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-4">
-                    <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="p-5">
+                    {/* Formation identity */}
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="w-9 h-9 bg-brand-green rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                        <BookOpen className="w-4 h-4 text-white" />
+                      </div>
                       <div>
-                        <p className="text-slate-400 text-[10px] uppercase tracking-wide font-medium mb-0.5">Coût total</p>
-                        <p className="text-white font-black text-2xl leading-none">
-                          {heroFormation.price.toLocaleString('fr-FR')}
-                          <span className="text-sm font-bold text-slate-300 ml-1">FCFA</span>
-                        </p>
-                        {heroFormation.originalPrice && (
-                          <p className="text-slate-500 text-xs line-through mt-0.5">
-                            {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
-                          </p>
-                        )}
+                        <p className="text-white font-bold text-sm leading-snug">{heroFormation.title}</p>
+                        <p className="text-slate-400 text-xs mt-0.5">{heroFormation.duration} · {heroFormation.level}</p>
                       </div>
-                      {heroFormation.paymentType === 'tranches' ? (
-                        <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1 rounded-lg border border-brand-yellow/30 shrink-0">
-                          <CreditCard className="w-3 h-3" />
-                          En tranches
-                        </span>
-                      ) : heroFormation.paymentType === 'unique' ? (
-                        <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/20 shrink-0">
-                          <Wallet className="w-3 h-3" />
-                          Paiement unique
-                        </span>
-                      ) : null}
                     </div>
 
-                    {heroFormation.paymentType === 'tranches' && heroFormation.tranches && heroFormation.tranches.length > 0 ? (
-                      <div className="pt-2 border-t border-white/10">
-                        <p className="text-slate-400 text-[10px] uppercase tracking-wide font-medium mb-1.5">Échéancier</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {heroFormation.tranches.map((tranche, i) => (
-                            <div key={i} className="flex items-center gap-1 bg-white/10 rounded-lg px-2 py-1">
-                              <span className="w-4 h-4 bg-brand-yellow/30 text-brand-yellow rounded-full flex items-center justify-center text-[10px] font-black shrink-0">
-                                {i + 1}
-                              </span>
-                              <span className="text-white text-[11px] font-semibold">
-                                {tranche.montant.toLocaleString('fr-FR')} FCFA
-                              </span>
+                    {/* Pricing decision block */}
+                    <div className="bg-navy-900/40 border border-white/10 rounded-xl p-4 mb-4">
+                      {heroFormation.paymentType === 'tranches' && heroFormation.tranches && heroFormation.tranches.length > 0 ? (
+                        <>
+                          {/* Per installment highlight */}
+                          <div className="flex items-end justify-between gap-2 mb-3">
+                            <div>
+                              <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-0.5">À partir de</p>
+                              <p className="text-white font-black text-3xl leading-none">
+                                {Math.min(...heroFormation.tranches.map(t => t.montant)).toLocaleString('fr-FR')}
+                                <span className="text-sm font-bold text-slate-300 ml-1">FCFA</span>
+                              </p>
+                              <p className="text-slate-400 text-xs mt-0.5">par tranche</p>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : heroFormation.paymentType === 'tranches' ? (
-                      <div className="pt-2 border-t border-white/10">
-                        <p className="text-slate-300 text-xs">Paiement échelonné disponible — contactez-nous.</p>
-                      </div>
-                    ) : null}
-                  </div>
+                            <span className="inline-flex items-center gap-1 bg-brand-yellow/20 text-brand-yellow text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-brand-yellow/30 shrink-0">
+                              <CreditCard className="w-3 h-3" />
+                              En tranches
+                            </span>
+                          </div>
 
-                  {/* Key points */}
-                  <div className="space-y-2 mb-4">
-                    {heroPoints.map((point) => (
-                      <div key={point} className="flex items-start gap-2 text-xs text-slate-300">
-                        <CheckCircle className="w-3.5 h-3.5 text-brand-green shrink-0 mt-0.5" />
-                        <span className="line-clamp-1">{point}</span>
-                      </div>
-                    ))}
-                  </div>
+                          {/* Separator + total */}
+                          <div className="border-t border-white/10 pt-3 mb-3">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-slate-400 text-xs">Total formation</p>
+                                <p className="text-white font-bold text-base">
+                                  {heroFormation.price.toLocaleString('fr-FR')} FCFA
+                                </p>
+                              </div>
+                              {heroFormation.originalPrice && (
+                                <p className="text-slate-500 text-sm line-through">
+                                  {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
+                                </p>
+                              )}
+                            </div>
+                            <p className="text-slate-400 text-xs mt-1">
+                              Paiement en {heroFormation.tranches.length} tranche{heroFormation.tranches.length > 1 ? 's' : ''}
+                            </p>
+                          </div>
 
-                  {/* Status */}
-                  <div className="flex items-center gap-2 mb-4">
-                    {heroFormation.status === 'ouvert' ? (
-                      <span className="inline-flex items-center gap-1.5 bg-brand-green/20 text-brand-green text-xs font-bold px-3 py-1 rounded-lg border border-brand-green/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-                        Inscriptions ouvertes
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 bg-brand-yellow/20 text-brand-yellow text-xs font-bold px-3 py-1 rounded-lg border border-brand-yellow/30">
-                        Bientôt disponible
-                      </span>
+                          {/* Tranches detail */}
+                          <div className="flex flex-wrap gap-1.5">
+                            {heroFormation.tranches.map((tranche, i) => (
+                              <div key={i} className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 flex-1 min-w-0">
+                                <span className="w-5 h-5 bg-brand-yellow/30 text-brand-yellow rounded-full flex items-center justify-center text-[10px] font-black shrink-0">
+                                  {i + 1}
+                                </span>
+                                <div className="min-w-0">
+                                  <p className="text-white text-[11px] font-bold leading-none">{tranche.montant.toLocaleString('fr-FR')} F</p>
+                                  <p className="text-slate-400 text-[10px] truncate">{tranche.echeance}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Single payment */}
+                          <div className="flex items-end justify-between gap-2">
+                            <div>
+                              <p className="text-slate-400 text-[10px] uppercase tracking-widest font-semibold mb-0.5">Prix</p>
+                              <p className="text-white font-black text-3xl leading-none">
+                                {heroFormation.price.toLocaleString('fr-FR')}
+                                <span className="text-sm font-bold text-slate-300 ml-1">FCFA</span>
+                              </p>
+                              {heroFormation.originalPrice && (
+                                <p className="text-slate-500 text-xs line-through mt-0.5">
+                                  {heroFormation.originalPrice.toLocaleString('fr-FR')} FCFA
+                                </p>
+                              )}
+                            </div>
+                            <span className="inline-flex items-center gap-1 bg-white/10 text-slate-300 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border border-white/20 shrink-0">
+                              <Wallet className="w-3 h-3" />
+                              Paiement unique
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Key points */}
+                    {heroPoints.length > 0 && (
+                      <div className="space-y-1.5 mb-4">
+                        {heroPoints.map((point) => (
+                          <div key={point} className="flex items-start gap-2 text-xs text-slate-300">
+                            <CheckCircle className="w-3.5 h-3.5 text-brand-green shrink-0 mt-0.5" />
+                            <span className="line-clamp-1">{point}</span>
+                          </div>
+                        ))}
+                      </div>
                     )}
-                  </div>
 
-                  <Link
-                    href={`/formations/${heroFormation.slug}`}
-                    className="flex items-center justify-center gap-2 bg-brand-green text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors"
-                  >
-                    Découvrir cette formation <ArrowRight className="w-4 h-4" />
-                  </Link>
+                    {/* CTAs */}
+                    <div className="flex flex-col gap-2">
+                      <Link
+                        href={`/formations/${heroFormation.slug}`}
+                        className="flex items-center justify-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white text-sm font-bold py-3 rounded-xl transition-colors"
+                      >
+                        Découvrir cette formation <ArrowRight className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href={`/formations/${heroFormation.slug}#programme`}
+                        className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 border border-white/20 text-slate-200 text-sm font-semibold py-2.5 rounded-xl transition-colors"
+                      >
+                        Recevoir le programme
+                      </Link>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bottom mini cards */}
-                <div className="absolute bottom-0 left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                    <Users className="w-5 h-5 text-brand-green" />
+                <div className="flex gap-3 mt-3">
+                  <div className="flex-1 bg-white rounded-xl shadow-xl p-3.5 flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
+                      <Users className="w-4 h-4 text-brand-green" />
+                    </div>
+                    <div>
+                      <p className="font-black text-navy-900 text-sm leading-none">Petits groupes</p>
+                      <p className="text-xs text-gray-400">Suivi individualisé</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-black text-navy-900 text-base leading-none">Petits groupes</p>
-                    <p className="text-xs text-gray-400">Suivi individualisé</p>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-0 right-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-brand-yellow" />
-                  </div>
-                  <div>
-                    <p className="font-black text-navy-900 text-base leading-none">100% Pratique</p>
-                    <p className="text-xs text-gray-400">Zéro rembourrage théorique</p>
+                  <div className="flex-1 bg-white rounded-xl shadow-xl p-3.5 flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center shrink-0">
+                      <Zap className="w-4 h-4 text-brand-yellow" />
+                    </div>
+                    <div>
+                      <p className="font-black text-navy-900 text-sm leading-none">100% Pratique</p>
+                      <p className="text-xs text-gray-400">Zéro théorie inutile</p>
+                    </div>
                   </div>
                 </div>
               </div>
