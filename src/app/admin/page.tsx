@@ -11,6 +11,7 @@ import {
   Settings,
   Mail,
   CheckCircle2,
+  RefreshCw,
 } from 'lucide-react'
 import type { Formation, BlogPost, Prospect } from '@/types'
 
@@ -19,6 +20,17 @@ export default function AdminDashboard() {
   const [waitlist, setWaitlist] = useState<Prospect[]>([])
   const [blog, setBlog] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+
+  const fetchProspects = () => {
+    fetch('/api/prospects')
+      .then((r) => r.json())
+      .then((w) => {
+        setWaitlist(Array.isArray(w) ? w : [])
+        setLastUpdated(new Date())
+      })
+      .catch(() => {})
+  }
 
   useEffect(() => {
     Promise.all([
@@ -30,7 +42,10 @@ export default function AdminDashboard() {
       setWaitlist(Array.isArray(w) ? w : [])
       setBlog(Array.isArray(b) ? b : [])
       setLoading(false)
+      setLastUpdated(new Date())
     })
+    const interval = setInterval(fetchProspects, 30000)
+    return () => clearInterval(interval)
   }, [])
 
   const ouvertes = formations.filter((f) => f.status === 'ouvert').length
@@ -169,10 +184,26 @@ export default function AdminDashboard() {
           {/* Prospects preview */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h2 className="font-bold text-navy-900">Derniers prospects</h2>
-              <Link href="/admin/liste-attente" className="text-xs text-brand-green font-semibold flex items-center gap-1 hover:underline">
-                Voir tout <ArrowRight className="w-3 h-3" />
-              </Link>
+              <div>
+                <h2 className="font-bold text-navy-900">Derniers prospects</h2>
+                {lastUpdated && (
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Mis à jour à {lastUpdated.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={fetchProspects}
+                  title="Actualiser"
+                  className="text-gray-400 hover:text-navy-900 transition-colors p-1 rounded-lg hover:bg-gray-100"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                </button>
+                <Link href="/admin/liste-attente" className="text-xs text-brand-green font-semibold flex items-center gap-1 hover:underline">
+                  Voir tout <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             </div>
             {loading ? (
               <div className="p-4 space-y-2">
@@ -185,12 +216,17 @@ export default function AdminDashboard() {
             ) : (
               <div className="divide-y divide-gray-50">
                 {[...waitlist].reverse().slice(0, 5).map((entry, i) => (
-                  <div key={i} className="flex items-center gap-3 px-4 py-3">
-                    <div className="w-7 h-7 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-xs shrink-0">
-                      {entry.prenom?.[0]}{entry.nom?.[0]}
+                  <div key={i} className={`flex items-center gap-3 px-4 py-3 ${entry.status === 'nouveau' ? 'border-l-2 border-blue-500 bg-blue-50/30' : ''}`}>
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${entry.status === 'nouveau' ? 'bg-blue-100 text-blue-700' : 'bg-brand-green/10 text-brand-green'}`}>
+                      {(entry.prenom?.[0] || '?')}{(entry.nom?.[0] || '?')}
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-navy-900 truncate">{entry.prenom} {entry.nom}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-semibold text-navy-900 truncate">{entry.prenom} {entry.nom}</p>
+                        {entry.status === 'nouveau' && (
+                          <span className="shrink-0 text-[10px] font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded-full leading-none">NEW</span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-400 truncate">{entry.email}</p>
                     </div>
                   </div>
