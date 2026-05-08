@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { Star, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Instagram, MessageCircle } from 'lucide-react'
 import { store } from '@/lib/store'
-import FooterLogo from './FooterLogo'
+import SiteLogo from './SiteLogo'
 
 const footerLinks = {
   formations: [
@@ -23,7 +23,12 @@ const footerLinks = {
 
 const legalLinks = ['Mentions légales', 'CGV', 'Politique de confidentialité', 'Cookies']
 
-export default function Footer() {
+interface FooterProps {
+  logoUrl?: string
+  siteName?: string
+}
+
+export default function Footer({ logoUrl, siteName }: FooterProps) {
   const settings = store.settings.get()
 
   const socialLinks = [
@@ -72,7 +77,9 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <FooterLogo />
+            <Link href="/" className="inline-flex mb-5 group">
+              <SiteLogo logoUrl={logoUrl} siteName={siteName ?? settings.siteName} />
+            </Link>
 
             <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
               {settings.siteDescription || "Sirius Academy est une académie digitale basée au Sénégal. Nous vous aidons à construire des compétences concrètes, visibles et utiles grâce à un accompagnement personnalisé en petits groupes."}

@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Star, MessageCircle } from 'lucide-react'
+import { Menu, X, MessageCircle } from 'lucide-react'
+import SiteLogo from './SiteLogo'
 
 const navLinks = [
   { href: '/', label: 'Accueil' },
@@ -53,25 +54,8 @@ export default function Header({ logoUrl, siteName = 'Sirius Academy', whatsappL
           <div className="flex items-center justify-between h-16 lg:h-20">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              {logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoUrl}
-                  alt={siteName}
-                  className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
-                />
-              ) : (
-                <>
-                  <div className="w-10 h-10 bg-gradient-to-br from-brand-yellow via-amber-400 to-orange-400 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-amber-400/40 group-hover:scale-105 transition-all duration-200">
-                    <Star className="w-5 h-5 text-navy-900 fill-current" />
-                  </div>
-                  <div className="leading-none">
-                    <span className="text-white font-bold text-xl">{siteName.split(' ')[0]}</span>
-                    <span className="text-brand-yellow font-bold text-xl"> {siteName.split(' ').slice(1).join(' ')}</span>
-                  </div>
-                </>
-              )}
+            <Link href="/" className="group">
+              <SiteLogo logoUrl={logoUrl} siteName={siteName} />
             </Link>
 
             {/* Desktop Navigation */}

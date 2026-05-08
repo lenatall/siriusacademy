@@ -15,7 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         whatsappLink={settings.whatsappLink}
       />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer logoUrl={settings.logoUrl} siteName={settings.siteName} />
     </>
   )
 }
