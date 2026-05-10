@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(_: Request, { params }: { params: { slug: string } }) {
   const f = store.formations.getBySlug(params.slug)
   if (!f) return NextResponse.json({ error: 'Not found' }, { status: 404 })

@@ -3,6 +3,7 @@ import { createSessionToken, COOKIE_NAME, COOKIE_OPTIONS } from '@/lib/session'
 import { checkRateLimit, recordFailedAttempt, recordSuccessfulLogin } from '@/lib/rateLimit'
 import { timingSafeEqual } from 'crypto'
 
+export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
 function safeCompare(a: string, b: string): boolean {

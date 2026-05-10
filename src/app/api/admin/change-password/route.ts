@@ -4,6 +4,7 @@ import { isAdminAuthenticated } from '@/lib/session'
 import fs from 'fs'
 import path from 'path'
 
+export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
 export async function POST(request: Request) {

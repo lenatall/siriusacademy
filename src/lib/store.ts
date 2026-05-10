@@ -5,24 +5,26 @@ import type { Formation, FreeCourse, BlogPost, Prospect, SiteSettings } from '@/
 import fs from 'fs'
 import path from 'path'
 
-// Persist data to disk so it survives hot reloads and server restarts.
-// DATA_DIR can be overridden via env var (recommended on shared hosts where
-// process.cwd() is not the app directory, e.g. o2switch/cPanel/Passenger).
-const DATA_DIR = process.env.DATA_DIR
-  ? path.resolve(process.env.DATA_DIR)
-  : path.join(process.cwd(), '.sirius-data')
+// Evaluated at call time so Phusion Passenger env vars are always current.
+function getDataDir(): string {
+  return process.env.DATA_DIR
+    ? path.resolve(process.env.DATA_DIR)
+    : path.join(process.cwd(), '.sirius-data')
+}
 
 function ensureDataDir() {
+  const dir = getDataDir()
   try {
-    fs.mkdirSync(DATA_DIR, { recursive: true })
+    fs.mkdirSync(dir, { recursive: true })
   } catch (err) {
-    console.error('[store] mkdir failed', DATA_DIR, err)
+    console.error('[store] mkdir failed', dir, err)
   }
 }
 
 function readJson<T>(filename: string, fallback: T): T {
+  const dir = getDataDir()
   try {
-    const filePath = path.join(DATA_DIR, filename)
+    const filePath = path.join(dir, filename)
     if (fs.existsSync(filePath)) {
       return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as T
     }
@@ -34,10 +36,12 @@ function readJson<T>(filename: string, fallback: T): T {
 
 function writeJson(filename: string, data: unknown) {
   ensureDataDir()
+  const dir = getDataDir()
   try {
-    fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf-8')
+    fs.writeFileSync(path.join(dir, filename), JSON.stringify(data, null, 2), 'utf-8')
+    console.log('[store] wrote', filename, 'to', dir)
   } catch (err) {
-    console.error('[store] write failed', filename, 'in', DATA_DIR, err)
+    console.error('[store] write failed', filename, 'in', dir, err)
   }
 }
 

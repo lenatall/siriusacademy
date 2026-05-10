@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
 import { sendProspectNotification } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(request: Request) {
   const body = await request.json()
   const { formationSlug, nom, prenom, email, telephone, statut } = body

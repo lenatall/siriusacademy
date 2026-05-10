@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
 import { sendProspectNotification } from '@/lib/email'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET() {
   return NextResponse.json(store.prospects.getAll())
 }

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const body = await request.json()
   const updated = store.prospects.update(params.id, body)
