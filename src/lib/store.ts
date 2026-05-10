@@ -5,11 +5,19 @@ import type { Formation, FreeCourse, BlogPost, Prospect, SiteSettings } from '@/
 import fs from 'fs'
 import path from 'path'
 
-// Persist data to disk so it survives hot reloads and server restarts
-const DATA_DIR = path.join(process.cwd(), '.sirius-data')
+// Persist data to disk so it survives hot reloads and server restarts.
+// DATA_DIR can be overridden via env var (recommended on shared hosts where
+// process.cwd() is not the app directory, e.g. o2switch/cPanel/Passenger).
+const DATA_DIR = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : path.join(process.cwd(), '.sirius-data')
 
 function ensureDataDir() {
-  try { fs.mkdirSync(DATA_DIR, { recursive: true }) } catch {}
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true })
+  } catch (err) {
+    console.error('[store] mkdir failed', DATA_DIR, err)
+  }
 }
 
 function readJson<T>(filename: string, fallback: T): T {
@@ -18,7 +26,9 @@ function readJson<T>(filename: string, fallback: T): T {
     if (fs.existsSync(filePath)) {
       return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as T
     }
-  } catch {}
+  } catch (err) {
+    console.error('[store] read failed', filename, err)
+  }
   return fallback
 }
 
@@ -26,7 +36,9 @@ function writeJson(filename: string, data: unknown) {
   ensureDataDir()
   try {
     fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2), 'utf-8')
-  } catch {}
+  } catch (err) {
+    console.error('[store] write failed', filename, 'in', DATA_DIR, err)
+  }
 }
 
 const DEFAULT_SETTINGS: SiteSettings = {
