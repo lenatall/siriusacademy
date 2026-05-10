@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
+import { sendProspectNotification } from '@/lib/email'
 
 export async function GET() {
   return NextResponse.json(store.prospects.getAll())
@@ -25,6 +26,16 @@ export async function POST(request: Request) {
     statut: body.statut,
     createdAt: new Date().toISOString(),
   })
+
+  sendProspectNotification({
+    nom: prospect.nom,
+    prenom: prospect.prenom,
+    email: prospect.email,
+    telephone: prospect.telephone,
+    formationSlug: prospect.formationSlug,
+    source: prospect.source,
+    message: prospect.message,
+  }).catch((err) => console.error('[email] prospect notification failed', err))
 
   return NextResponse.json(prospect, { status: 201 })
 }
