@@ -1,8 +1,16 @@
 // Custom server for o2switch/cPanel (Phusion Passenger)
 // cPanel's "Setup Node.js App" expects this file as startup file
+const path = require('path')
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
+
+// Guarantee DATA_DIR is always relative to this file's directory,
+// so .sirius-data is always at the app root regardless of cwd or env vars.
+if (!process.env.DATA_DIR) {
+  process.env.DATA_DIR = path.join(__dirname, '.sirius-data')
+}
+console.log('[sirius] DATA_DIR =', process.env.DATA_DIR)
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = process.env.HOST || 'localhost'
