@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { store } from '@/lib/store'
+import { sendProspectNotification } from '@/lib/email'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -20,6 +21,15 @@ export async function POST(request: Request) {
     statut: statut ?? '',
     createdAt: new Date().toISOString(),
   })
+
+  sendProspectNotification({
+    nom: prospect.nom,
+    prenom: prospect.prenom,
+    email: prospect.email,
+    telephone: prospect.telephone,
+    formationSlug: prospect.formationSlug,
+    source: 'liste-attente',
+  }).catch((err) => console.error('[email] waitlist notification failed', err))
 
   return NextResponse.json({ success: true, id: prospect.id })
 }
