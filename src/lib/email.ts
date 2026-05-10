@@ -2,9 +2,7 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const FROM = process.env.NODE_ENV === 'production' && process.env.RESEND_DOMAIN_VERIFIED
-  ? 'Sirius Academy <notifications@sirius-academy.net>'
-  : 'Sirius Academy <onboarding@resend.dev>'
+const FROM = 'Sirius Academy <notifications@sirius-academy.net>'
 const ADMIN_EMAIL = process.env.NOTIFY_EMAIL ?? 'admin@sirius-academy.net'
 
 export async function sendProspectNotification(data: {
