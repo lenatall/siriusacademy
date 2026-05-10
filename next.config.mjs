@@ -1,3 +1,8 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -15,6 +20,9 @@ const nextConfig = {
     unoptimized: false,
   },
   webpack: (config, { isServer }) => {
+    // Explicit alias so @/ resolves correctly on all environments (e.g. o2switch)
+    config.resolve.alias['@'] = path.resolve(__dirname, 'src')
+
     if (!isServer) return config
     // Prevent hot reload when persisted data files change
     config.watchOptions = {
